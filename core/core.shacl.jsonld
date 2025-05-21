@@ -1,0 +1,55 @@
+{
+  "@context": [
+    "https://raw.githubusercontent.com/w3c/shacl/main/shacl-jsonld-context/shacl.context.ld.json",
+    {
+      "@vocab": "http://www.w3.org/ns/shacl#",
+      "hsml": "https://www.spatialwebfoundation.org/ns/hsml#",
+      "sh": "http://www.w3.org/ns/shacl#",
+      "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+      "owl": "http://www.w3.org/2002/07/owl#",
+      "label": {
+        "@id": "rdfs:label"
+      },
+      "subClassOf": {
+        "@id": "rdfs:subClassOf",
+        "@type": "@id",
+        "@container": "@set"
+      }
+    }
+  ],
+  "@id": "https://www.spatialwebfoundation.org/ns/hsml/shapes#EntityShape",
+  "@type": "NodeShape",
+  "label": "Entity",
+  "description": "An ENTITY is that which is perceived, known, or inferred to exist, has existed, or is anticipated to exist.",
+  "property": [
+    {
+      "@type": "PropertyShape",
+      "label": "swid",
+      "description": "Spatial web decentralized identifier",
+      "sh:maxCount": 1,
+      "sh:minCount": 1,
+      "name": "swid",
+      "nodeKind": "sh:IRI",
+      "path": "hsml:swid"
+    },
+    {
+      "@type": "PropertyShape",
+      "label": "name",
+      "description": "Human readable name for the entity",
+      "sh:minCount": 1,
+      "name": "name",
+      "nodeKind": "sh:Literal",
+      "path": "hsml:name"
+    },
+    {
+      "@type": "PropertyShape",
+      "label": "credential",
+      "description": "Credentials associated with the entity",
+      "sh:minCount": 1,
+      "name": "credentials",
+      "nodeKind": "sh:IRI",
+      "path": "hsml:hasCredential"
+    }
+  ],
+  "targetClass": "hsml:Entity"
+}

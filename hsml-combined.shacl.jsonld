@@ -1,0 +1,658 @@
+{
+  "@context": [
+    "https://raw.githubusercontent.com/w3c/shacl/main/shacl-jsonld-context/shacl.context.ld.json",
+    {
+      "@vocab": "http://www.w3.org/ns/shacl#",
+      "hsml": "https://www.spatialwebfoundation.org/ns/hsml#",
+      "sh": "http://www.w3.org/ns/shacl#",
+      "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+      "owl": "http://www.w3.org/2002/07/owl#",
+      "label": {
+        "@id": "rdfs:label"
+      },
+      "subClassOf": {
+        "@id": "rdfs:subClassOf",
+        "@type": "@id",
+        "@container": "@set"
+      }
+    }
+  ],
+  "@graph": [
+    {
+      "@id": "https://www.spatialwebfoundation.org/ns/hsml/shapes#ActivitySchemaShape",
+      "@type": "NodeShape",
+      "label": "Activity Schema",
+      "description": "An ActivitySchema is the abstract template that defines the structure and constraints of an activity before any specific execution takes place.",
+      "property": [
+        {
+          "@type": "PropertyShape",
+          "label": "has input",
+          "description": "Associates an ActivitySchema with a Variable defining required inputs.",
+          "sh:minCount": 0,
+          "name": "inputs",
+          "nodeKind": "sh:BlankNodeOrIRI",
+          "path": "hsml:hasInput"
+        },
+        {
+          "@type": "PropertyShape",
+          "label": "variable binding",
+          "description": "Associates an ActivitySchema with VariableBinding resources for schema composition",
+          "sh:minCount": 0,
+          "name": "variable_bindings",
+          "nodeKind": "sh:BlankNodeOrIRI",
+          "path": "hsml:variableBinding"
+        },
+        {
+          "@type": "PropertyShape",
+          "label": "has output",
+          "description": "Associates an ActivitySchema with a Variable defining declared outputs.",
+          "sh:minCount": 0,
+          "name": "outputs",
+          "nodeKind": "sh:BlankNodeOrIRI",
+          "path": "hsml:hasOutput"
+        },
+        {
+          "@type": "PropertyShape",
+          "label": "precondition",
+          "description": "Links an ActivitySchema to a Condition that must hold before execution.",
+          "sh:minCount": 0,
+          "name": "preconditions",
+          "path": "hsml:preCondition"
+        }
+      ],
+      "targetClass": {
+        "@id": "hsml:ActivitySchema",
+        "subClassOf": [
+          "owl:Class"
+        ]
+      }
+    },
+    {
+      "@id": "https://www.spatialwebfoundation.org/ns/hsml/shapes#ActivityShape",
+      "@type": "NodeShape",
+      "label": "Activity",
+      "description": "An ACTIVITY is a partially ordered set of changes to be effected by an AGENT, representing an event or process over time.",
+      "property": [
+        {
+          "@type": "PropertyShape",
+          "label": "satisfies contract",
+          "description": "The contract that is satisfied by the activity",
+          "sh:minCount": 0,
+          "name": "satisfies_contract",
+          "nodeKind": "sh:IRI",
+          "path": "hsml:satisfiesContract"
+        },
+        {
+          "@type": "PropertyShape",
+          "label": "start time",
+          "description": "Timestamp when the activity began.",
+          "sh:maxCount": 1,
+          "sh:minCount": 0,
+          "name": "startTime",
+          "path": "hsml:startTime"
+        },
+        {
+          "@type": "PropertyShape",
+          "label": "sub activity of",
+          "description": "Inverse of hasSubActivity; points to the parent activity of a sub-activity.",
+          "sh:minCount": 0,
+          "name": "sub_activity_of",
+          "nodeKind": "sh:IRI",
+          "path": "hsml:subActivityOf"
+        },
+        {
+          "@type": "PropertyShape",
+          "label": "performed with",
+          "description": "The domain that collaborates in carrying out the activity.",
+          "sh:minCount": 0,
+          "name": "performed_with",
+          "nodeKind": "sh:IRI",
+          "path": "hsml:performedWith"
+        },
+        {
+          "@type": "PropertyShape",
+          "label": "has status ",
+          "description": "Indicates the current lifecycle status of the activity (e.g., planned, in-progress, completed).",
+          "sh:maxCount": 1,
+          "sh:minCount": 0,
+          "name": "status",
+          "nodeKind": "sh:IRI",
+          "path": "hsml:hasStatus"
+        },
+        {
+          "@type": "PropertyShape",
+          "label": "performed by",
+          "description": "Identifies the domain that performs the activity.",
+          "sh:minCount": 1,
+          "name": "performed_by",
+          "nodeKind": "sh:IRI",
+          "path": "hsml:performedBy"
+        },
+        {
+          "@type": "PropertyShape",
+          "label": "end time",
+          "description": "Timestamp when the activity ended.",
+          "sh:maxCount": 1,
+          "sh:minCount": 0,
+          "name": "endTime",
+          "path": "hsml:endTime"
+        },
+        {
+          "@type": "PropertyShape",
+          "label": "performed in",
+          "description": "The domain within which the activity takes place.",
+          "sh:minCount": 0,
+          "name": "performed_in",
+          "nodeKind": "sh:IRI",
+          "path": "hsml:performedIn"
+        },
+        {
+          "@type": "PropertyShape",
+          "label": "performed on",
+          "description": "The domain that is the direct target or object of the activity.",
+          "sh:minCount": 0,
+          "name": "performed_on",
+          "nodeKind": "sh:IRI",
+          "path": "hsml:performedOn"
+        }
+      ],
+      "targetClass": {
+        "@id": "hsml:Activity",
+        "subClassOf": [
+          "hsml:Entity",
+          "http://www.w3.org/2006/time#TemporalEntity"
+        ]
+      }
+    },
+    {
+      "@id": "https://www.spatialwebfoundation.org/ns/hsml/shapes#AgentCapabilityShape",
+      "@type": "NodeShape",
+      "property": [
+        {
+          "@type": "PropertyShape",
+          "label": "supports activity",
+          "sh:minCount": 0,
+          "name": "supports_activity",
+          "nodeKind": "sh:IRI",
+          "path": "hsml:supportsActivity"
+        },
+        {
+          "@type": "PropertyShape",
+          "label": "uses tool",
+          "description": "Indicates that an Agent employs a Tool in pursuit of its goals",
+          "name": "tools",
+          "nodeKind": "sh:IRI",
+          "path": "hsml:usesTool"
+        }
+      ],
+      "targetClass": "hsml:Capability"
+    },
+    {
+      "@id": "https://www.spatialwebfoundation.org/ns/hsml/shapes#AgentShape",
+      "@type": "NodeShape",
+      "label": "Agent",
+      "description": "An AGENT is an ENTITY that senses and responds to its environment, maintains a model of its environment, and performs ACTIVITIES to achieve its goals.",
+      "property": [
+        {
+          "@type": "PropertyShape",
+          "label": "has capability",
+          "description": "Links an Agent to it capability (sensing,and perceiving, activity schemas, learning mechanisms, autonomous decision-making, physical and digital actuations)",
+          "name": "capabilities",
+          "nodeKind": "sh:BlankNodeOrIRI",
+          "path": "hsml:hasCapability"
+        },
+        {
+          "@type": "PropertyShape",
+          "label": "has goal",
+          "description": "A goal or desired outcome that this agent aims to accomplish",
+          "name": "goal",
+          "nodeKind": "sh:BlankNodeOrIRI",
+          "path": "hsml:hasGoal"
+        },
+        {
+          "@type": "PropertyShape",
+          "label": "performs activity",
+          "description": "An activity that this agent has performed or is performing.",
+          "sh:minCount": 0,
+          "name": "activity",
+          "nodeKind": "sh:IRI",
+          "path": "hsml:performsActivity"
+        }
+      ],
+      "targetClass": {
+        "@id": "hsml:Agent",
+        "subClassOf": [
+          {
+            "@id": "hsml:Domain",
+            "subClassOf": [
+              "hsml:Entity"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "@id": "https://www.spatialwebfoundation.org/ns/hsml/shapes#ChannelShape",
+      "@type": "NodeShape",
+      "label": "Channel",
+      "description": "A CHANNEL is a Spatial Web ENTITY grouping a stream of HSML elements related to a specific context or communication without warranting a domain hierarchy. ",
+      "property": [
+        {
+          "@type": "PropertyShape",
+          "label": "is channel for",
+          "description": "Links a Channel to the Activity (or Activities) whose messages it carries.",
+          "sh:minCount": 1,
+          "name": "channel_for",
+          "nodeKind": "sh:IRI",
+          "path": "hsml:isChannelFor"
+        },
+        {
+          "@type": "PropertyShape",
+          "label": "authorized agents",
+          "description": "Links a Channel to the Agent(s) permitted to access it; only those Agents holding the necessary credentials or roles may use this Channel.",
+          "sh:minCount": 1,
+          "name": "authorized_agents",
+          "nodeKind": "sh:IRI",
+          "path": "hsml:authorizedAgent"
+        },
+        {
+          "@type": "PropertyShape",
+          "label": "has sub\u2011channel",
+          "description": "Indicates that this Channel has the given Channel as a sub-channel.",
+          "sh:minCount": 1,
+          "name": "has_sub_channel",
+          "nodeKind": "sh:IRI",
+          "path": "hsml:hasSubChannel"
+        },
+        {
+          "@type": "PropertyShape",
+          "label": "is sub\u2011channel of ",
+          "description": "Indicates that this Channel is a sub-channel of another Channel",
+          "sh:minCount": 1,
+          "name": "sub_channels_of",
+          "nodeKind": "sh:IRI",
+          "path": "hsml:isSubChannelOf"
+        }
+      ],
+      "targetClass": {
+        "@id": "hsml:Channel",
+        "subClassOf": [
+          "hsml:Entity"
+        ]
+      }
+    },
+    {
+      "@id": "https://www.spatialwebfoundation.org/ns/hsml/shapes#ComponentTypeShape",
+      "@type": "NodeShape",
+      "label": "Component Type",
+      "description": "A generic base class for different types of configurable components that characterize or constitute a hyperspace, such as element types, path types, metrics, operations, properties, or value specifications. Instances of its subclasses represent specific, named configurations of these components.",
+      "targetClass": "hsml:ComponentType"
+    },
+    {
+      "@id": "https://www.spatialwebfoundation.org/ns/hsml/shapes#ContractShape",
+      "@type": "NodeShape",
+      "label": "Contract",
+      "description": "A CONTRACT is a Spatial Web ENTITY representing a request to perform an instance of an ACTIVITY, specifying the parties involved.",
+      "property": [
+        {
+          "@type": "PropertyShape",
+          "label": "contract status",
+          "description": "The current lifecycle status of the contract, one of: Proposed, Accepted, Active, Fulfilled, or Cancelled.",
+          "sh:maxCount": 1,
+          "sh:minCount": 1,
+          "name": "contract_status",
+          "nodeKind": "sh:IRI",
+          "path": "hsml:contractStatus"
+        },
+        {
+          "@type": "PropertyShape",
+          "label": "requested by agent",
+          "description": "The Agent that requests the contract",
+          "sh:minCount": 1,
+          "name": "requested_by_agent",
+          "nodeKind": "sh:IRI",
+          "path": "hsml:requestedByAgent"
+        },
+        {
+          "@type": "PropertyShape",
+          "label": "accepted by agent",
+          "description": "The Agent that accepted or signed the contract.",
+          "sh:minCount": 1,
+          "name": "accepted_by",
+          "nodeKind": "sh:IRI",
+          "path": "hsml:acceptedBy"
+        },
+        {
+          "@type": "PropertyShape",
+          "label": "contract for",
+          "description": "The Activity to which this contract applies (e.g., a delivery, a service invocation, or a payment action).",
+          "sh:minCount": 1,
+          "name": "contract_for",
+          "nodeKind": "sh:IRI",
+          "path": "hsml:contractFor"
+        },
+        {
+          "@type": "PropertyShape",
+          "label": "fullfilled by agent",
+          "description": "The Agent responsible for carrying out or completing the contract\u2019s obligations.",
+          "sh:minCount": 1,
+          "name": "fullfilled_by",
+          "nodeKind": "sh:IRI",
+          "path": "hsml:fulfilledBy"
+        },
+        {
+          "@type": "PropertyShape",
+          "label": "requested by domain",
+          "description": "The Domain (e.g., an organization or administrative entity) that initiated or issued this contract request.",
+          "sh:minCount": 1,
+          "name": "requested_by_domain",
+          "nodeKind": "sh:IRI",
+          "path": "hsml:requestedByDomain"
+        },
+        {
+          "@type": "PropertyShape",
+          "label": "created",
+          "description": "Timestamp when the contract was originally created.",
+          "sh:maxCount": 1,
+          "sh:minCount": 0,
+          "name": "created",
+          "path": "hsml:created"
+        },
+        {
+          "@type": "PropertyShape",
+          "label": "modified",
+          "description": "Timestamp of the most recent modification to the contract.",
+          "sh:minCount": 0,
+          "name": "modified",
+          "path": "hsml:modified"
+        }
+      ],
+      "targetClass": {
+        "@id": "hsml:Contract",
+        "subClassOf": [
+          "hsml:Entity"
+        ]
+      }
+    },
+    {
+      "@id": "https://www.spatialwebfoundation.org/ns/hsml/shapes#DomainShape",
+      "@type": "NodeShape",
+      "label": "Domain",
+      "description": "A DOMAIN is a Spatial Web ENTITY with identity through time endowed with rights and credentials.",
+      "property": [
+        {
+          "@type": "PropertyShape",
+          "label": "has space",
+          "sh:minCount": 0,
+          "name": "space",
+          "nodeKind": "sh:IRI",
+          "path": "hsml:hasSpace"
+        },
+        {
+          "@type": "PropertyShape",
+          "label": "has subdomain",
+          "description": "Links a parent Domain to one or more child Domains that it contains or specializes, capturing nested or hierarchical relationships among Domains.",
+          "sh:minCount": 0,
+          "name": "subdomains",
+          "nodeKind": "sh:IRI",
+          "path": "hsml:hasSubDomain"
+        }
+      ],
+      "targetClass": {
+        "@id": "hsml:Domain",
+        "subClassOf": [
+          "hsml:Entity"
+        ]
+      }
+    },
+    {
+      "@id": "https://www.spatialwebfoundation.org/ns/hsml/shapes#EntityShape",
+      "@type": "NodeShape",
+      "label": "Entity",
+      "description": "An ENTITY is that which is perceived, known, or inferred to exist, has existed, or is anticipated to exist.",
+      "property": [
+        {
+          "@type": "PropertyShape",
+          "label": "swid",
+          "description": "Spatial web decentralized identifier",
+          "sh:maxCount": 1,
+          "sh:minCount": 1,
+          "name": "swid",
+          "nodeKind": "sh:IRI",
+          "path": "hsml:swid"
+        },
+        {
+          "@type": "PropertyShape",
+          "label": "name",
+          "description": "Human readable name for the entity",
+          "sh:minCount": 1,
+          "name": "name",
+          "nodeKind": "sh:Literal",
+          "path": "hsml:name"
+        },
+        {
+          "@type": "PropertyShape",
+          "label": "credential",
+          "description": "Credentials associated with the entity",
+          "sh:minCount": 1,
+          "name": "credentials",
+          "nodeKind": "sh:IRI",
+          "path": "hsml:hasCredential"
+        }
+      ],
+      "targetClass": "hsml:Entity"
+    },
+    {
+      "@id": "https://www.spatialwebfoundation.org/ns/hsml/shapes#GoalShape",
+      "@type": "NodeShape",
+      "targetClass": "hsml:Goal"
+    },
+    {
+      "@id": "https://www.spatialwebfoundation.org/ns/hsml/shapes#HyperspaceShape",
+      "@type": "NodeShape",
+      "label": "Hypergraph",
+      "description": "A HYPERSPACE is a Spatial Web ENTITY for a generalized concept of space: a set of elements with paths between any pair, satisfying identity and composition laws.",
+      "property": [
+        {
+          "@type": "PropertyShape",
+          "label": "hasPathType",
+          "description": "Relates a Hyperspace instance to a PathType instance that defines the nature of paths, links, edges, or traversals between its elements. For example, a GraphSpace might have a PathType representing 'Edge', and a GeospatialSpace might have a PathType representing 'RouteSegment",
+          "sh:maxCount": 1,
+          "sh:minCount": 1,
+          "name": "path_type",
+          "nodeKind": "sh:IRI",
+          "path": "hsml:hasPathType"
+        },
+        {
+          "@type": "PropertyShape",
+          "label": "hasOperation",
+          "description": "Relates a Hyperspace instance to an Operation instance that defines a specific function, action, transformation, or query performable within or on this hyperspace or its components. For example, a GeospatialSpace might link to Operation instances representing 'Buffer' or 'Intersection'",
+          "sh:minCount": 0,
+          "name": "operations",
+          "nodeKind": "sh:IRI",
+          "path": "hsml:hasOperation"
+        },
+        {
+          "@type": "PropertyShape",
+          "label": "hasElementType",
+          "description": "Relates a Hyperspace instance to an ElementType instance that defines the nature of its primary constituent elements or 'points'. For example, a GraphSpace might have an ElementType representing 'Node', and a CellularSpace might have an ElementType representing 'Cell'.",
+          "sh:maxCount": 1,
+          "sh:minCount": 1,
+          "name": "element_type",
+          "nodeKind": "sh:IRI",
+          "path": "hsml:hasElementType"
+        }
+      ],
+      "targetClass": {
+        "@id": "hsml:Hyperspace",
+        "subClassOf": [
+          "hsml:Entity"
+        ]
+      }
+    },
+    {
+      "@id": "https://www.spatialwebfoundation.org/ns/hsml/shapes#MetricSpaceShape",
+      "@type": "NodeShape",
+      "label": "Metric Space",
+      "description": "A TopologicalSpace equipped with a metric function d: X\u00d7X \u2192 \u211d that satisfies non-negativity, identity of indiscernibles, symmetry, and the triangle inequality. This metric induces the space\u2019s topology",
+      "property": {
+        "@type": "PropertyShape",
+        "label": "hasMetric",
+        "description": "Relates a Hyperspace instance (typically a MetricSpace or a space supporting distance concepts) to a Metric instance that defines a specific distance function or dissimilarity measure applicable within it. For example, a EuclideanSpace would link to a Metric instance representing 'EuclideanDistance",
+        "sh:minCount": 1,
+        "name": "metrics",
+        "nodeKind": "sh:IRI",
+        "path": "hsml:hasMetric"
+      },
+      "targetClass": {
+        "@id": "hsml:MetricSpace",
+        "subClassOf": [
+          "hsml:TopologicalSpace"
+        ]
+      }
+    },
+    {
+      "@id": "https://www.spatialwebfoundation.org/ns/hsml/shapes#OperandShape",
+      "@type": "NodeShape",
+      "label": "Operand",
+      "description": "Represents a specific, named configuration for a single input parameter or an output result of an Operation. An instance of Operand (e.g., 'InputGeometry', 'BufferRadius', 'OutputArea') defines its role within the operation, its expected data type, and whether it is an input or output",
+      "targetClass": {
+        "@id": "hsml:Operand",
+        "subClassOf": [
+          "hsml:ComponentType"
+        ]
+      }
+    },
+    {
+      "@id": "https://www.spatialwebfoundation.org/ns/hsml/shapes#OperationShape",
+      "@type": "NodeShape",
+      "label": "Operation",
+      "description": "Represents a specific, named configuration of an action, function, transformation, or query. An instance of Operation (e.g., 'SpatialBuffer', 'FindShortestPath') defines the operation's signature through its associated Operand configurations and describes what it achieves",
+      "property": {
+        "@type": "PropertyShape",
+        "label": "has operand",
+        "description": "Relates an Operation definition to an Operand definition. The signature of an Operation is defined by the set of Operand definitions it is associated with, each specifying a parameter or a result.",
+        "sh:minCount": 0,
+        "name": "operands",
+        "nodeKind": "sh:IRI",
+        "path": "hsml:hasOperand"
+      },
+      "targetClass": {
+        "@id": "hsml:Operation",
+        "subClassOf": [
+          "hsml:ComponentType"
+        ]
+      }
+    },
+    {
+      "@id": "https://www.spatialwebfoundation.org/ns/hsml/shapes#SimilarityMetricShape",
+      "@type": "NodeShape",
+      "label": "SimilarityMetric",
+      "description": "Represents a specific, named configuration of a function that quantifies the similarity between two elements or objects. Unlike distance metrics where smaller values mean 'closer' or 'more similar', for similarity metrics, typically larger values mean 'more similar'. Common examples include Cosine Similarity, Jaccard Index, or Pearson Correlation Coefficient. The output range of a similarity metric is often normalized (e.g., [0, 1] or [-1, 1]). Instances of this class define a particular similarity calculation method.",
+      "property": [
+        {
+          "@type": "PropertyShape",
+          "label": "is normalized",
+          "description": "Indicates whether the output of a similarity metric is typically within a standard normalized range (e.g., [0,1] or [-1,1]).",
+          "sh:maxCount": 1,
+          "sh:minCount": 1,
+          "name": "is_normalized",
+          "path": "hsml:isNormalized"
+        },
+        {
+          "@type": "PropertyShape",
+          "label": "typical range maximum",
+          "description": "The typical maximum value for this similarity metric's output.",
+          "sh:maxCount": 1,
+          "sh:minCount": 0,
+          "name": "typical_range_max",
+          "path": "hsml:typicalRangeMax"
+        },
+        {
+          "@type": "PropertyShape",
+          "label": "typical range minimum",
+          "description": "The typical minimum value for this similarity metric's output",
+          "sh:maxCount": 1,
+          "sh:minCount": 0,
+          "name": "typical_range_min",
+          "path": "hsml:typicalRangeMin"
+        }
+      ],
+      "targetClass": {
+        "@id": "hsml:SimilarityMetric",
+        "subClassOf": [
+          "hsml:Metric"
+        ]
+      }
+    },
+    {
+      "@id": "https://www.spatialwebfoundation.org/ns/hsml/shapes#VariableBindingShape",
+      "@type": "NodeShape",
+      "label": "Variable Binding",
+      "description": "A VariableBinding maps a variable declared by an ancestor ActivitySchema to a variable in the current ActivitySchema definition the variable binding is assigned to, establishing how data flows from the higher-level activity into its nested invocation",
+      "property": [
+        {
+          "@type": "PropertyShape",
+          "label": "source activity schema",
+          "description": "The ActivitySchema providing the output field.",
+          "sh:minCount": 1,
+          "name": "source_activity_schema",
+          "nodeKind": "sh:IRI",
+          "path": "hsml:sourceActivitySchema"
+        },
+        {
+          "@type": "PropertyShape",
+          "label": "variable name",
+          "description": "The sh:name of the input variable on the bound ActivitySchema to receive data.",
+          "sh:minCount": 1,
+          "name": "variable_name",
+          "path": "hsml:variableName"
+        },
+        {
+          "@type": "PropertyShape",
+          "label": "source variable name",
+          "description": "The sh:name of the output variable on the source schema.",
+          "sh:minCount": 1,
+          "name": "source_variable_name",
+          "path": "hsml:sourceVariableName"
+        }
+      ],
+      "targetClass": "hsml:VariableBinding"
+    },
+    {
+      "@id": "https://www.spatialwebfoundation.org/ns/hsml/shapes#VariableShape",
+      "@type": "NodeShape",
+      "label": "Variable",
+      "description": "A placeholder representing an input, output, or intermediate parameter of an activity.",
+      "targetClass": {
+        "@id": "hsml:Variable",
+        "subClassOf": [
+          "sh:PropertyShape"
+        ]
+      }
+    },
+    {
+      "@id": "https://www.spatialwebfoundation.org/ns/hsml/shapes#VectorSpaceShape",
+      "@type": "NodeShape",
+      "label": "VectorSpace",
+      "description": "A Hyperspace whose points form a vector space over a field (typically the real numbers), with operations of vector addition and scalar multiplication satisfying the usual axioms of linear algebra.",
+      "property": {
+        "@type": "PropertyShape",
+        "label": "dimension",
+        "description": "number of degree of freedom available to points in a hyperspace (typically vector space)",
+        "sh:maxCount": 1,
+        "sh:minCount": 0,
+        "minInclusive": 0.0,
+        "name": "dimension",
+        "nodeKind": "sh:Literal",
+        "path": "hsml:dimension"
+      },
+      "targetClass": {
+        "@id": "hsml:VectorSpace",
+        "subClassOf": [
+          "hsml:TopologicalSpace"
+        ]
+      }
+    }
+  ]
+}

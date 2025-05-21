@@ -1,0 +1,49 @@
+{
+  "@context": [
+    "https://raw.githubusercontent.com/w3c/shacl/main/shacl-jsonld-context/shacl.context.ld.json",
+    {
+      "@vocab": "http://www.w3.org/ns/shacl#",
+      "hsml": "https://www.spatialwebfoundation.org/ns/hsml#",
+      "sh": "http://www.w3.org/ns/shacl#",
+      "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+      "owl": "http://www.w3.org/2002/07/owl#",
+      "label": {
+        "@id": "rdfs:label"
+      },
+      "subClassOf": {
+        "@id": "rdfs:subClassOf",
+        "@type": "@id",
+        "@container": "@set"
+      }
+    }
+  ],
+  "@id": "https://www.spatialwebfoundation.org/ns/hsml/shapes#DomainShape",
+  "@type": "NodeShape",
+  "label": "Domain",
+  "description": "A DOMAIN is a Spatial Web ENTITY with identity through time endowed with rights and credentials.",
+  "property": [
+    {
+      "@type": "PropertyShape",
+      "label": "has subdomain",
+      "description": "Links a parent Domain to one or more child Domains that it contains or specializes, capturing nested or hierarchical relationships among Domains.",
+      "sh:minCount": 0,
+      "name": "subdomains",
+      "nodeKind": "sh:IRI",
+      "path": "hsml:hasSubDomain"
+    },
+    {
+      "@type": "PropertyShape",
+      "label": "has space",
+      "sh:minCount": 0,
+      "name": "space",
+      "nodeKind": "sh:IRI",
+      "path": "hsml:hasSpace"
+    }
+  ],
+  "targetClass": {
+    "@id": "hsml:Domain",
+    "subClassOf": [
+      "hsml:Entity"
+    ]
+  }
+}

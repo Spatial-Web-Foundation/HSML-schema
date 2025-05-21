@@ -1,0 +1,144 @@
+@prefix hsml: <https://www.spatialwebfoundation.org/ns/hsml#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix time: <http://www.w3.org/2006/time#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://www.spatialwebfoundation.org/ns/hsml/shapes#ActivitySchemaShape> a sh:NodeShape ;
+    rdfs:label "Activity Schema" ;
+    sh:description "An ActivitySchema is the abstract template that defines the structure and constraints of an activity before any specific execution takes place." ;
+    sh:property [ a sh:PropertyShape ;
+            rdfs:label "has output" ;
+            sh:description "Associates an ActivitySchema with a Variable defining declared outputs." ;
+            sh:minCount 0 ;
+            sh:name "outputs" ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:path hsml:hasOutput ],
+        [ a sh:PropertyShape ;
+            rdfs:label "variable binding" ;
+            sh:description "Associates an ActivitySchema with VariableBinding resources for schema composition" ;
+            sh:minCount 0 ;
+            sh:name "variable_bindings" ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:path hsml:variableBinding ],
+        [ a sh:PropertyShape ;
+            rdfs:label "precondition" ;
+            sh:description "Links an ActivitySchema to a Condition that must hold before execution." ;
+            sh:minCount 0 ;
+            sh:name "preconditions" ;
+            sh:path hsml:preCondition ],
+        [ a sh:PropertyShape ;
+            rdfs:label "has input" ;
+            sh:description "Associates an ActivitySchema with a Variable defining required inputs." ;
+            sh:minCount 0 ;
+            sh:name "inputs" ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:path hsml:hasInput ] ;
+    sh:targetClass hsml:ActivitySchema .
+
+<https://www.spatialwebfoundation.org/ns/hsml/shapes#ActivityShape> a sh:NodeShape ;
+    rdfs:label "Activity" ;
+    sh:description "An ACTIVITY is a partially ordered set of changes to be effected by an AGENT, representing an event or process over time." ;
+    sh:property [ a sh:PropertyShape ;
+            rdfs:label "performed with" ;
+            sh:description "The domain that collaborates in carrying out the activity." ;
+            sh:minCount 0 ;
+            sh:name "performed_with" ;
+            sh:nodeKind sh:IRI ;
+            sh:path hsml:performedWith ],
+        [ a sh:PropertyShape ;
+            rdfs:label "start time" ;
+            sh:description "Timestamp when the activity began." ;
+            sh:maxCount 1 ;
+            sh:minCount 0 ;
+            sh:name "startTime" ;
+            sh:path hsml:startTime ],
+        [ a sh:PropertyShape ;
+            rdfs:label "performed on" ;
+            sh:description "The domain that is the direct target or object of the activity." ;
+            sh:minCount 0 ;
+            sh:name "performed_on" ;
+            sh:nodeKind sh:IRI ;
+            sh:path hsml:performedOn ],
+        [ a sh:PropertyShape ;
+            rdfs:label "sub activity of" ;
+            sh:description "Inverse of hasSubActivity; points to the parent activity of a sub-activity." ;
+            sh:minCount 0 ;
+            sh:name "sub_activity_of" ;
+            sh:nodeKind sh:IRI ;
+            sh:path hsml:subActivityOf ],
+        [ a sh:PropertyShape ;
+            rdfs:label "performed by" ;
+            sh:description "Identifies the domain that performs the activity." ;
+            sh:minCount 1 ;
+            sh:name "performed_by" ;
+            sh:nodeKind sh:IRI ;
+            sh:path hsml:performedBy ],
+        [ a sh:PropertyShape ;
+            rdfs:label "performed in" ;
+            sh:description "The domain within which the activity takes place." ;
+            sh:minCount 0 ;
+            sh:name "performed_in" ;
+            sh:nodeKind sh:IRI ;
+            sh:path hsml:performedIn ],
+        [ a sh:PropertyShape ;
+            rdfs:label "satisfies contract" ;
+            sh:description "The contract that is satisfied by the activity" ;
+            sh:minCount 0 ;
+            sh:name "satisfies_contract" ;
+            sh:nodeKind sh:IRI ;
+            sh:path hsml:satisfiesContract ],
+        [ a sh:PropertyShape ;
+            rdfs:label "end time" ;
+            sh:description "Timestamp when the activity ended." ;
+            sh:maxCount 1 ;
+            sh:minCount 0 ;
+            sh:name "endTime" ;
+            sh:path hsml:endTime ],
+        [ a sh:PropertyShape ;
+            rdfs:label "has status " ;
+            sh:description "Indicates the current lifecycle status of the activity (e.g., planned, in-progress, completed)." ;
+            sh:maxCount 1 ;
+            sh:minCount 0 ;
+            sh:name "status" ;
+            sh:nodeKind sh:IRI ;
+            sh:path hsml:hasStatus ] ;
+    sh:targetClass hsml:Activity .
+
+<https://www.spatialwebfoundation.org/ns/hsml/shapes#VariableBindingShape> a sh:NodeShape ;
+    rdfs:label "Variable Binding" ;
+    sh:description "A VariableBinding maps a variable declared by an ancestor ActivitySchema to a variable in the current ActivitySchema definition the variable binding is assigned to, establishing how data flows from the higher-level activity into its nested invocation" ;
+    sh:property [ a sh:PropertyShape ;
+            rdfs:label "source activity schema" ;
+            sh:description "The ActivitySchema providing the output field." ;
+            sh:minCount 1 ;
+            sh:name "source_activity_schema" ;
+            sh:nodeKind sh:IRI ;
+            sh:path hsml:sourceActivitySchema ],
+        [ a sh:PropertyShape ;
+            rdfs:label "variable name" ;
+            sh:description "The sh:name of the input variable on the bound ActivitySchema to receive data." ;
+            sh:minCount 1 ;
+            sh:name "variable_name" ;
+            sh:path hsml:variableName ],
+        [ a sh:PropertyShape ;
+            rdfs:label "source variable name" ;
+            sh:description "The sh:name of the output variable on the source schema." ;
+            sh:minCount 1 ;
+            sh:name "source_variable_name" ;
+            sh:path hsml:sourceVariableName ] ;
+    sh:targetClass hsml:VariableBinding .
+
+<https://www.spatialwebfoundation.org/ns/hsml/shapes#VariableShape> a sh:NodeShape ;
+    rdfs:label "Variable" ;
+    sh:description "A placeholder representing an input, output, or intermediate parameter of an activity." ;
+    sh:targetClass hsml:Variable .
+
+hsml:Activity rdfs:subClassOf time:TemporalEntity,
+        hsml:Entity .
+
+hsml:ActivitySchema rdfs:subClassOf owl:Class .
+
+hsml:Variable rdfs:subClassOf sh:PropertyShape .
+

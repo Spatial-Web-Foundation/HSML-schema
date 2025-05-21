@@ -1,0 +1,180 @@
+@prefix hsml: <https://www.spatialwebfoundation.org/ns/hsml#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+hsml:AbstractDatatypeSpace a owl:Class ;
+    rdfs:label "Abstract Datatype Space" ;
+    rdfs:subClassOf hsml:Hyperspace .
+
+hsml:EuclidianSpace a owl:Class ;
+    rdfs:label "Euclidian Space" ;
+    rdfs:comment "A finite-dimensional real VectorSpace endowed with an inner product ⟨·,·⟩ that induces the standard Euclidean distance via ∥x–y∥ = √⟨x–y, x–y⟩, providing well-defined notions of angles and orthogonality" ;
+    rdfs:subClassOf hsml:MetricSpace,
+        hsml:VectorSpace .
+
+hsml:GeographicCellularSpace a owl:Class ;
+    rdfs:label "Geographic Cellular Space" ;
+    rdfs:subClassOf hsml:CellularSpace .
+
+hsml:GraphSpace a owl:Class ;
+    rdfs:label "Graph Space" ;
+    rdfs:comment "A Hyperspace whose points are graph vertices and whose paths correspond to walks along edges, each edge having a designated source and target node. Used to model discrete connectivity and routing." ;
+    rdfs:subClassOf hsml:HypergraphSpace .
+
+hsml:HyperspaceOfSpaces a owl:Class ;
+    rdfs:label "Hyperspace of Spaces" ;
+    rdfs:subClassOf hsml:Hyperspace .
+
+hsml:Manifold a owl:Class ;
+    rdfs:label "Manifold" ;
+    rdfs:comment "A type of TopologicalSpace that, near each point, locally resembles Euclidean space of a certain dimension (the manifold's dimension). More formally, each point has a neighborhood that is homeomorphic to an open subset of Euclidean space. Manifolds are described by an atlas of charts, with transition maps defining how charts overlap" ;
+    rdfs:subClassOf hsml:TopologicalSpace .
+
+hsml:PropertySpecification a owl:Class ;
+    rdfs:label "Property Specification" ;
+    rdfs:comment "Represents a specific, named configuration for a characteristic, attribute, or feature that instances of a particular ElementType or PathType are expected to possess. An instance of Property (e.g., 'NodeIdentifierProperty', 'RoadSurfaceMaterialProperty') defines the name, value specification, cardinality, and its mapping to a standard RDF property for that characteristic" ;
+    rdfs:subClassOf hsml:ComponentType .
+
+hsml:ReferenceSystem a owl:Class ;
+    rdfs:label "Reference System" ;
+    rdfs:subClassOf hsml:ComponentType .
+
+hsml:SimilarityMetric a owl:Class ;
+    rdfs:label "SimilarityMetric" ;
+    rdfs:comment "Represents a specific, named configuration of a function that quantifies the similarity between two elements or objects. Unlike distance metrics where smaller values mean 'closer' or 'more similar', for similarity metrics, typically larger values mean 'more similar'. Common examples include Cosine Similarity, Jaccard Index, or Pearson Correlation Coefficient. The output range of a similarity metric is often normalized (e.g., [0, 1] or [-1, 1]). Instances of this class define a particular similarity calculation method." ;
+    rdfs:subClassOf hsml:Metric .
+
+hsml:Space a owl:Class ;
+    rdfs:label "Space" ;
+    rdfs:comment "A SPACE is a subclass of HYPERSPACE providing spatial or logical boundaries (e.g., geometries or value ranges) for DOMAINS." ;
+    rdfs:subClassOf hsml:Hyperspace .
+
+hsml:ValueSpecification a owl:Class ;
+    rdfs:label "Value Specification" ;
+    rdfs:comment "Represents a specific, named configuration that defines the datatype, structure, and constraints for a literal value or a complex data value. An instance of Value (e.g., 'PositiveIntegerSpec', 'WKTGeometryLiteralSpec', 'ColorEnumerationSpec') is typically used to type Property configurations or Operand configurations" ;
+    rdfs:subClassOf hsml:ComponentType .
+
+hsml:componentName a owl:DatatypeProperty ;
+    rdfs:label "component name" ;
+    rdfs:comment "Human-readable name or identifier for a specific instance of a ComponentType, representing a particular configuration. This name should ideally be unique within its type or context (e.g., the name of a specific metric configuration like 'EuclideanDistance', or a property configuration like 'NodeID')" ;
+    rdfs:range xsd:string .
+
+hsml:dimension a owl:DatatypeProperty ;
+    rdfs:label "dimension" ;
+    rdfs:comment "number of degree of freedom available to points in a hyperspace (typically vector space)" ;
+    rdfs:range xsd:nonNegativeInteger .
+
+hsml:hasCoordinateSystem a owl:ObjectProperty ;
+    rdfs:label "has coordinate system" ;
+    rdfs:comment "Relates a Hyperspace instance to a CoordinateSystem instance that defines how locations or elements are identified, addressed, or positioned within it. For example, an EuclideanSpace would link to a CoordinateSystem instance representing 'CartesianCoordinates', and a GeospatialSpace might link to one representing 'WGS84" ;
+    rdfs:range hsml:CoordinateSystem .
+
+hsml:hasElementType a owl:ObjectProperty ;
+    rdfs:label "has element type" ;
+    rdfs:comment "Relates a Hyperspace instance to an ElementType instance that defines the nature of its primary constituent elements or 'points'. For example, a GraphSpace might have an ElementType representing 'Node', and a CellularSpace might have an ElementType representing 'Cell'." ;
+    rdfs:range hsml:ElementType .
+
+hsml:hasMetric a owl:ObjectProperty ;
+    rdfs:label "has metric" ;
+    rdfs:comment "Relates a Hyperspace instance (typically a MetricSpace or a space supporting distance concepts) to a Metric instance that defines a specific distance function or dissimilarity measure applicable within it. For example, a EuclideanSpace would link to a Metric instance representing 'EuclideanDistance" ;
+    rdfs:range hsml:Metric .
+
+hsml:hasOperand a owl:ObjectProperty ;
+    rdfs:label "has Operand (configuration)" ;
+    rdfs:comment "Relates an Operation configuration instance to an Operand configuration instance. An Operation's signature is defined by the collection of Operand configurations it links to, each specifying an input parameter or an output result" ;
+    rdfs:range hsml:Operand .
+
+hsml:hasOperation a owl:ObjectProperty ;
+    rdfs:label "has operation" ;
+    rdfs:comment "Relates a Hyperspace instance to an Operation instance that defines a specific function, action, transformation, or query performable within or on this hyperspace or its components. For example, a GeospatialSpace might link to Operation instances representing 'Buffer' or 'Intersection'" ;
+    rdfs:range hsml:Operation .
+
+hsml:hasPathType a owl:ObjectProperty ;
+    rdfs:label "has path type" ;
+    rdfs:comment "Relates a Hyperspace instance to a PathType instance that defines the nature of paths, links, edges, or traversals between its elements. For example, a GraphSpace might have a PathType representing 'Edge', and a GeospatialSpace might have a PathType representing 'RouteSegment" ;
+    rdfs:range hsml:PathType .
+
+hsml:hasProperty a owl:ObjectProperty ;
+    rdfs:label "has property (configuration)" ;
+    rdfs:comment "Relates an ElementType or PathType configuration instance to a Property configuration instance. This signifies that elements or paths conforming to this type are expected to possess the characteristic defined by the linked Property configuration." ;
+    rdfs:range hsml:Property .
+
+hsml:isNormalized a owl:DatatypeProperty ;
+    rdfs:label "is normalized" ;
+    rdfs:comment "Indicates whether the output of a similarity metric is typically within a standard normalized range (e.g., [0,1] or [-1,1])." ;
+    rdfs:range xsd:boolean .
+
+hsml:typicalRangeMax a owl:DatatypeProperty ;
+    rdfs:label "typical Range Maximum" ;
+    rdfs:comment "The typical maximum value for this similarity metric's output." ;
+    rdfs:range xsd:double .
+
+hsml:typicalRangeMin a owl:DatatypeProperty ;
+    rdfs:label "typical Range Minimum" ;
+    rdfs:comment "The typical minimum value for this similarity metric's output" ;
+    rdfs:range xsd:double .
+
+hsml:CellularSpace a owl:Class ;
+    rdfs:label "Cellular Space" ;
+    rdfs:comment "A Hyperspace structured as a regular grid (lattice) of cells, each taking values from a finite set of states, with neighborhood relations defining adjacency. Commonly employed in cellular automata, spatial simulations and spatial indexing" ;
+    rdfs:subClassOf hsml:Hyperspace .
+
+hsml:CoordinateSystem a owl:Class ;
+    rdfs:label "Coordinate System" ;
+    rdfs:comment "Represents a specific, named configuration of a system for uniquely identifying the position or location of elements. An instance of CoordinateSystem (e.g., 'WGS84Geographic', 'Cartesian2DSystem') defines the structure, axes, units, and reference frame for a particular way of expressing coordinates" ;
+    rdfs:subClassOf hsml:ComponentType .
+
+hsml:ElementType a owl:Class ;
+    rdfs:label "ElementType" ;
+    rdfs:comment "Represents a specific, named configuration defining a category of primary entities, 'points', or discrete objects that can constitute a hyperspace. An ElementType instance (e.g., 'GraphNode', 'GeospatialFeaturePoint') specifies the expected characteristics, including properties, of such elements" ;
+    rdfs:subClassOf hsml:ComponentType .
+
+hsml:HypergraphSpace a owl:Class ;
+    rdfs:label "HypergraphSpace" ;
+    rdfs:subClassOf hsml:Hyperspace .
+
+hsml:MetricSpace a owl:Class ;
+    rdfs:label "Metric Space" ;
+    rdfs:comment "A TopologicalSpace equipped with a metric function d: X×X → ℝ that satisfies non-negativity, identity of indiscernibles, symmetry, and the triangle inequality. This metric induces the space’s topology" ;
+    rdfs:subClassOf hsml:TopologicalSpace .
+
+hsml:Operand a owl:Class ;
+    rdfs:label "Operand" ;
+    rdfs:comment "Represents a specific, named configuration for a single input parameter or an output result of an Operation. An instance of Operand (e.g., 'InputGeometry', 'BufferRadius', 'OutputArea') defines its role within the operation, its expected data type, and whether it is an input or output" ;
+    rdfs:subClassOf hsml:ComponentType .
+
+hsml:Operation a owl:Class ;
+    rdfs:label "Operation" ;
+    rdfs:comment "Represents a specific, named configuration of an action, function, transformation, or query. An instance of Operation (e.g., 'SpatialBuffer', 'FindShortestPath') defines the operation's signature through its associated Operand configurations and describes what it achieves" ;
+    rdfs:subClassOf hsml:ComponentType .
+
+hsml:PathType a owl:Class ;
+    rdfs:label "PathType" ;
+    rdfs:comment "Represents a specific, named configuration defining a category of traversal, link, edge, or continuous path that can exist between elements in a hyperspace. A PathType instance (e.g., 'RoadSegment', 'WeightedGraphEdge') specifies the expected characteristics, including properties, of such paths" ;
+    rdfs:subClassOf hsml:ComponentType .
+
+hsml:VectorSpace a owl:Class ;
+    rdfs:label "VectorSpace" ;
+    rdfs:comment "A Hyperspace whose points form a vector space over a field (typically the real numbers), with operations of vector addition and scalar multiplication satisfying the usual axioms of linear algebra." ;
+    rdfs:subClassOf hsml:TopologicalSpace .
+
+hsml:Metric a owl:Class ;
+    rdfs:label "Metric" ;
+    rdfs:comment "Represents a specific, named configuration of a distance function or dissimilarity measure. An instance of Metric (e.g., 'EuclideanDistance', 'ManhattanDistance') defines a particular way to calculate distance or related concepts within a hyperspace that supports it." ;
+    rdfs:subClassOf hsml:ComponentType .
+
+hsml:TopologicalSpace a owl:Class ;
+    rdfs:label "Topological Space" ;
+    rdfs:comment "A Hyperspace defined by a collection of open sets satisfying the axioms for continuity, connectedness, and convergence, without requiring any notion of distance." ;
+    rdfs:subClassOf hsml:Hyperspace .
+
+hsml:Hyperspace a owl:Class ;
+    rdfs:label "Hypergraph" ;
+    rdfs:comment "A HYPERSPACE is a Spatial Web ENTITY for a generalized concept of space: a set of elements with paths between any pair, satisfying identity and composition laws." ;
+    rdfs:subClassOf hsml:Entity .
+
+hsml:ComponentType a owl:Class ;
+    rdfs:label "Component Type" ;
+    rdfs:comment "A generic base class for different types of configurable components that characterize or constitute a hyperspace, such as element types, path types, metrics, operations, properties, or value specifications. Instances of its subclasses represent specific, named configurations of these components." .
+

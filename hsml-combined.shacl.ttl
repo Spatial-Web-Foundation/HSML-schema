@@ -1,0 +1,448 @@
+@prefix hsml: <https://www.spatialwebfoundation.org/ns/hsml#> .
+@prefix hsmlsh: <https://www.spatialwebfoundation.org/ns/hsml/shapes#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix time: <http://www.w3.org/2006/time#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+hsmlsh:ActivitySchemaShape a sh:NodeShape ;
+    rdfs:label "Activity Schema" ;
+    sh:description "An ActivitySchema is the abstract template that defines the structure and constraints of an activity before any specific execution takes place." ;
+    sh:property [ a sh:PropertyShape ;
+            rdfs:label "precondition" ;
+            sh:description "Links an ActivitySchema to a Condition that must hold before execution." ;
+            sh:minCount 0 ;
+            sh:name "preconditions" ;
+            sh:path hsml:preCondition ],
+        [ a sh:PropertyShape ;
+            rdfs:label "has output" ;
+            sh:description "Associates an ActivitySchema with a Variable defining declared outputs." ;
+            sh:minCount 0 ;
+            sh:name "outputs" ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:path hsml:hasOutput ],
+        [ a sh:PropertyShape ;
+            rdfs:label "variable binding" ;
+            sh:description "Associates an ActivitySchema with VariableBinding resources for schema composition" ;
+            sh:minCount 0 ;
+            sh:name "variable_bindings" ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:path hsml:variableBinding ],
+        [ a sh:PropertyShape ;
+            rdfs:label "has input" ;
+            sh:description "Associates an ActivitySchema with a Variable defining required inputs." ;
+            sh:minCount 0 ;
+            sh:name "inputs" ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:path hsml:hasInput ] ;
+    sh:targetClass hsml:ActivitySchema .
+
+hsmlsh:ActivityShape a sh:NodeShape ;
+    rdfs:label "Activity" ;
+    sh:description "An ACTIVITY is a partially ordered set of changes to be effected by an AGENT, representing an event or process over time." ;
+    sh:property [ a sh:PropertyShape ;
+            rdfs:label "performed on" ;
+            sh:description "The domain that is the direct target or object of the activity." ;
+            sh:minCount 0 ;
+            sh:name "performed_on" ;
+            sh:nodeKind sh:IRI ;
+            sh:path hsml:performedOn ],
+        [ a sh:PropertyShape ;
+            rdfs:label "performed by" ;
+            sh:description "Identifies the domain that performs the activity." ;
+            sh:minCount 1 ;
+            sh:name "performed_by" ;
+            sh:nodeKind sh:IRI ;
+            sh:path hsml:performedBy ],
+        [ a sh:PropertyShape ;
+            rdfs:label "has status " ;
+            sh:description "Indicates the current lifecycle status of the activity (e.g., planned, in-progress, completed)." ;
+            sh:maxCount 1 ;
+            sh:minCount 0 ;
+            sh:name "status" ;
+            sh:nodeKind sh:IRI ;
+            sh:path hsml:hasStatus ],
+        [ a sh:PropertyShape ;
+            rdfs:label "performed with" ;
+            sh:description "The domain that collaborates in carrying out the activity." ;
+            sh:minCount 0 ;
+            sh:name "performed_with" ;
+            sh:nodeKind sh:IRI ;
+            sh:path hsml:performedWith ],
+        [ a sh:PropertyShape ;
+            rdfs:label "satisfies contract" ;
+            sh:description "The contract that is satisfied by the activity" ;
+            sh:minCount 0 ;
+            sh:name "satisfies_contract" ;
+            sh:nodeKind sh:IRI ;
+            sh:path hsml:satisfiesContract ],
+        [ a sh:PropertyShape ;
+            rdfs:label "end time" ;
+            sh:description "Timestamp when the activity ended." ;
+            sh:maxCount 1 ;
+            sh:minCount 0 ;
+            sh:name "endTime" ;
+            sh:path hsml:endTime ],
+        [ a sh:PropertyShape ;
+            rdfs:label "performed in" ;
+            sh:description "The domain within which the activity takes place." ;
+            sh:minCount 0 ;
+            sh:name "performed_in" ;
+            sh:nodeKind sh:IRI ;
+            sh:path hsml:performedIn ],
+        [ a sh:PropertyShape ;
+            rdfs:label "start time" ;
+            sh:description "Timestamp when the activity began." ;
+            sh:maxCount 1 ;
+            sh:minCount 0 ;
+            sh:name "startTime" ;
+            sh:path hsml:startTime ],
+        [ a sh:PropertyShape ;
+            rdfs:label "sub activity of" ;
+            sh:description "Inverse of hasSubActivity; points to the parent activity of a sub-activity." ;
+            sh:minCount 0 ;
+            sh:name "sub_activity_of" ;
+            sh:nodeKind sh:IRI ;
+            sh:path hsml:subActivityOf ] ;
+    sh:targetClass hsml:Activity .
+
+hsmlsh:AgentCapabilityShape a sh:NodeShape ;
+    sh:property [ a sh:PropertyShape ;
+            rdfs:label "uses tool" ;
+            sh:description "Indicates that an Agent employs a Tool in pursuit of its goals" ;
+            sh:name "tools" ;
+            sh:nodeKind sh:IRI ;
+            sh:path hsml:usesTool ],
+        [ a sh:PropertyShape ;
+            rdfs:label "supports activity" ;
+            sh:minCount 0 ;
+            sh:name "supports_activity" ;
+            sh:nodeKind sh:IRI ;
+            sh:path hsml:supportsActivity ] ;
+    sh:targetClass hsml:Capability .
+
+hsmlsh:AgentShape a sh:NodeShape ;
+    rdfs:label "Agent" ;
+    sh:description "An AGENT is an ENTITY that senses and responds to its environment, maintains a model of its environment, and performs ACTIVITIES to achieve its goals." ;
+    sh:property [ a sh:PropertyShape ;
+            rdfs:label "has capability" ;
+            sh:description "Links an Agent to it capability (sensing,and perceiving, activity schemas, learning mechanisms, autonomous decision-making, physical and digital actuations)" ;
+            sh:name "capabilities" ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:path hsml:hasCapability ],
+        [ a sh:PropertyShape ;
+            rdfs:label "performs activity" ;
+            sh:description "An activity that this agent has performed or is performing." ;
+            sh:minCount 0 ;
+            sh:name "activity" ;
+            sh:nodeKind sh:IRI ;
+            sh:path hsml:performsActivity ],
+        [ a sh:PropertyShape ;
+            rdfs:label "has goal" ;
+            sh:description "A goal or desired outcome that this agent aims to accomplish" ;
+            sh:name "goal" ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:path hsml:hasGoal ] ;
+    sh:targetClass hsml:Agent .
+
+hsmlsh:ChannelShape a sh:NodeShape ;
+    rdfs:label "Channel" ;
+    sh:description "A CHANNEL is a Spatial Web ENTITY grouping a stream of HSML elements related to a specific context or communication without warranting a domain hierarchy. " ;
+    sh:property [ a sh:PropertyShape ;
+            rdfs:label "is sub‑channel of " ;
+            sh:description "Indicates that this Channel is a sub-channel of another Channel" ;
+            sh:minCount 1 ;
+            sh:name "sub_channels_of" ;
+            sh:nodeKind sh:IRI ;
+            sh:path hsml:isSubChannelOf ],
+        [ a sh:PropertyShape ;
+            rdfs:label "is channel for" ;
+            sh:description "Links a Channel to the Activity (or Activities) whose messages it carries." ;
+            sh:minCount 1 ;
+            sh:name "channel_for" ;
+            sh:nodeKind sh:IRI ;
+            sh:path hsml:isChannelFor ],
+        [ a sh:PropertyShape ;
+            rdfs:label "has sub‑channel" ;
+            sh:description "Indicates that this Channel has the given Channel as a sub-channel." ;
+            sh:minCount 1 ;
+            sh:name "has_sub_channel" ;
+            sh:nodeKind sh:IRI ;
+            sh:path hsml:hasSubChannel ],
+        [ a sh:PropertyShape ;
+            rdfs:label "authorized agents" ;
+            sh:description "Links a Channel to the Agent(s) permitted to access it; only those Agents holding the necessary credentials or roles may use this Channel." ;
+            sh:minCount 1 ;
+            sh:name "authorized_agents" ;
+            sh:nodeKind sh:IRI ;
+            sh:path hsml:authorizedAgent ] ;
+    sh:targetClass hsml:Channel .
+
+hsmlsh:ComponentTypeShape a sh:NodeShape ;
+    rdfs:label "Component Type" ;
+    sh:description "A generic base class for different types of configurable components that characterize or constitute a hyperspace, such as element types, path types, metrics, operations, properties, or value specifications. Instances of its subclasses represent specific, named configurations of these components." ;
+    sh:targetClass hsml:ComponentType .
+
+hsmlsh:ContractShape a sh:NodeShape ;
+    rdfs:label "Contract" ;
+    sh:description "A CONTRACT is a Spatial Web ENTITY representing a request to perform an instance of an ACTIVITY, specifying the parties involved." ;
+    sh:property [ a sh:PropertyShape ;
+            rdfs:label "contract for" ;
+            sh:description "The Activity to which this contract applies (e.g., a delivery, a service invocation, or a payment action)." ;
+            sh:minCount 1 ;
+            sh:name "contract_for" ;
+            sh:nodeKind sh:IRI ;
+            sh:path hsml:contractFor ],
+        [ a sh:PropertyShape ;
+            rdfs:label "accepted by agent" ;
+            sh:description "The Agent that accepted or signed the contract." ;
+            sh:minCount 1 ;
+            sh:name "accepted_by" ;
+            sh:nodeKind sh:IRI ;
+            sh:path hsml:acceptedBy ],
+        [ a sh:PropertyShape ;
+            rdfs:label "contract status" ;
+            sh:description "The current lifecycle status of the contract, one of: Proposed, Accepted, Active, Fulfilled, or Cancelled." ;
+            sh:maxCount 1 ;
+            sh:minCount 1 ;
+            sh:name "contract_status" ;
+            sh:nodeKind sh:IRI ;
+            sh:path hsml:contractStatus ],
+        [ a sh:PropertyShape ;
+            rdfs:label "requested by agent" ;
+            sh:description "The Agent that requests the contract" ;
+            sh:minCount 1 ;
+            sh:name "requested_by_agent" ;
+            sh:nodeKind sh:IRI ;
+            sh:path hsml:requestedByAgent ],
+        [ a sh:PropertyShape ;
+            rdfs:label "requested by domain" ;
+            sh:description "The Domain (e.g., an organization or administrative entity) that initiated or issued this contract request." ;
+            sh:minCount 1 ;
+            sh:name "requested_by_domain" ;
+            sh:nodeKind sh:IRI ;
+            sh:path hsml:requestedByDomain ],
+        [ a sh:PropertyShape ;
+            rdfs:label "fullfilled by agent" ;
+            sh:description "The Agent responsible for carrying out or completing the contract’s obligations." ;
+            sh:minCount 1 ;
+            sh:name "fullfilled_by" ;
+            sh:nodeKind sh:IRI ;
+            sh:path hsml:fulfilledBy ],
+        [ a sh:PropertyShape ;
+            rdfs:label "created" ;
+            sh:description "Timestamp when the contract was originally created." ;
+            sh:maxCount 1 ;
+            sh:minCount 0 ;
+            sh:name "created" ;
+            sh:path hsml:created ],
+        [ a sh:PropertyShape ;
+            rdfs:label "modified" ;
+            sh:description "Timestamp of the most recent modification to the contract." ;
+            sh:minCount 0 ;
+            sh:name "modified" ;
+            sh:path hsml:modified ] ;
+    sh:targetClass hsml:Contract .
+
+hsmlsh:DomainShape a sh:NodeShape ;
+    rdfs:label "Domain" ;
+    sh:description "A DOMAIN is a Spatial Web ENTITY with identity through time endowed with rights and credentials." ;
+    sh:property [ a sh:PropertyShape ;
+            rdfs:label "has subdomain" ;
+            sh:description "Links a parent Domain to one or more child Domains that it contains or specializes, capturing nested or hierarchical relationships among Domains." ;
+            sh:minCount 0 ;
+            sh:name "subdomains" ;
+            sh:nodeKind sh:IRI ;
+            sh:path hsml:hasSubDomain ],
+        [ a sh:PropertyShape ;
+            rdfs:label "has space" ;
+            sh:minCount 0 ;
+            sh:name "space" ;
+            sh:nodeKind sh:IRI ;
+            sh:path hsml:hasSpace ] ;
+    sh:targetClass hsml:Domain .
+
+hsmlsh:EntityShape a sh:NodeShape ;
+    rdfs:label "Entity" ;
+    sh:description "An ENTITY is that which is perceived, known, or inferred to exist, has existed, or is anticipated to exist." ;
+    sh:property [ a sh:PropertyShape ;
+            rdfs:label "credential" ;
+            sh:description "Credentials associated with the entity" ;
+            sh:minCount 1 ;
+            sh:name "credentials" ;
+            sh:nodeKind sh:IRI ;
+            sh:path hsml:hasCredential ],
+        [ a sh:PropertyShape ;
+            rdfs:label "name" ;
+            sh:description "Human readable name for the entity" ;
+            sh:minCount 1 ;
+            sh:name "name" ;
+            sh:nodeKind sh:Literal ;
+            sh:path hsml:name ],
+        [ a sh:PropertyShape ;
+            rdfs:label "swid" ;
+            sh:description "Spatial web decentralized identifier" ;
+            sh:maxCount 1 ;
+            sh:minCount 1 ;
+            sh:name "swid" ;
+            sh:nodeKind sh:IRI ;
+            sh:path hsml:swid ] ;
+    sh:targetClass hsml:Entity .
+
+hsmlsh:GoalShape a sh:NodeShape ;
+    sh:targetClass hsml:Goal .
+
+hsmlsh:HyperspaceShape a sh:NodeShape ;
+    rdfs:label "Hypergraph" ;
+    sh:description "A HYPERSPACE is a Spatial Web ENTITY for a generalized concept of space: a set of elements with paths between any pair, satisfying identity and composition laws." ;
+    sh:property [ a sh:PropertyShape ;
+            rdfs:label "hasElementType" ;
+            sh:description "Relates a Hyperspace instance to an ElementType instance that defines the nature of its primary constituent elements or 'points'. For example, a GraphSpace might have an ElementType representing 'Node', and a CellularSpace might have an ElementType representing 'Cell'." ;
+            sh:maxCount 1 ;
+            sh:minCount 1 ;
+            sh:name "element_type" ;
+            sh:nodeKind sh:IRI ;
+            sh:path hsml:hasElementType ],
+        [ a sh:PropertyShape ;
+            rdfs:label "hasOperation" ;
+            sh:description "Relates a Hyperspace instance to an Operation instance that defines a specific function, action, transformation, or query performable within or on this hyperspace or its components. For example, a GeospatialSpace might link to Operation instances representing 'Buffer' or 'Intersection'" ;
+            sh:minCount 0 ;
+            sh:name "operations" ;
+            sh:nodeKind sh:IRI ;
+            sh:path hsml:hasOperation ],
+        [ a sh:PropertyShape ;
+            rdfs:label "hasPathType" ;
+            sh:description "Relates a Hyperspace instance to a PathType instance that defines the nature of paths, links, edges, or traversals between its elements. For example, a GraphSpace might have a PathType representing 'Edge', and a GeospatialSpace might have a PathType representing 'RouteSegment" ;
+            sh:maxCount 1 ;
+            sh:minCount 1 ;
+            sh:name "path_type" ;
+            sh:nodeKind sh:IRI ;
+            sh:path hsml:hasPathType ] ;
+    sh:targetClass hsml:Hyperspace .
+
+hsmlsh:MetricSpaceShape a sh:NodeShape ;
+    rdfs:label "Metric Space" ;
+    sh:description "A TopologicalSpace equipped with a metric function d: X×X → ℝ that satisfies non-negativity, identity of indiscernibles, symmetry, and the triangle inequality. This metric induces the space’s topology" ;
+    sh:property [ a sh:PropertyShape ;
+            rdfs:label "hasMetric" ;
+            sh:description "Relates a Hyperspace instance (typically a MetricSpace or a space supporting distance concepts) to a Metric instance that defines a specific distance function or dissimilarity measure applicable within it. For example, a EuclideanSpace would link to a Metric instance representing 'EuclideanDistance" ;
+            sh:minCount 1 ;
+            sh:name "metrics" ;
+            sh:nodeKind sh:IRI ;
+            sh:path hsml:hasMetric ] ;
+    sh:targetClass hsml:MetricSpace .
+
+hsmlsh:OperandShape a sh:NodeShape ;
+    rdfs:label "Operand" ;
+    sh:description "Represents a specific, named configuration for a single input parameter or an output result of an Operation. An instance of Operand (e.g., 'InputGeometry', 'BufferRadius', 'OutputArea') defines its role within the operation, its expected data type, and whether it is an input or output" ;
+    sh:targetClass hsml:Operand .
+
+hsmlsh:OperationShape a sh:NodeShape ;
+    rdfs:label "Operation" ;
+    sh:description "Represents a specific, named configuration of an action, function, transformation, or query. An instance of Operation (e.g., 'SpatialBuffer', 'FindShortestPath') defines the operation's signature through its associated Operand configurations and describes what it achieves" ;
+    sh:property [ a sh:PropertyShape ;
+            rdfs:label "has operand" ;
+            sh:description "Relates an Operation definition to an Operand definition. The signature of an Operation is defined by the set of Operand definitions it is associated with, each specifying a parameter or a result." ;
+            sh:minCount 0 ;
+            sh:name "operands" ;
+            sh:nodeKind sh:IRI ;
+            sh:path hsml:hasOperand ] ;
+    sh:targetClass hsml:Operation .
+
+hsmlsh:SimilarityMetricShape a sh:NodeShape ;
+    rdfs:label "SimilarityMetric" ;
+    sh:description "Represents a specific, named configuration of a function that quantifies the similarity between two elements or objects. Unlike distance metrics where smaller values mean 'closer' or 'more similar', for similarity metrics, typically larger values mean 'more similar'. Common examples include Cosine Similarity, Jaccard Index, or Pearson Correlation Coefficient. The output range of a similarity metric is often normalized (e.g., [0, 1] or [-1, 1]). Instances of this class define a particular similarity calculation method." ;
+    sh:property [ a sh:PropertyShape ;
+            rdfs:label "typical range maximum" ;
+            sh:description "The typical maximum value for this similarity metric's output." ;
+            sh:maxCount 1 ;
+            sh:minCount 0 ;
+            sh:name "typical_range_max" ;
+            sh:path hsml:typicalRangeMax ],
+        [ a sh:PropertyShape ;
+            rdfs:label "is normalized" ;
+            sh:description "Indicates whether the output of a similarity metric is typically within a standard normalized range (e.g., [0,1] or [-1,1])." ;
+            sh:maxCount 1 ;
+            sh:minCount 1 ;
+            sh:name "is_normalized" ;
+            sh:path hsml:isNormalized ],
+        [ a sh:PropertyShape ;
+            rdfs:label "typical range minimum" ;
+            sh:description "The typical minimum value for this similarity metric's output" ;
+            sh:maxCount 1 ;
+            sh:minCount 0 ;
+            sh:name "typical_range_min" ;
+            sh:path hsml:typicalRangeMin ] ;
+    sh:targetClass hsml:SimilarityMetric .
+
+hsmlsh:VariableBindingShape a sh:NodeShape ;
+    rdfs:label "Variable Binding" ;
+    sh:description "A VariableBinding maps a variable declared by an ancestor ActivitySchema to a variable in the current ActivitySchema definition the variable binding is assigned to, establishing how data flows from the higher-level activity into its nested invocation" ;
+    sh:property [ a sh:PropertyShape ;
+            rdfs:label "source variable name" ;
+            sh:description "The sh:name of the output variable on the source schema." ;
+            sh:minCount 1 ;
+            sh:name "source_variable_name" ;
+            sh:path hsml:sourceVariableName ],
+        [ a sh:PropertyShape ;
+            rdfs:label "variable name" ;
+            sh:description "The sh:name of the input variable on the bound ActivitySchema to receive data." ;
+            sh:minCount 1 ;
+            sh:name "variable_name" ;
+            sh:path hsml:variableName ],
+        [ a sh:PropertyShape ;
+            rdfs:label "source activity schema" ;
+            sh:description "The ActivitySchema providing the output field." ;
+            sh:minCount 1 ;
+            sh:name "source_activity_schema" ;
+            sh:nodeKind sh:IRI ;
+            sh:path hsml:sourceActivitySchema ] ;
+    sh:targetClass hsml:VariableBinding .
+
+hsmlsh:VariableShape a sh:NodeShape ;
+    rdfs:label "Variable" ;
+    sh:description "A placeholder representing an input, output, or intermediate parameter of an activity." ;
+    sh:targetClass hsml:Variable .
+
+hsmlsh:VectorSpaceShape a sh:NodeShape ;
+    rdfs:label "VectorSpace" ;
+    sh:description "A Hyperspace whose points form a vector space over a field (typically the real numbers), with operations of vector addition and scalar multiplication satisfying the usual axioms of linear algebra." ;
+    sh:property [ a sh:PropertyShape ;
+            rdfs:label "dimension" ;
+            sh:description "number of degree of freedom available to points in a hyperspace (typically vector space)" ;
+            sh:maxCount 1 ;
+            sh:minCount 0 ;
+            sh:minInclusive 0e+00 ;
+            sh:name "dimension" ;
+            sh:nodeKind sh:Literal ;
+            sh:path hsml:dimension ] ;
+    sh:targetClass hsml:VectorSpace .
+
+hsml:Activity rdfs:subClassOf time:TemporalEntity,
+        hsml:Entity .
+
+hsml:ActivitySchema rdfs:subClassOf owl:Class .
+
+hsml:Agent rdfs:subClassOf hsml:Domain .
+
+hsml:Channel rdfs:subClassOf hsml:Entity .
+
+hsml:Contract rdfs:subClassOf hsml:Entity .
+
+hsml:Hyperspace rdfs:subClassOf hsml:Entity .
+
+hsml:MetricSpace rdfs:subClassOf hsml:TopologicalSpace .
+
+hsml:Operand rdfs:subClassOf hsml:ComponentType .
+
+hsml:Operation rdfs:subClassOf hsml:ComponentType .
+
+hsml:SimilarityMetric rdfs:subClassOf hsml:Metric .
+
+hsml:Variable rdfs:subClassOf sh:PropertyShape .
+
+hsml:VectorSpace rdfs:subClassOf hsml:TopologicalSpace .
+
+hsml:Domain rdfs:subClassOf hsml:Entity .
+

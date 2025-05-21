@@ -1,0 +1,33 @@
+@prefix hsml: <https://www.spatialwebfoundation.org/ns/hsml#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+hsml:hasCredential a owl:ObjectProperty ;
+    rdfs:label "has credential" ;
+    rdfs:comment "Credential associated with an entity" ;
+    rdfs:range hsml:Credential .
+
+hsml:name a owl:DatatypeProperty ;
+    rdfs:label "name" ;
+    rdfs:comment "Entity human readable name." ;
+    rdfs:range xsd:string .
+
+hsml:swid a owl:ObjectProperty ;
+    rdfs:label "swid" ;
+    rdfs:comment "Spatial Web Decentralized Identifier" ;
+    rdfs:range hsml:Swid .
+
+hsml:Credential a owl:Class ;
+    rdfs:label "Credential" ;
+    rdfs:comment "A CREDENTIAL is a Spatial Web ENTITY holding one or more claims that a DOMAIN possesses to assert verifiable attributes or authorizations." ;
+    rdfs:subClassOf hsml:Entity .
+
+hsml:Entity a owl:Class ;
+    rdfs:label "Entity" ;
+    rdfs:comment "An ENTITY is that which is perceived, known, or inferred to exist, has existed, or is anticipated to exist." .
+
+hsml:Swid a owl:Class ;
+    rdfs:label "SWID" ;
+    rdfs:comment "Spatial Web Decentralized Identifier" .
+
