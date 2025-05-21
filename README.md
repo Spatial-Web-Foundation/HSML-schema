@@ -1,6 +1,6 @@
-# HSML (Hypergraph Spatial Modeling Language)
+# HSML (Hyperspace Modeling Language)
 
-This repository contains the formal schema definitions for the Hypergraph Spatial Modeling Language (HSML), a comprehensive ontology for modeling spatial entities,relationships and interactions in the Spatial Web.
+This repository contains the formal schema definitions for the Hyperspace Modeling Language (HSML), a comprehensive ontology for modeling spatial entities,relationships and interactions in the Spatial Web.
 
 ## Overview
 
