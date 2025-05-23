@@ -35,7 +35,7 @@ The repository is organized into several key directories and files:
 
 The schema defines several important concepts:
 
-1. **Entity** - Base class for all spatial entities
+1. **Entity** - Base class for all spatial web entities
 2. **Domain** - Represents a spatial domain with identity and credentials
 3. **Activity** - Represents actions or processes that occur in space
 4. **Agent** - Represents entities that can perform activities
