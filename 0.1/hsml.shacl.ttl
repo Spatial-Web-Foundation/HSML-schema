@@ -1,0 +1,13 @@
+@prefix hsml: <https://www.spatialwebfoundation.org/ns/hsml#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+
+hsml: owl:imports <activity/activity.shacl.ttl>,
+        <agent/agent.shacl.ttl>,
+        <channel/channel.shacl.ttl>,
+        <contract/contract.shacl.ttl>,
+        <core/core.shacl.ttl>,
+        <credential/credential.shacl.ttl>,
+        <domain/domain.shacl.ttl>,
+        <hyperspace/hyperspace.shacl.ttl>,
+        <thing/thing.shacl.ttl> .
+

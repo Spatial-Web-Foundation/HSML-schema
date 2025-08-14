@@ -1,0 +1,206 @@
+@prefix : <https://www.spatialwebfoundation.org/ns/hsml/activity#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix core: <https://www.spatialwebfoundation.org/ns/hsml/core#> .
+@prefix schema: <https://schema.org/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@base <https://www.spatialwebfoundation.org/ns/hsml/activity> .
+
+<https://www.spatialwebfoundation.org/ns/hsml/activity> rdf:type owl:Ontology ;
+    rdfs:label "HSML Activity Module"
+    dct:created "2025-08-14"^^xsd:date ;
+    rdfs:comment "Defines the classes and properties for the HSML Activity Module, used to describe Activities, Composite Workflows, and their execution in the Spatial Web." ;
+    owl:versionIRI <https://www.spatialwebfoundation.org/ns/hsml/activity/0.2> ;
+    owl:versionInfo "0.2";
+    owl:imports <https://www.spatialwebfoundation.org/ns/hsml/core>.
+
+#################################################################
+#    Classes
+#################################################################
+
+###  https://www.spatialwebfoundation.org/ns/hsml/activity#Activity
+:Activity rdf:type owl:Class ;
+          rdfs:subClassOf core:Entity ;
+          rdfs:comment "A concrete, stateful execution of an ActivitySchema. It is the record of an action that has been, is being, or is planned to be performed." ;
+          rdfs:label "Activity" .
+
+
+###  https://www.spatialwebfoundation.org/ns/hsml/activity#ActivitySchema
+:ActivitySchema rdf:type owl:Class ;
+                rdfs:subClassOf core:Entity ;
+                rdfs:comment "A reusable, design-time template that specifies the type of action, its required inputs, expected outputs, and the conditions under which it is valid." ;
+                rdfs:label "Activity Schema" .
+
+
+###  https://www.spatialwebfoundation.org/ns/hsml/activity#ActivityStep
+:ActivityStep rdf:type owl:Class ;
+              rdfs:subClassOf owl:Thing ;
+              rdfs:comment "A unique, addressable step within a CompositeActivitySchema. Each step is an element of the workflow that points to an ActivitySchema it executes and can be annotated with names, descriptions, and conditional logic." ;
+              rdfs:label "Activity Step" .
+
+
+###  https://www.spatialwebfoundation.org/ns/hsml/activity#CompositeActivitySchema
+:CompositeActivitySchema rdf:type owl:Class ;
+                         rdfs:subClassOf :ActivitySchema ;
+                         rdfs:comment "An ActivitySchema that defines a complex, multi-step workflow composed of ActivitySteps and DataLinks." ;
+                         rdfs:label "Composite Activity Schema" .
+
+
+###  https://www.spatialwebfoundation.org/ns/hsml/activity#DataLink
+:DataLink rdf:type owl:Class ;
+          rdfs:subClassOf owl:Thing ;
+          rdfs:comment "A directed \"wire\" defining data flow. It can connect two internal steps, a composite's input to a step, or a step's output to a composite's output." ;
+          rdfs:label "Data Link" .
+
+
+###  https://www.spatialwebfoundation.org/ns/hsml/activity#Variable
+:Variable rdf:type owl:Class ;
+          rdfs:subClassOf owl:Thing ;
+          rdfs:comment "A formal parameter definition for an ActivitySchema, representing an input, output, or contextual binding." ;
+          rdfs:label "Variable" .
+
+
+###  https://www.spatialwebfoundation.org/ns/hsml/activity#VariableBinding
+:VariableBinding rdf:type owl:Class ;
+                 rdfs:subClassOf owl:Thing ;
+                 rdfs:comment "A binding that connects a Variable to a concrete value (object or literal) in the context of an Activity." ;
+                 rdfs:label "Variable Binding" .
+
+
+#################################################################
+#    Object Properties
+#################################################################
+
+###  https://www.spatialwebfoundation.org/ns/hsml/activity#activitySchema
+:activitySchema rdf:type owl:ObjectProperty ;
+                rdfs:domain :Activity ;
+                rdfs:range :ActivitySchema ;
+                rdfs:comment "Links the Activity instance to the ActivitySchema it implements." ;
+                rdfs:label "activitySchema" .
+
+
+###  https://www.spatialwebfoundation.org/ns/hsml/activity#expects
+:expects rdf:type owl:ObjectProperty ;
+         rdfs:domain :Variable ;
+         rdfs:range rdfs:Class ;
+         rdfs:comment "A declaration of the expected data type(s) or class(es) for the variable's value." ;
+         rdfs:label "expects" .
+
+
+###  https://www.spatialwebfoundation.org/ns/hsml/activity#hasBinding
+:hasBinding rdf:type owl:ObjectProperty ;
+            rdfs:domain :Activity ;
+            rdfs:range :VariableBinding ;
+            rdfs:comment "Associates a VariableBinding with the Activity." ;
+            rdfs:label "hasBinding" .
+
+
+###  https://www.spatialwebfoundation.org/ns/hsml/activity#hasDataLink
+:hasDataLink rdf:type owl:ObjectProperty ;
+             rdfs:domain :CompositeActivitySchema ;
+             rdfs:range :DataLink ;
+             rdfs:comment "Associates a DataLink with a CompositeActivitySchema." ;
+             rdfs:label "hasDataLink" .
+
+
+###  https://www.spatialwebfoundation.org/ns/hsml/activity#hasInput
+:hasInput rdf:type owl:ObjectProperty ;
+          rdfs:domain :ActivitySchema ;
+          rdfs:range :Variable ;
+          rdfs:comment "Specifies an input variable for an ActivitySchema." ;
+          rdfs:label "hasInput" .
+
+
+###  https://www.spatialwebfoundation.org/ns/hsml/activity#hasOutput
+:hasOutput rdf:type owl:ObjectProperty ;
+           rdfs:domain :ActivitySchema ;
+           rdfs:range :Variable ;
+           rdfs:comment "Specifies an output variable for an ActivitySchema." ;
+           rdfs:label "hasOutput" .
+
+
+###  https://www.spatialwebfoundation.org/ns/hsml/activity#hasStep
+:hasStep rdf:type owl:ObjectProperty ;
+         rdfs:domain :CompositeActivitySchema ;
+         rdfs:range :ActivityStep ;
+         rdfs:comment "Associates an ActivityStep with a CompositeActivitySchema." ;
+         rdfs:label "hasStep" .
+
+
+###  https://www.spatialwebfoundation.org/ns/hsml/activity#performedBy
+:performedBy rdf:type owl:ObjectProperty ;
+             rdfs:domain :Activity ;
+             rdfs:range core:Agent ;
+             rdfs:comment "Identifies the Agent(s) responsible for performing the Activity." ;
+             rdfs:label "performedBy" .
+
+
+###  https://www.spatialwebfoundation.org/ns/hsml/activity#status
+:status rdf:type owl:ObjectProperty ;
+        rdfs:domain :Activity ;
+        rdfs:range <http://www.w3.org/2004/02/skos/core#Concept> ;
+        rdfs:comment "The current lifecycle state of the Activity." ;
+        rdfs:label "status" .
+
+
+###  https://www.spatialwebfoundation.org/ns/hsml/activity#usesSchema
+:usesSchema rdf:type owl:ObjectProperty ;
+            rdfs:domain :ActivityStep ;
+            rdfs:range :ActivitySchema ;
+            rdfs:comment "Links the step to the ActivitySchema defining its logic." ;
+            rdfs:label "usesSchema" .
+
+
+#################################################################
+#    Data Properties
+#################################################################
+
+###  https://www.spatialwebfoundation.org/ns/hsml/activity#sourceStep
+:sourceStep rdf:type owl:DatatypeProperty ;
+            rdfs:domain :DataLink ;
+            rdfs:range xsd:string ;
+            rdfs:comment "The identifier of the source ActivityStep for the data link." ;
+            rdfs:label "sourceStep" .
+
+
+###  https://www.spatialwebfoundation.org/ns/hsml/activity#sourceVariable
+:sourceVariable rdf:type owl:DatatypeProperty ;
+                rdfs:domain :DataLink ;
+                rdfs:range xsd:string ;
+                rdfs:comment "The identifier of the source Variable for the data link." ;
+                rdfs:label "sourceVariable" .
+
+
+###  https://www.spatialwebfoundation.org/ns/hsml/activity#targetStep
+:targetStep rdf:type owl:DatatypeProperty ;
+            rdfs:domain :DataLink ;
+            rdfs:range xsd:string ;
+            rdfs:comment "The identifier of the target ActivityStep for the data link." ;
+            rdfs:label "targetStep" .
+
+
+###  https://www.spatialwebfoundation.org/ns/hsml/activity#targetVariable
+:targetVariable rdf:type owl:DatatypeProperty ;
+                rdfs:domain :DataLink ;
+                rdfs:range xsd:string ;
+                rdfs:comment "The identifier of the target Variable for the data link." ;
+                rdfs:label "targetVariable" .
+
+
+###  https://www.spatialwebfoundation.org/ns/hsml/activity#variable
+:variable rdf:type owl:DatatypeProperty ;
+          rdfs:domain :VariableBinding ;
+          rdfs:range xsd:string ;
+          rdfs:comment "Connects a VariableBinding to the identifier of the Variable it parameterizes." ;
+          rdfs:label "variable" .
+
+
+###  http://www.w3.org/1999/02/22-rdf-syntax-ns#value
+<http://www.w3.org/1999/02/22-rdf-syntax-ns#value> rdf:type owl:ObjectProperty ;
+                                                   rdfs:domain :VariableBinding ;
+                                                   rdfs:range owl:Thing ;
+                                                   rdfs:comment "The concrete value (IRI for an entity or a Literal for data) assigned in a VariableBinding." ;
+                                                   rdfs:label "value" .

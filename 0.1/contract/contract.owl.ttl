@@ -1,0 +1,34 @@
+@prefix hsml: <https://www.spatialwebfoundation.org/ns/hsml#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+hsml:Contract a owl:Class ;
+    rdfs:label "Contract" ;
+    rdfs:comment "A CONTRACT is a Spatial Web ENTITY representing a request to perform an instance of an ACTIVITY, specifying the parties involved." ;
+    rdfs:subClassOf hsml:Entity .
+
+hsml:contractFor a owl:ObjectProperty ;
+    rdfs:label "contract for" ;
+    rdfs:comment "The activity that this contract is created to govern." ;
+    rdfs:range hsml:Activity .
+
+hsml:contractStatus a owl:ObjectProperty ;
+    rdfs:label "contract status" ;
+    rdfs:comment "The lifecycle status of this contract." ;
+    rdfs:range hsml:ContractStatus .
+
+hsml:isAcceptedBy a owl:ObjectProperty ;
+    rdfs:label "is accepted by" ;
+    rdfs:comment "The agent who has accepted this contract." ;
+    rdfs:range hsml:Agent .
+
+hsml:isFulfilledBy a owl:ObjectProperty ;
+    rdfs:label "is fulfilled by" ;
+    rdfs:comment "The agent responsible for fulfilling this contract." ;
+    rdfs:range hsml:Agent .
+
+hsml:isRequestedBy a owl:ObjectProperty ;
+    rdfs:label "is requested by" ;
+    rdfs:comment "The domain which initiated or requested this contract." ;
+    rdfs:range hsml:Domain .
+

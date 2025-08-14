@@ -1,0 +1,20 @@
+{
+  "@context": [
+    "https://raw.githubusercontent.com/w3c/shacl/main/shacl-jsonld-context/shacl.context.ld.json",
+    {
+      "@vocab": "http://www.w3.org/ns/shacl#",
+      "hsml": "https://www.spatialwebfoundation.org/ns/hsml#",
+      "sh": "http://www.w3.org/ns/shacl#",
+      "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+      "owl": "http://www.w3.org/2002/07/owl#",
+      "label": {
+        "@id": "rdfs:label"
+      },
+      "subClassOf": {
+        "@id": "rdfs:subClassOf",
+        "@type": "@id",
+        "@container": "@set"
+      }
+    }
+  ]
+}

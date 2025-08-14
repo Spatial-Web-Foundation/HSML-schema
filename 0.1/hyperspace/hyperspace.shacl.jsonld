@@ -1,0 +1,190 @@
+{
+  "@context": [
+    "https://raw.githubusercontent.com/w3c/shacl/main/shacl-jsonld-context/shacl.context.ld.json",
+    {
+      "@vocab": "http://www.w3.org/ns/shacl#",
+      "hsml": "https://www.spatialwebfoundation.org/ns/hsml#",
+      "sh": "http://www.w3.org/ns/shacl#",
+      "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+      "owl": "http://www.w3.org/2002/07/owl#",
+      "label": {
+        "@id": "rdfs:label"
+      },
+      "subClassOf": {
+        "@id": "rdfs:subClassOf",
+        "@type": "@id",
+        "@container": "@set"
+      }
+    }
+  ],
+  "@graph": [
+    {
+      "@id": "https://www.spatialwebfoundation.org/ns/hsml/shapes#ComponentTypeShape",
+      "@type": "NodeShape",
+      "label": "Component Type",
+      "description": "A generic base class for different types of configurable components that characterize or constitute a hyperspace, such as element types, path types, metrics, operations, properties, or value specifications. Instances of its subclasses represent specific, named configurations of these components.",
+      "targetClass": "hsml:ComponentType"
+    },
+    {
+      "@id": "https://www.spatialwebfoundation.org/ns/hsml/shapes#HyperspaceShape",
+      "@type": "NodeShape",
+      "label": "Hypergraph",
+      "description": "A HYPERSPACE is a Spatial Web ENTITY for a generalized concept of space: a set of elements with paths between any pair, satisfying identity and composition laws.",
+      "property": [
+        {
+          "@type": "PropertyShape",
+          "label": "hasElementType",
+          "description": "Relates a Hyperspace instance to an ElementType instance that defines the nature of its primary constituent elements or 'points'. For example, a GraphSpace might have an ElementType representing 'Node', and a CellularSpace might have an ElementType representing 'Cell'.",
+          "sh:maxCount": 1,
+          "sh:minCount": 1,
+          "name": "element_type",
+          "nodeKind": "sh:IRI",
+          "path": "hsml:hasElementType"
+        },
+        {
+          "@type": "PropertyShape",
+          "label": "hasPathType",
+          "description": "Relates a Hyperspace instance to a PathType instance that defines the nature of paths, links, edges, or traversals between its elements. For example, a GraphSpace might have a PathType representing 'Edge', and a GeospatialSpace might have a PathType representing 'RouteSegment",
+          "sh:maxCount": 1,
+          "sh:minCount": 1,
+          "name": "path_type",
+          "nodeKind": "sh:IRI",
+          "path": "hsml:hasPathType"
+        },
+        {
+          "@type": "PropertyShape",
+          "label": "hasOperation",
+          "description": "Relates a Hyperspace instance to an Operation instance that defines a specific function, action, transformation, or query performable within or on this hyperspace or its components. For example, a GeospatialSpace might link to Operation instances representing 'Buffer' or 'Intersection'",
+          "sh:minCount": 0,
+          "name": "operations",
+          "nodeKind": "sh:IRI",
+          "path": "hsml:hasOperation"
+        }
+      ],
+      "targetClass": {
+        "@id": "hsml:Hyperspace",
+        "subClassOf": [
+          "hsml:Entity"
+        ]
+      }
+    },
+    {
+      "@id": "https://www.spatialwebfoundation.org/ns/hsml/shapes#MetricSpaceShape",
+      "@type": "NodeShape",
+      "label": "Metric Space",
+      "description": "A TopologicalSpace equipped with a metric function d: X\u00d7X \u2192 \u211d that satisfies non-negativity, identity of indiscernibles, symmetry, and the triangle inequality. This metric induces the space\u2019s topology",
+      "property": {
+        "@type": "PropertyShape",
+        "label": "hasMetric",
+        "description": "Relates a Hyperspace instance (typically a MetricSpace or a space supporting distance concepts) to a Metric instance that defines a specific distance function or dissimilarity measure applicable within it. For example, a EuclideanSpace would link to a Metric instance representing 'EuclideanDistance",
+        "sh:minCount": 1,
+        "name": "metrics",
+        "nodeKind": "sh:IRI",
+        "path": "hsml:hasMetric"
+      },
+      "targetClass": {
+        "@id": "hsml:MetricSpace",
+        "subClassOf": [
+          "hsml:TopologicalSpace"
+        ]
+      }
+    },
+    {
+      "@id": "https://www.spatialwebfoundation.org/ns/hsml/shapes#OperandShape",
+      "@type": "NodeShape",
+      "label": "Operand",
+      "description": "Represents a specific, named configuration for a single input parameter or an output result of an Operation. An instance of Operand (e.g., 'InputGeometry', 'BufferRadius', 'OutputArea') defines its role within the operation, its expected data type, and whether it is an input or output",
+      "targetClass": {
+        "@id": "hsml:Operand",
+        "subClassOf": [
+          "hsml:ComponentType"
+        ]
+      }
+    },
+    {
+      "@id": "https://www.spatialwebfoundation.org/ns/hsml/shapes#OperationShape",
+      "@type": "NodeShape",
+      "label": "Operation",
+      "description": "Represents a specific, named configuration of an action, function, transformation, or query. An instance of Operation (e.g., 'SpatialBuffer', 'FindShortestPath') defines the operation's signature through its associated Operand configurations and describes what it achieves",
+      "property": {
+        "@type": "PropertyShape",
+        "label": "has operand",
+        "description": "Relates an Operation definition to an Operand definition. The signature of an Operation is defined by the set of Operand definitions it is associated with, each specifying a parameter or a result.",
+        "sh:minCount": 0,
+        "name": "operands",
+        "nodeKind": "sh:IRI",
+        "path": "hsml:hasOperand"
+      },
+      "targetClass": {
+        "@id": "hsml:Operation",
+        "subClassOf": [
+          "hsml:ComponentType"
+        ]
+      }
+    },
+    {
+      "@id": "https://www.spatialwebfoundation.org/ns/hsml/shapes#SimilarityMetricShape",
+      "@type": "NodeShape",
+      "label": "SimilarityMetric",
+      "description": "Represents a specific, named configuration of a function that quantifies the similarity between two elements or objects. Unlike distance metrics where smaller values mean 'closer' or 'more similar', for similarity metrics, typically larger values mean 'more similar'. Common examples include Cosine Similarity, Jaccard Index, or Pearson Correlation Coefficient. The output range of a similarity metric is often normalized (e.g., [0, 1] or [-1, 1]). Instances of this class define a particular similarity calculation method.",
+      "property": [
+        {
+          "@type": "PropertyShape",
+          "label": "is normalized",
+          "description": "Indicates whether the output of a similarity metric is typically within a standard normalized range (e.g., [0,1] or [-1,1]).",
+          "sh:maxCount": 1,
+          "sh:minCount": 1,
+          "name": "is_normalized",
+          "path": "hsml:isNormalized"
+        },
+        {
+          "@type": "PropertyShape",
+          "label": "typical range minimum",
+          "description": "The typical minimum value for this similarity metric's output",
+          "sh:maxCount": 1,
+          "sh:minCount": 0,
+          "name": "typical_range_min",
+          "path": "hsml:typicalRangeMin"
+        },
+        {
+          "@type": "PropertyShape",
+          "label": "typical range maximum",
+          "description": "The typical maximum value for this similarity metric's output.",
+          "sh:maxCount": 1,
+          "sh:minCount": 0,
+          "name": "typical_range_max",
+          "path": "hsml:typicalRangeMax"
+        }
+      ],
+      "targetClass": {
+        "@id": "hsml:SimilarityMetric",
+        "subClassOf": [
+          "hsml:Metric"
+        ]
+      }
+    },
+    {
+      "@id": "https://www.spatialwebfoundation.org/ns/hsml/shapes#VectorSpaceShape",
+      "@type": "NodeShape",
+      "label": "VectorSpace",
+      "description": "A Hyperspace whose points form a vector space over a field (typically the real numbers), with operations of vector addition and scalar multiplication satisfying the usual axioms of linear algebra.",
+      "property": {
+        "@type": "PropertyShape",
+        "label": "dimension",
+        "description": "number of degree of freedom available to points in a hyperspace (typically vector space)",
+        "sh:maxCount": 1,
+        "sh:minCount": 0,
+        "minInclusive": 0.0,
+        "name": "dimension",
+        "nodeKind": "sh:Literal",
+        "path": "hsml:dimension"
+      },
+      "targetClass": {
+        "@id": "hsml:VectorSpace",
+        "subClassOf": [
+          "hsml:TopologicalSpace"
+        ]
+      }
+    }
+  ]
+}

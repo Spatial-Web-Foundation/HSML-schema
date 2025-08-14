@@ -1,0 +1,28 @@
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix hsml: <https://www.spatialwebfoundation.org/ns/hsml#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix time: <http://www.w3.org/2006/time#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+hsml: a owl:Ontology ;
+    rdfs:label "HSML Core Ontology"^^xsd:string,
+        "HSML Specification  v0.1" ;
+    dct:created "2025-05-21" ;
+    rdfs:comment "Defines the core classes and properties for HSML, the Hyperspace Modeling Language used to describe Domains, Activities, Channels, and their relationships in the Spatial Web.",
+        "Defines the core classes and properties for HSML, the Hyperspace Modeling Language used to describe Domains, Activities, Channels, and their relationships in the Spatial Web."^^xsd:string ;
+    owl:imports <activity/activity.owl.ttl>,
+        <agent/agent.owl.ttl>,
+        <channel/channel.owl.ttl>,
+        <contract/contract.owl.ttl>,
+        <core/core.owl.ttl>,
+        <credential/credential.owl.ttl>,
+        <domain/domain.owl.ttl>,
+        time:,
+        sh:,
+        <hyperspace/hyperspace.owl.ttl>,
+        <thing/thing.owl.ttl> ;
+    owl:versionIRI <https://www.spatialwebfoundation.org/ns/hsml/0.1#> ;
+    owl:versionInfo "0.1" .
+

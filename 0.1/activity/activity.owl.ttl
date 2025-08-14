@@ -1,0 +1,103 @@
+@prefix hsml: <https://www.spatialwebfoundation.org/ns/hsml#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix time: <http://www.w3.org/2006/time#> .
+
+hsml:AtomicActivitySchema a owl:Class ;
+    rdfs:label "Atomic Activity Schema" ;
+    rdfs:subClassOf hsml:ActivitySchema .
+
+hsml:CompositeActivitySchema a owl:Class ;
+    rdfs:label "Composite Activity Schema" ;
+    rdfs:subClassOf hsml:ActivitySchema .
+
+hsml:Planned a hsml:ActivityStatus .
+
+hsml:authorizedBy a owl:ObjectProperty ;
+    rdfs:label "authorized by" ;
+    rdfs:comment "A credential required to authorize performance of this activity" ;
+    rdfs:range hsml:Credential .
+
+hsml:composedOf a owl:ObjectProperty ;
+    rdfs:label "composed of" ;
+    rdfs:comment "A sub-activity that composes a higher-level composite activity." ;
+    rdfs:range hsml:Activity .
+
+hsml:hasStatus a owl:ObjectProperty ;
+    rdfs:label "has status" ;
+    rdfs:comment "The lifecycle status of the activity" ;
+    rdfs:range hsml:ActivityStatus .
+
+hsml:hasVariable a owl:ObjectProperty ;
+    rdfs:label "has variable" ;
+    rdfs:comment "A open variable included in the activity schema" ;
+    rdfs:range hsml:Variable .
+
+hsml:hasVariableBinding a owl:ObjectProperty ;
+    rdfs:label "has variable binding" ;
+    rdfs:comment "Associates an ActivitySchema with VariableBinding resources for schema composition" ;
+    rdfs:range hsml:VariableBinding .
+
+hsml:performedBy a owl:ObjectProperty ;
+    rdfs:label "performed by" ;
+    rdfs:comment "The domain which performed this activity." ;
+    rdfs:range hsml:Domain .
+
+hsml:performedIn a owl:ObjectProperty ;
+    rdfs:label "performed in" ;
+    rdfs:comment "The domain (e.g., space or context) in which the activity was performed." ;
+    rdfs:range hsml:Domain .
+
+hsml:performedOn a owl:ObjectProperty ;
+    rdfs:label "performed on" ;
+    rdfs:comment "The domain that is the target of this activity." ;
+    rdfs:range hsml:Domain .
+
+hsml:performedWith a owl:ObjectProperty ;
+    rdfs:label "performed with" ;
+    rdfs:comment "A domain used or involved in performing the activity." ;
+    rdfs:range hsml:Domain .
+
+hsml:precondition a owl:ObjectProperty ;
+    rdfs:label "precondition" ;
+    rdfs:comment "Condition required before this activity can be performed" ;
+    rdfs:range hsml:Condition .
+
+hsml:Variable a owl:Class ;
+    rdfs:label "Variable" ;
+    rdfs:comment "A placeholder representing an input, output, or intermediate parameter of an activity." ;
+    rdfs:subClassOf sh:PropertyShape .
+
+hsml:VariableBinding a owl:Class ;
+    rdfs:label "Variable Binding" ;
+    rdfs:comment "A VariableBinding maps a variable declared by an ancestor ActivitySchema to a variable in the current ActivitySchema definition the variable binding is assigned to, establishing how data flows from the higher-level activity into its nested invocation" .
+
+hsml:followedBy a owl:ObjectProperty ;
+    rdfs:label "followed by" ;
+    rdfs:comment "The next activity in execution order." ;
+    rdfs:range hsml:Activity ;
+    owl:inverseOf hsml:precededBy .
+
+hsml:precededBy a owl:ObjectProperty ;
+    rdfs:label "preceded by" ;
+    rdfs:comment "The immediately preceding activity in execution order." ;
+    rdfs:range hsml:Activity ;
+    owl:inverseOf hsml:followedBy .
+
+hsml:ActivitySchema a owl:Class ;
+    rdfs:label "Activity Schema" ;
+    rdfs:comment "An ActivitySchema is the abstract template that defines the structure and constraints of an activity before any specific execution takes place." ;
+    rdfs:subClassOf owl:Class .
+
+hsml:ActivityStatus a owl:Class ;
+    rdfs:label "Activity Status" ;
+    rdfs:subClassOf skos:Concept .
+
+hsml:Activity a owl:Class ;
+    rdfs:label "Activity" ;
+    rdfs:comment "An ACTIVITY is a partially ordered set of changes to be effected by an AGENT, representing an event or process over time." ;
+    rdfs:subClassOf time:TemporalEntity,
+        hsml:Entity .
+

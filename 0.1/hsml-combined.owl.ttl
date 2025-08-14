@@ -1,0 +1,463 @@
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix hsml: <https://www.spatialwebfoundation.org/ns/hsml#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix time: <http://www.w3.org/2006/time#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+hsml: a owl:Ontology ;
+    rdfs:label "HSML Core Ontology"^^xsd:string,
+        "HSML Specification  v0.1" ;
+    dct:created "2025-05-21" ;
+    rdfs:comment "Defines the core classes and properties for HSML, the Hyperspace Modeling Language used to describe Domains, Activities, Channels, and their relationships in the Spatial Web.",
+        "Defines the core classes and properties for HSML, the Hyperspace Modeling Language used to describe Domains, Activities, Channels, and their relationships in the Spatial Web."^^xsd:string ;
+    owl:imports time:,
+        sh: ;
+    owl:versionIRI <https://www.spatialwebfoundation.org/ns/hsml/0.1#> ;
+    owl:versionInfo "0.1" .
+
+hsml:AbstractDatatypeSpace a owl:Class ;
+    rdfs:label "Abstract Datatype Space" ;
+    rdfs:subClassOf hsml:Hyperspace .
+
+hsml:AtomicActivitySchema a owl:Class ;
+    rdfs:label "Atomic Activity Schema" ;
+    rdfs:subClassOf hsml:ActivitySchema .
+
+hsml:CompositeActivitySchema a owl:Class ;
+    rdfs:label "Composite Activity Schema" ;
+    rdfs:subClassOf hsml:ActivitySchema .
+
+hsml:Concept a owl:Class ;
+    rdfs:label "Concept" ;
+    rdfs:comment "A domain that contains intangible concepts and abstract ideas thatmy not have physical presence, but hold significance for a community of users. " ;
+    rdfs:subClassOf hsml:Domain .
+
+hsml:Contract a owl:Class ;
+    rdfs:label "Contract" ;
+    rdfs:comment "A CONTRACT is a Spatial Web ENTITY representing a request to perform an instance of an ACTIVITY, specifying the parties involved." ;
+    rdfs:subClassOf hsml:Entity .
+
+hsml:EuclidianSpace a owl:Class ;
+    rdfs:label "Euclidian Space" ;
+    rdfs:comment "A finite-dimensional real VectorSpace endowed with an inner product ⟨·,·⟩ that induces the standard Euclidean distance via ∥x–y∥ = √⟨x–y, x–y⟩, providing well-defined notions of angles and orthogonality" ;
+    rdfs:subClassOf hsml:MetricSpace,
+        hsml:VectorSpace .
+
+hsml:GeographicCellularSpace a owl:Class ;
+    rdfs:label "Geographic Cellular Space" ;
+    rdfs:subClassOf hsml:CellularSpace .
+
+hsml:GraphSpace a owl:Class ;
+    rdfs:label "Graph Space" ;
+    rdfs:comment "A Hyperspace whose points are graph vertices and whose paths correspond to walks along edges, each edge having a designated source and target node. Used to model discrete connectivity and routing." ;
+    rdfs:subClassOf hsml:HypergraphSpace .
+
+hsml:HyperspaceOfSpaces a owl:Class ;
+    rdfs:label "Hyperspace of Spaces" ;
+    rdfs:subClassOf hsml:Hyperspace .
+
+hsml:Manifold a owl:Class ;
+    rdfs:label "Manifold" ;
+    rdfs:comment "A type of TopologicalSpace that, near each point, locally resembles Euclidean space of a certain dimension (the manifold's dimension). More formally, each point has a neighborhood that is homeomorphic to an open subset of Euclidean space. Manifolds are described by an atlas of charts, with transition maps defining how charts overlap" ;
+    rdfs:subClassOf hsml:TopologicalSpace .
+
+hsml:Organization a owl:Class ;
+    rdfs:label "Organization" ;
+    rdfs:comment "An ORGANIZATION is an AGENT representing a collective domain with decision‑making capabilities and governance structures." ;
+    rdfs:subClassOf hsml:Agent .
+
+hsml:Person a owl:Class ;
+    rdfs:label "Person" ;
+    rdfs:comment "A PERSON is an AGENT representing a human individual with persistent identity and agency." ;
+    rdfs:subClassOf hsml:Agent .
+
+hsml:Planned a hsml:ActivityStatus .
+
+hsml:PropertySpecification a owl:Class ;
+    rdfs:label "Property Specification" ;
+    rdfs:comment "Represents a specific, named configuration for a characteristic, attribute, or feature that instances of a particular ElementType or PathType are expected to possess. An instance of Property (e.g., 'NodeIdentifierProperty', 'RoadSurfaceMaterialProperty') defines the name, value specification, cardinality, and its mapping to a standard RDF property for that characteristic" ;
+    rdfs:subClassOf hsml:ComponentType .
+
+hsml:ReferenceSystem a owl:Class ;
+    rdfs:label "Reference System" ;
+    rdfs:subClassOf hsml:ComponentType .
+
+hsml:SimilarityMetric a owl:Class ;
+    rdfs:label "SimilarityMetric" ;
+    rdfs:comment "Represents a specific, named configuration of a function that quantifies the similarity between two elements or objects. Unlike distance metrics where smaller values mean 'closer' or 'more similar', for similarity metrics, typically larger values mean 'more similar'. Common examples include Cosine Similarity, Jaccard Index, or Pearson Correlation Coefficient. The output range of a similarity metric is often normalized (e.g., [0, 1] or [-1, 1]). Instances of this class define a particular similarity calculation method." ;
+    rdfs:subClassOf hsml:Metric .
+
+hsml:Space a owl:Class ;
+    rdfs:label "Space" ;
+    rdfs:comment "A SPACE is a subclass of HYPERSPACE providing spatial or logical boundaries (e.g., geometries or value ranges) for DOMAINS." ;
+    rdfs:subClassOf hsml:Hyperspace .
+
+hsml:SpatialFeature a owl:Class ;
+    rdfs:label "Spatial Feature" ;
+    rdfs:comment "A domain that refers to the features of worlds including the earth, the moon, planets and virtual worlds. Domains of this type may have several geometric representations." ;
+    rdfs:subClassOf hsml:Domain .
+
+hsml:ValueSpecification a owl:Class ;
+    rdfs:label "Value Specification" ;
+    rdfs:comment "Represents a specific, named configuration that defines the datatype, structure, and constraints for a literal value or a complex data value. An instance of Value (e.g., 'PositiveIntegerSpec', 'WKTGeometryLiteralSpec', 'ColorEnumerationSpec') is typically used to type Property configurations or Operand configurations" ;
+    rdfs:subClassOf hsml:ComponentType .
+
+hsml:authorizedAgent a owl:ObjectProperty ;
+    rdfs:label "authorized agent" ;
+    rdfs:comment "Links a Channel to the Agent(s) permitted to access it; only those Agents holding the necessary credentials or roles may use this Channel." ;
+    rdfs:range hsml:Agent .
+
+hsml:authorizedBy a owl:ObjectProperty ;
+    rdfs:label "authorized by" ;
+    rdfs:comment "A credential required to authorize performance of this activity" ;
+    rdfs:range hsml:Credential .
+
+hsml:componentName a owl:DatatypeProperty ;
+    rdfs:label "component name" ;
+    rdfs:comment "Human-readable name or identifier for a specific instance of a ComponentType, representing a particular configuration. This name should ideally be unique within its type or context (e.g., the name of a specific metric configuration like 'EuclideanDistance', or a property configuration like 'NodeID')" ;
+    rdfs:range xsd:string .
+
+hsml:composedOf a owl:ObjectProperty ;
+    rdfs:label "composed of" ;
+    rdfs:comment "A sub-activity that composes a higher-level composite activity." ;
+    rdfs:range hsml:Activity .
+
+hsml:contractFor a owl:ObjectProperty ;
+    rdfs:label "contract for" ;
+    rdfs:comment "The activity that this contract is created to govern." ;
+    rdfs:range hsml:Activity .
+
+hsml:contractStatus a owl:ObjectProperty ;
+    rdfs:label "contract status" ;
+    rdfs:comment "The lifecycle status of this contract." ;
+    rdfs:range hsml:ContractStatus .
+
+hsml:dimension a owl:DatatypeProperty ;
+    rdfs:label "dimension" ;
+    rdfs:comment "number of degree of freedom available to points in a hyperspace (typically vector space)" ;
+    rdfs:range xsd:nonNegativeInteger .
+
+hsml:domainAuthority a owl:ObjectProperty ;
+    rdfs:label "domain authority" ;
+    rdfs:comment "Specifies the Domain Authority responsible for governance, policies, and contracts within this Domain" ;
+    rdfs:range hsml:Agent .
+
+hsml:embodiedIn a owl:ObjectProperty ;
+    rdfs:label "embodied in" ;
+    rdfs:comment "Links an Agent to the physical Thing it inhabits" ;
+    rdfs:range hsml:Thing .
+
+hsml:hasActivitySchema a owl:ObjectProperty ;
+    rdfs:label "has activity schema" ;
+    rdfs:comment "Specifies the activity schemas that can be performed in/on/by/with the domain" ;
+    rdfs:range hsml:ActivitySchema .
+
+hsml:hasCapability a owl:ObjectProperty ;
+    rdfs:label "has capability" ;
+    rdfs:comment "Links an Agent to it capability (sensing,and perceiving, activity schemas, learning mechanisms, autonomous decision-making, physical and digital actuations)" ;
+    rdfs:range hsml:Capability .
+
+hsml:hasCoordinateSystem a owl:ObjectProperty ;
+    rdfs:label "has coordinate system" ;
+    rdfs:comment "Relates a Hyperspace instance to a CoordinateSystem instance that defines how locations or elements are identified, addressed, or positioned within it. For example, an EuclideanSpace would link to a CoordinateSystem instance representing 'CartesianCoordinates', and a GeospatialSpace might link to one representing 'WGS84" ;
+    rdfs:range hsml:CoordinateSystem .
+
+hsml:hasCredential a owl:ObjectProperty ;
+    rdfs:label "has credential" ;
+    rdfs:comment "Credential associated with an entity" ;
+    rdfs:range hsml:Credential .
+
+hsml:hasElementType a owl:ObjectProperty ;
+    rdfs:label "has element type" ;
+    rdfs:comment "Relates a Hyperspace instance to an ElementType instance that defines the nature of its primary constituent elements or 'points'. For example, a GraphSpace might have an ElementType representing 'Node', and a CellularSpace might have an ElementType representing 'Cell'." ;
+    rdfs:range hsml:ElementType .
+
+hsml:hasGoal a owl:ObjectProperty ;
+    rdfs:label "has goal" ;
+    rdfs:comment "A goal or desired outcome that this agent aims to accomplish" ;
+    rdfs:range hsml:Goal .
+
+hsml:hasMetric a owl:ObjectProperty ;
+    rdfs:label "has metric" ;
+    rdfs:comment "Relates a Hyperspace instance (typically a MetricSpace or a space supporting distance concepts) to a Metric instance that defines a specific distance function or dissimilarity measure applicable within it. For example, a EuclideanSpace would link to a Metric instance representing 'EuclideanDistance" ;
+    rdfs:range hsml:Metric .
+
+hsml:hasOperand a owl:ObjectProperty ;
+    rdfs:label "has Operand (configuration)" ;
+    rdfs:comment "Relates an Operation configuration instance to an Operand configuration instance. An Operation's signature is defined by the collection of Operand configurations it links to, each specifying an input parameter or an output result" ;
+    rdfs:range hsml:Operand .
+
+hsml:hasOperation a owl:ObjectProperty ;
+    rdfs:label "has operation" ;
+    rdfs:comment "Relates a Hyperspace instance to an Operation instance that defines a specific function, action, transformation, or query performable within or on this hyperspace or its components. For example, a GeospatialSpace might link to Operation instances representing 'Buffer' or 'Intersection'" ;
+    rdfs:range hsml:Operation .
+
+hsml:hasPathType a owl:ObjectProperty ;
+    rdfs:label "has path type" ;
+    rdfs:comment "Relates a Hyperspace instance to a PathType instance that defines the nature of paths, links, edges, or traversals between its elements. For example, a GraphSpace might have a PathType representing 'Edge', and a GeospatialSpace might have a PathType representing 'RouteSegment" ;
+    rdfs:range hsml:PathType .
+
+hsml:hasProperty a owl:ObjectProperty ;
+    rdfs:label "has property (configuration)" ;
+    rdfs:comment "Relates an ElementType or PathType configuration instance to a Property configuration instance. This signifies that elements or paths conforming to this type are expected to possess the characteristic defined by the linked Property configuration." ;
+    rdfs:range hsml:Property .
+
+hsml:hasStatus a owl:ObjectProperty ;
+    rdfs:label "has status" ;
+    rdfs:comment "The lifecycle status of the activity" ;
+    rdfs:range hsml:ActivityStatus .
+
+hsml:hasVariable a owl:ObjectProperty ;
+    rdfs:label "has variable" ;
+    rdfs:comment "A open variable included in the activity schema" ;
+    rdfs:range hsml:Variable .
+
+hsml:hasVariableBinding a owl:ObjectProperty ;
+    rdfs:label "has variable binding" ;
+    rdfs:comment "Associates an ActivitySchema with VariableBinding resources for schema composition" ;
+    rdfs:range hsml:VariableBinding .
+
+hsml:isAcceptedBy a owl:ObjectProperty ;
+    rdfs:label "is accepted by" ;
+    rdfs:comment "The agent who has accepted this contract." ;
+    rdfs:range hsml:Agent .
+
+hsml:isChannelFor a owl:ObjectProperty ;
+    rdfs:label "is channel for" ;
+    rdfs:comment "Links a Channel to the Activity (or Activities) whose messages it carries." ;
+    rdfs:range hsml:Activity .
+
+hsml:isFulfilledBy a owl:ObjectProperty ;
+    rdfs:label "is fulfilled by" ;
+    rdfs:comment "The agent responsible for fulfilling this contract." ;
+    rdfs:range hsml:Agent .
+
+hsml:isNormalized a owl:DatatypeProperty ;
+    rdfs:label "is normalized" ;
+    rdfs:comment "Indicates whether the output of a similarity metric is typically within a standard normalized range (e.g., [0,1] or [-1,1])." ;
+    rdfs:range xsd:boolean .
+
+hsml:isRequestedBy a owl:ObjectProperty ;
+    rdfs:label "is requested by" ;
+    rdfs:comment "The domain which initiated or requested this contract." ;
+    rdfs:range hsml:Domain .
+
+hsml:name a owl:DatatypeProperty ;
+    rdfs:label "name" ;
+    rdfs:comment "Entity human readable name." ;
+    rdfs:range xsd:string .
+
+hsml:performedBy a owl:ObjectProperty ;
+    rdfs:label "performed by" ;
+    rdfs:comment "The domain which performed this activity." ;
+    rdfs:range hsml:Domain .
+
+hsml:performedIn a owl:ObjectProperty ;
+    rdfs:label "performed in" ;
+    rdfs:comment "The domain (e.g., space or context) in which the activity was performed." ;
+    rdfs:range hsml:Domain .
+
+hsml:performedOn a owl:ObjectProperty ;
+    rdfs:label "performed on" ;
+    rdfs:comment "The domain that is the target of this activity." ;
+    rdfs:range hsml:Domain .
+
+hsml:performedWith a owl:ObjectProperty ;
+    rdfs:label "performed with" ;
+    rdfs:comment "A domain used or involved in performing the activity." ;
+    rdfs:range hsml:Domain .
+
+hsml:performsActivity a owl:ObjectProperty ;
+    rdfs:label "performs activity" ;
+    rdfs:comment "An activity that this agent has performed or is performing." ;
+    rdfs:range hsml:Activity .
+
+hsml:precondition a owl:ObjectProperty ;
+    rdfs:label "precondition" ;
+    rdfs:comment "Condition required before this activity can be performed" ;
+    rdfs:range hsml:Condition .
+
+hsml:situation a owl:ObjectProperty ;
+    rdfs:label "situation" ;
+    rdfs:comment "A situation relationship is an entity comprised of all DOMAINS that can be perceived and reasoned about by an AGENT" ;
+    rdfs:range hsml:Entity .
+
+hsml:swid a owl:ObjectProperty ;
+    rdfs:label "swid" ;
+    rdfs:comment "Spatial Web Decentralized Identifier" ;
+    rdfs:range hsml:Swid .
+
+hsml:typicalRangeMax a owl:DatatypeProperty ;
+    rdfs:label "typical Range Maximum" ;
+    rdfs:comment "The typical maximum value for this similarity metric's output." ;
+    rdfs:range xsd:double .
+
+hsml:typicalRangeMin a owl:DatatypeProperty ;
+    rdfs:label "typical Range Minimum" ;
+    rdfs:comment "The typical minimum value for this similarity metric's output" ;
+    rdfs:range xsd:double .
+
+hsml:usesTool a owl:ObjectProperty ;
+    rdfs:label "uses tool" ;
+    rdfs:comment "Indicates that an Agent employs a Tool in pursuit of its goals" ;
+    rdfs:range hsml:Tool .
+
+hsml:CellularSpace a owl:Class ;
+    rdfs:label "Cellular Space" ;
+    rdfs:comment "A Hyperspace structured as a regular grid (lattice) of cells, each taking values from a finite set of states, with neighborhood relations defining adjacency. Commonly employed in cellular automata, spatial simulations and spatial indexing" ;
+    rdfs:subClassOf hsml:Hyperspace .
+
+hsml:CoordinateSystem a owl:Class ;
+    rdfs:label "Coordinate System" ;
+    rdfs:comment "Represents a specific, named configuration of a system for uniquely identifying the position or location of elements. An instance of CoordinateSystem (e.g., 'WGS84Geographic', 'Cartesian2DSystem') defines the structure, axes, units, and reference frame for a particular way of expressing coordinates" ;
+    rdfs:subClassOf hsml:ComponentType .
+
+hsml:ElementType a owl:Class ;
+    rdfs:label "ElementType" ;
+    rdfs:comment "Represents a specific, named configuration defining a category of primary entities, 'points', or discrete objects that can constitute a hyperspace. An ElementType instance (e.g., 'GraphNode', 'GeospatialFeaturePoint') specifies the expected characteristics, including properties, of such elements" ;
+    rdfs:subClassOf hsml:ComponentType .
+
+hsml:HypergraphSpace a owl:Class ;
+    rdfs:label "HypergraphSpace" ;
+    rdfs:subClassOf hsml:Hyperspace .
+
+hsml:MetricSpace a owl:Class ;
+    rdfs:label "Metric Space" ;
+    rdfs:comment "A TopologicalSpace equipped with a metric function d: X×X → ℝ that satisfies non-negativity, identity of indiscernibles, symmetry, and the triangle inequality. This metric induces the space’s topology" ;
+    rdfs:subClassOf hsml:TopologicalSpace .
+
+hsml:Operand a owl:Class ;
+    rdfs:label "Operand" ;
+    rdfs:comment "Represents a specific, named configuration for a single input parameter or an output result of an Operation. An instance of Operand (e.g., 'InputGeometry', 'BufferRadius', 'OutputArea') defines its role within the operation, its expected data type, and whether it is an input or output" ;
+    rdfs:subClassOf hsml:ComponentType .
+
+hsml:Operation a owl:Class ;
+    rdfs:label "Operation" ;
+    rdfs:comment "Represents a specific, named configuration of an action, function, transformation, or query. An instance of Operation (e.g., 'SpatialBuffer', 'FindShortestPath') defines the operation's signature through its associated Operand configurations and describes what it achieves" ;
+    rdfs:subClassOf hsml:ComponentType .
+
+hsml:PathType a owl:Class ;
+    rdfs:label "PathType" ;
+    rdfs:comment "Represents a specific, named configuration defining a category of traversal, link, edge, or continuous path that can exist between elements in a hyperspace. A PathType instance (e.g., 'RoadSegment', 'WeightedGraphEdge') specifies the expected characteristics, including properties, of such paths" ;
+    rdfs:subClassOf hsml:ComponentType .
+
+hsml:Swid a owl:Class ;
+    rdfs:label "SWID" ;
+    rdfs:comment "Spatial Web Decentralized Identifier" .
+
+hsml:Thing a owl:Class ;
+    rdfs:label "Thing" ;
+    rdfs:comment "A THING is a passive DOMAIN representing bounded items without agency that can be acted upon or manipulated by AGENTs." ;
+    rdfs:subClassOf hsml:Domain .
+
+hsml:Variable a owl:Class ;
+    rdfs:label "Variable" ;
+    rdfs:comment "A placeholder representing an input, output, or intermediate parameter of an activity." ;
+    rdfs:subClassOf sh:PropertyShape .
+
+hsml:VariableBinding a owl:Class ;
+    rdfs:label "Variable Binding" ;
+    rdfs:comment "A VariableBinding maps a variable declared by an ancestor ActivitySchema to a variable in the current ActivitySchema definition the variable binding is assigned to, establishing how data flows from the higher-level activity into its nested invocation" .
+
+hsml:VectorSpace a owl:Class ;
+    rdfs:label "VectorSpace" ;
+    rdfs:comment "A Hyperspace whose points form a vector space over a field (typically the real numbers), with operations of vector addition and scalar multiplication satisfying the usual axioms of linear algebra." ;
+    rdfs:subClassOf hsml:TopologicalSpace .
+
+hsml:followedBy a owl:ObjectProperty ;
+    rdfs:label "followed by" ;
+    rdfs:comment "The next activity in execution order." ;
+    rdfs:range hsml:Activity ;
+    owl:inverseOf hsml:precededBy .
+
+hsml:hasSubChannel a owl:ObjectProperty ;
+    rdfs:label "has subchannel" ;
+    rdfs:comment "Indicates that this Channel has the given Channel as a sub-channel." ;
+    rdfs:range hsml:Channel ;
+    owl:inverseOf hsml:isSubChannelOf .
+
+hsml:hasSubDomain a owl:ObjectProperty ;
+    rdfs:label "hasSubDomain" ;
+    rdfs:comment "Links a parent Domain to one or more child Domains that it contains or specializes, capturing nested or hierarchical relationships among Domains." ;
+    rdfs:range hsml:Domain ;
+    owl:inverseOf hsml:subDomainOf .
+
+hsml:isSubChannelOf a owl:ObjectProperty ;
+    rdfs:label "subChannelOf" ;
+    rdfs:comment "Indicates that this Channel is a sub-channel of another Channel" ;
+    rdfs:range hsml:Channel ;
+    owl:inverseOf hsml:hasSubChannel .
+
+hsml:precededBy a owl:ObjectProperty ;
+    rdfs:label "preceded by" ;
+    rdfs:comment "The immediately preceding activity in execution order." ;
+    rdfs:range hsml:Activity ;
+    owl:inverseOf hsml:followedBy .
+
+hsml:subDomainOf a owl:ObjectProperty ;
+    rdfs:label "subDomainOf" ;
+    rdfs:comment "Links a domain to its immediate parent domain in a hierarchical domain structure. Inverse of hsml:hasSubDomain" ;
+    rdfs:range hsml:Domain ;
+    owl:inverseOf hsml:hasSubDomain .
+
+hsml:ActivityStatus a owl:Class ;
+    rdfs:label "Activity Status" ;
+    rdfs:subClassOf skos:Concept .
+
+hsml:Channel a owl:Class ;
+    rdfs:label "Channel" ;
+    rdfs:comment "A CHANNEL is a Spatial Web ENTITY grouping a stream of HSML elements related to a specific context or communication without warranting a domain hierarchy. " ;
+    rdfs:subClassOf hsml:Entity .
+
+hsml:Credential a owl:Class ;
+    rdfs:label "Credential" ;
+    rdfs:comment "A CREDENTIAL is a Spatial Web ENTITY holding one or more claims that a DOMAIN possesses to assert verifiable attributes or authorizations." ;
+    rdfs:subClassOf hsml:Entity .
+
+hsml:Metric a owl:Class ;
+    rdfs:label "Metric" ;
+    rdfs:comment "Represents a specific, named configuration of a distance function or dissimilarity measure. An instance of Metric (e.g., 'EuclideanDistance', 'ManhattanDistance') defines a particular way to calculate distance or related concepts within a hyperspace that supports it." ;
+    rdfs:subClassOf hsml:ComponentType .
+
+hsml:ActivitySchema a owl:Class ;
+    rdfs:label "Activity Schema" ;
+    rdfs:comment "An ActivitySchema is the abstract template that defines the structure and constraints of an activity before any specific execution takes place." ;
+    rdfs:subClassOf owl:Class .
+
+hsml:TopologicalSpace a owl:Class ;
+    rdfs:label "Topological Space" ;
+    rdfs:comment "A Hyperspace defined by a collection of open sets satisfying the axioms for continuity, connectedness, and convergence, without requiring any notion of distance." ;
+    rdfs:subClassOf hsml:Hyperspace .
+
+hsml:Activity a owl:Class ;
+    rdfs:label "Activity" ;
+    rdfs:comment "An ACTIVITY is a partially ordered set of changes to be effected by an AGENT, representing an event or process over time." ;
+    rdfs:subClassOf time:TemporalEntity,
+        hsml:Entity .
+
+hsml:Agent a owl:Class ;
+    rdfs:label "Agent" ;
+    rdfs:comment "An AGENT is an ENTITY that senses and responds to its environment, maintains a model of its environment, and performs ACTIVITIES to achieve its goals." ;
+    rdfs:subClassOf hsml:Domain .
+
+hsml:Hyperspace a owl:Class ;
+    rdfs:label "Hypergraph" ;
+    rdfs:comment "A HYPERSPACE is a Spatial Web ENTITY for a generalized concept of space: a set of elements with paths between any pair, satisfying identity and composition laws." ;
+    rdfs:subClassOf hsml:Entity .
+
+hsml:Entity a owl:Class ;
+    rdfs:label "Entity" ;
+    rdfs:comment "An ENTITY is that which is perceived, known, or inferred to exist, has existed, or is anticipated to exist." .
+
+hsml:ComponentType a owl:Class ;
+    rdfs:label "Component Type" ;
+    rdfs:comment "A generic base class for different types of configurable components that characterize or constitute a hyperspace, such as element types, path types, metrics, operations, properties, or value specifications. Instances of its subclasses represent specific, named configurations of these components." .
+
+hsml:Domain a owl:Class ;
+    rdfs:label "Domain" ;
+    rdfs:comment "A DOMAIN is a Spatial Web ENTITY with identity through time endowed with rights and credentials." ;
+    rdfs:subClassOf hsml:Entity .
+

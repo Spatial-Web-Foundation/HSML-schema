@@ -1,0 +1,214 @@
+{
+  "@context": [
+    "https://raw.githubusercontent.com/w3c/shacl/main/shacl-jsonld-context/shacl.context.ld.json",
+    {
+      "@vocab": "http://www.w3.org/ns/shacl#",
+      "hsml": "https://www.spatialwebfoundation.org/ns/hsml#",
+      "sh": "http://www.w3.org/ns/shacl#",
+      "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+      "owl": "http://www.w3.org/2002/07/owl#",
+      "label": {
+        "@id": "rdfs:label"
+      },
+      "subClassOf": {
+        "@id": "rdfs:subClassOf",
+        "@type": "@id",
+        "@container": "@set"
+      }
+    }
+  ],
+  "@graph": [
+    {
+      "@id": "https://www.spatialwebfoundation.org/ns/hsml/shapes#ActivitySchemaShape",
+      "@type": "NodeShape",
+      "label": "Activity Schema",
+      "description": "An ActivitySchema is the abstract template that defines the structure and constraints of an activity before any specific execution takes place.",
+      "property": [
+        {
+          "@type": "PropertyShape",
+          "label": "has input",
+          "description": "Associates an ActivitySchema with a Variable defining required inputs.",
+          "sh:minCount": 0,
+          "name": "inputs",
+          "nodeKind": "sh:BlankNodeOrIRI",
+          "path": "hsml:hasInput"
+        },
+        {
+          "@type": "PropertyShape",
+          "label": "has output",
+          "description": "Associates an ActivitySchema with a Variable defining declared outputs.",
+          "sh:minCount": 0,
+          "name": "outputs",
+          "nodeKind": "sh:BlankNodeOrIRI",
+          "path": "hsml:hasOutput"
+        },
+        {
+          "@type": "PropertyShape",
+          "label": "precondition",
+          "description": "Links an ActivitySchema to a Condition that must hold before execution.",
+          "sh:minCount": 0,
+          "name": "preconditions",
+          "path": "hsml:preCondition"
+        },
+        {
+          "@type": "PropertyShape",
+          "label": "variable binding",
+          "description": "Associates an ActivitySchema with VariableBinding resources for schema composition",
+          "sh:minCount": 0,
+          "name": "variable_bindings",
+          "nodeKind": "sh:BlankNodeOrIRI",
+          "path": "hsml:variableBinding"
+        }
+      ],
+      "targetClass": {
+        "@id": "hsml:ActivitySchema",
+        "subClassOf": [
+          "owl:Class"
+        ]
+      }
+    },
+    {
+      "@id": "https://www.spatialwebfoundation.org/ns/hsml/shapes#ActivityShape",
+      "@type": "NodeShape",
+      "label": "Activity",
+      "description": "An ACTIVITY is a partially ordered set of changes to be effected by an AGENT, representing an event or process over time.",
+      "property": [
+        {
+          "@type": "PropertyShape",
+          "label": "performed by",
+          "description": "Identifies the domain that performs the activity.",
+          "sh:minCount": 1,
+          "name": "performed_by",
+          "nodeKind": "sh:IRI",
+          "path": "hsml:performedBy"
+        },
+        {
+          "@type": "PropertyShape",
+          "label": "performed in",
+          "description": "The domain within which the activity takes place.",
+          "sh:minCount": 0,
+          "name": "performed_in",
+          "nodeKind": "sh:IRI",
+          "path": "hsml:performedIn"
+        },
+        {
+          "@type": "PropertyShape",
+          "label": "performed on",
+          "description": "The domain that is the direct target or object of the activity.",
+          "sh:minCount": 0,
+          "name": "performed_on",
+          "nodeKind": "sh:IRI",
+          "path": "hsml:performedOn"
+        },
+        {
+          "@type": "PropertyShape",
+          "label": "performed with",
+          "description": "The domain that collaborates in carrying out the activity.",
+          "sh:minCount": 0,
+          "name": "performed_with",
+          "nodeKind": "sh:IRI",
+          "path": "hsml:performedWith"
+        },
+        {
+          "@type": "PropertyShape",
+          "label": "sub activity of",
+          "description": "Inverse of hasSubActivity; points to the parent activity of a sub-activity.",
+          "sh:minCount": 0,
+          "name": "sub_activity_of",
+          "nodeKind": "sh:IRI",
+          "path": "hsml:subActivityOf"
+        },
+        {
+          "@type": "PropertyShape",
+          "label": "has status ",
+          "description": "Indicates the current lifecycle status of the activity (e.g., planned, in-progress, completed).",
+          "sh:maxCount": 1,
+          "sh:minCount": 0,
+          "name": "status",
+          "nodeKind": "sh:IRI",
+          "path": "hsml:hasStatus"
+        },
+        {
+          "@type": "PropertyShape",
+          "label": "start time",
+          "description": "Timestamp when the activity began.",
+          "sh:maxCount": 1,
+          "sh:minCount": 0,
+          "name": "startTime",
+          "path": "hsml:startTime"
+        },
+        {
+          "@type": "PropertyShape",
+          "label": "satisfies contract",
+          "description": "The contract that is satisfied by the activity",
+          "sh:minCount": 0,
+          "name": "satisfies_contract",
+          "nodeKind": "sh:IRI",
+          "path": "hsml:satisfiesContract"
+        },
+        {
+          "@type": "PropertyShape",
+          "label": "end time",
+          "description": "Timestamp when the activity ended.",
+          "sh:maxCount": 1,
+          "sh:minCount": 0,
+          "name": "endTime",
+          "path": "hsml:endTime"
+        }
+      ],
+      "targetClass": {
+        "@id": "hsml:Activity",
+        "subClassOf": [
+          "hsml:Entity",
+          "http://www.w3.org/2006/time#TemporalEntity"
+        ]
+      }
+    },
+    {
+      "@id": "https://www.spatialwebfoundation.org/ns/hsml/shapes#VariableBindingShape",
+      "@type": "NodeShape",
+      "label": "Variable Binding",
+      "description": "A VariableBinding maps a variable declared by an ancestor ActivitySchema to a variable in the current ActivitySchema definition the variable binding is assigned to, establishing how data flows from the higher-level activity into its nested invocation",
+      "property": [
+        {
+          "@type": "PropertyShape",
+          "label": "source variable name",
+          "description": "The sh:name of the output variable on the source schema.",
+          "sh:minCount": 1,
+          "name": "source_variable_name",
+          "path": "hsml:sourceVariableName"
+        },
+        {
+          "@type": "PropertyShape",
+          "label": "source activity schema",
+          "description": "The ActivitySchema providing the output field.",
+          "sh:minCount": 1,
+          "name": "source_activity_schema",
+          "nodeKind": "sh:IRI",
+          "path": "hsml:sourceActivitySchema"
+        },
+        {
+          "@type": "PropertyShape",
+          "label": "variable name",
+          "description": "The sh:name of the input variable on the bound ActivitySchema to receive data.",
+          "sh:minCount": 1,
+          "name": "variable_name",
+          "path": "hsml:variableName"
+        }
+      ],
+      "targetClass": "hsml:VariableBinding"
+    },
+    {
+      "@id": "https://www.spatialwebfoundation.org/ns/hsml/shapes#VariableShape",
+      "@type": "NodeShape",
+      "label": "Variable",
+      "description": "A placeholder representing an input, output, or intermediate parameter of an activity.",
+      "targetClass": {
+        "@id": "hsml:Variable",
+        "subClassOf": [
+          "sh:PropertyShape"
+        ]
+      }
+    }
+  ]
+}

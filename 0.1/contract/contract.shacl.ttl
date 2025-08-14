@@ -1,0 +1,68 @@
+@prefix hsml: <https://www.spatialwebfoundation.org/ns/hsml#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://www.spatialwebfoundation.org/ns/hsml/shapes#ContractShape> a sh:NodeShape ;
+    rdfs:label "Contract" ;
+    sh:description "A CONTRACT is a Spatial Web ENTITY representing a request to perform an instance of an ACTIVITY, specifying the parties involved." ;
+    sh:property [ a sh:PropertyShape ;
+            rdfs:label "requested by domain" ;
+            sh:description "The Domain (e.g., an organization or administrative entity) that initiated or issued this contract request." ;
+            sh:minCount 1 ;
+            sh:name "requested_by_domain" ;
+            sh:nodeKind sh:IRI ;
+            sh:path hsml:requestedByDomain ],
+        [ a sh:PropertyShape ;
+            rdfs:label "accepted by agent" ;
+            sh:description "The Agent that accepted or signed the contract." ;
+            sh:minCount 1 ;
+            sh:name "accepted_by" ;
+            sh:nodeKind sh:IRI ;
+            sh:path hsml:acceptedBy ],
+        [ a sh:PropertyShape ;
+            rdfs:label "contract status" ;
+            sh:description "The current lifecycle status of the contract, one of: Proposed, Accepted, Active, Fulfilled, or Cancelled." ;
+            sh:maxCount 1 ;
+            sh:minCount 1 ;
+            sh:name "contract_status" ;
+            sh:nodeKind sh:IRI ;
+            sh:path hsml:contractStatus ],
+        [ a sh:PropertyShape ;
+            rdfs:label "contract for" ;
+            sh:description "The Activity to which this contract applies (e.g., a delivery, a service invocation, or a payment action)." ;
+            sh:minCount 1 ;
+            sh:name "contract_for" ;
+            sh:nodeKind sh:IRI ;
+            sh:path hsml:contractFor ],
+        [ a sh:PropertyShape ;
+            rdfs:label "modified" ;
+            sh:description "Timestamp of the most recent modification to the contract." ;
+            sh:minCount 0 ;
+            sh:name "modified" ;
+            sh:path hsml:modified ],
+        [ a sh:PropertyShape ;
+            rdfs:label "requested by agent" ;
+            sh:description "The Agent that requests the contract" ;
+            sh:minCount 1 ;
+            sh:name "requested_by_agent" ;
+            sh:nodeKind sh:IRI ;
+            sh:path hsml:requestedByAgent ],
+        [ a sh:PropertyShape ;
+            rdfs:label "fullfilled by agent" ;
+            sh:description "The Agent responsible for carrying out or completing the contract’s obligations." ;
+            sh:minCount 1 ;
+            sh:name "fullfilled_by" ;
+            sh:nodeKind sh:IRI ;
+            sh:path hsml:fulfilledBy ],
+        [ a sh:PropertyShape ;
+            rdfs:label "created" ;
+            sh:description "Timestamp when the contract was originally created." ;
+            sh:maxCount 1 ;
+            sh:minCount 0 ;
+            sh:name "created" ;
+            sh:path hsml:created ] ;
+    sh:targetClass hsml:Contract .
+
+hsml:Contract rdfs:subClassOf hsml:Entity .
+

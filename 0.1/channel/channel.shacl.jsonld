@@ -1,0 +1,68 @@
+{
+  "@context": [
+    "https://raw.githubusercontent.com/w3c/shacl/main/shacl-jsonld-context/shacl.context.ld.json",
+    {
+      "@vocab": "http://www.w3.org/ns/shacl#",
+      "hsml": "https://www.spatialwebfoundation.org/ns/hsml#",
+      "sh": "http://www.w3.org/ns/shacl#",
+      "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+      "owl": "http://www.w3.org/2002/07/owl#",
+      "label": {
+        "@id": "rdfs:label"
+      },
+      "subClassOf": {
+        "@id": "rdfs:subClassOf",
+        "@type": "@id",
+        "@container": "@set"
+      }
+    }
+  ],
+  "@id": "https://www.spatialwebfoundation.org/ns/hsml/shapes#ChannelShape",
+  "@type": "NodeShape",
+  "label": "Channel",
+  "description": "A CHANNEL is a Spatial Web ENTITY grouping a stream of HSML elements related to a specific context or communication without warranting a domain hierarchy. ",
+  "property": [
+    {
+      "@type": "PropertyShape",
+      "label": "has sub\u2011channel",
+      "description": "Indicates that this Channel has the given Channel as a sub-channel.",
+      "sh:minCount": 1,
+      "name": "has_sub_channel",
+      "nodeKind": "sh:IRI",
+      "path": "hsml:hasSubChannel"
+    },
+    {
+      "@type": "PropertyShape",
+      "label": "is sub\u2011channel of ",
+      "description": "Indicates that this Channel is a sub-channel of another Channel",
+      "sh:minCount": 1,
+      "name": "sub_channels_of",
+      "nodeKind": "sh:IRI",
+      "path": "hsml:isSubChannelOf"
+    },
+    {
+      "@type": "PropertyShape",
+      "label": "is channel for",
+      "description": "Links a Channel to the Activity (or Activities) whose messages it carries.",
+      "sh:minCount": 1,
+      "name": "channel_for",
+      "nodeKind": "sh:IRI",
+      "path": "hsml:isChannelFor"
+    },
+    {
+      "@type": "PropertyShape",
+      "label": "authorized agents",
+      "description": "Links a Channel to the Agent(s) permitted to access it; only those Agents holding the necessary credentials or roles may use this Channel.",
+      "sh:minCount": 1,
+      "name": "authorized_agents",
+      "nodeKind": "sh:IRI",
+      "path": "hsml:authorizedAgent"
+    }
+  ],
+  "targetClass": {
+    "@id": "hsml:Channel",
+    "subClassOf": [
+      "hsml:Entity"
+    ]
+  }
+}
