@@ -1,0 +1,68 @@
+@prefix space: <https://www.spatialwebfoundation.org/ns/hsml/space#> .
+@prefix core: <https://www.spatialwebfoundation.org/ns/hsml/core#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+# #################################################################
+#
+#    Ontology Header
+#
+# #################################################################
+
+space: a owl:Ontology ;
+    rdfs:label "HSML Hyperspace Module Ontology" ;
+    rdfs:comment "This ontology defines the normative classes and properties for representing Hyperspace within the Spatial Web, as specified in the HSML Implementation Specification." ;
+    owl:imports <https://www.spatialwebfoundation.org/ns/hsml/core#> .
+
+# #################################################################
+#
+#    Classes
+#
+# #################################################################
+
+###  Class: space:Hyperspace ###
+space:Hyperspace rdf:type owl:Class ;
+    rdfs:subClassOf core:Entity ;
+    rdfs:label "Hyperspace" ;
+    rdfs:comment "A spatial structure attached to a Domain that defines relationships among its elements, supporting spatial reasoning, navigation, and operations."@en ;
+    rdfs:isDefinedBy space: .
+
+###  Class: space:Operation ###
+space:Operation rdf:type owl:Class ;
+    rdfs:subClassOf core:Entity ;
+    rdfs:label "Operation" ;
+    rdfs:comment "A supported operation or transformation for a Hyperspace, such as subspace extraction or routing."@en ;
+    rdfs:isDefinedBy space: .
+
+
+# #################################################################
+#
+#    Object Properties
+#
+# #################################################################
+
+###  Property: space:hasElementType ###
+space:hasElementType rdf:type owl:ObjectProperty ;
+    rdfs:label "hasElementType" ;
+    rdfs:comment "Identifies the type of elements (points) comprising the Hyperspace."@en ;
+    rdfs:domain space:Hyperspace ;
+    rdfs:range rdfs:Resource ;  # The range can be an rdfs:Class or a datatype IRI
+    rdfs:isDefinedBy space: .
+
+###  Property: space:hasPathType ###
+space:hasPathType rdf:type owl:ObjectProperty ;
+    rdfs:label "hasPathType" ;
+    rdfs:comment "Identifies the type of paths or relationships between elements in the Hyperspace."@en ;
+    rdfs:domain space:Hyperspace ;
+    rdfs:range rdfs:Resource ; # The range can be an rdfs:Class or an ObjectProperty IRI
+    rdfs:isDefinedBy space: .
+
+###  Property: space:hasOperation ###
+space:hasOperation rdf:type owl:ObjectProperty ;
+    rdfs:label "hasOperation" ;
+    rdfs:comment "Declares supported operations or transformations for the Hyperspace."@en ;
+    rdfs:domain space:Hyperspace ;
+    rdfs:range space:Operation ;
+    rdfs:isDefinedBy space: .

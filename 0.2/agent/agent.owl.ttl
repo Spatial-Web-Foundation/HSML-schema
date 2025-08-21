@@ -1,199 +1,89 @@
-@prefix core: <https://www.spatialwebfoundation.org/ns/hsml/core#> .
 @prefix agt: <https://www.spatialwebfoundation.org/ns/hsml/agent#> .
-@prefix rdfh: <http://purl.org/rdfh/> .
-@prefix space: <https://www.spatialwebfoundation.org/ns/hsml/space#> .
+@prefix act: <https://www.spatialwebfoundation.org/ns/hsml/activity#> .
+@prefix core: <https://www.spatialwebfoundation.org/ns/hsml/core#> .
+@prefix hsml: <https://purl.org/hsml/core#> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix schema: <http://schema.org/> .
-@prefix sh: <http://www.w3.org/ns/shacl#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
-@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 
 # #################################################################
 #
-#    SHACL Shapes for HSML Core Module
-#
-#    This file provides normative shapes for validating instances of
-#    the HSML Core Module as defined in the HSML Implementation
-#    Specification (P2874.X/D1, May 2024).
+#    Ontology Header
 #
 # #################################################################
 
-# #################################################################
-#    Shape for core:Entity
-# #################################################################
-
-core:EntityShape
-    a sh:NodeShape ;
-    sh:targetClass core:Entity ;
-    sh:closed true ;
-    sh:ignoredProperties ( rdf:type ) ;
-    rdfs:label "Entity Shape" ;
-   rdfs:comment "Defines the base constraints for any HSML Entity. Note that core:Entity is an abstract class and should not be instantiated directly[cite: 1331]." ;
-
-    sh:property [
-        sh:path core:swid ;
-        sh:name "swid" ;
-        sh:description "The Spatial Web Identifier for the entity, which is mandatory (1..1) and must be an xsd:anyURI[cite: 1348]." ;
-        sh:minCount 1 ;
-        sh:maxCount 1 ;
-        sh:datatype xsd:anyURI ;
-    ] ;
-    sh:property [
-        sh:path schema:name ;
-        sh:name "name" ;
-        sh:description "A short, human-readable name for the entity (0..1)[cite: 1348]." ;
-        sh:maxCount 1 ;
-        sh:datatype xsd:string ;
-    ] ;
-    sh:property [
-        sh:path schema:description ;
-        sh:name "description" ;
-        sh:description "A detailed explanation of the entity's purpose (0..1)[cite: 1348]." ;
-        sh:maxCount 1 ;
-        sh:datatype xsd:string ;
-    ] .
+agt: a owl:Ontology ;
+    rdfs:label "HSML Agent Module Ontology" ;
+    rdfs:comment "This ontology defines the normative classes and properties for representing agents, persons, organizations, and their goals within the Spatial Web, as specified in the HSML Implementation Specification." ;
+    owl:imports <https://www.spatialwebfoundation.org/ns/hsml/core#> ,
+                <https://www.spatialwebfoundation.org/ns/hsml/activity#> ,
+                <http://schema.org/> .
 
 # #################################################################
-#    Shape for core:Domain
+#
+#    Classes
+#
 # #################################################################
 
-core:DomainShape
-    a sh:NodeShape ;
-    sh:targetClass core:Domain ;
-    sh:closed true ;
-    sh:ignoredProperties ( rdf:type ) ;
-    rdfs:label "Domain Shape" ;
-    rdfs:comment "Defines constraints for a core:Domain. It inherits constraints from core:EntityShape via subclassing." ;
+###  Class: agt:Agent ###
+agt:Agent rdf:type owl:Class ;
+    rdfs:subClassOf core:Domain ;
+    rdfs:label "Agent" ;
+    rdfs:comment "An autonomous entity capable of perceiving, deciding, and performing Activities to achieve its goals."@en ;
+    rdfs:isDefinedBy agt: .
 
-    sh:property [
-        sh:path core:domainType ;
-        sh:name "domainType" ;
-        sh:description "Every core:Domain SHALL have a domainType attribute specifying its classification[cite: 1454]." ;
-        sh:minCount 1 ;
-        sh:maxCount 1 ;
-        sh:nodeKind sh:IRI ; # Or sh:class skos:Concept
-    ] ;
-    sh:property [
-        sh:path core:hasSpace ;
-        sh:name "hasSpace" ;
-        sh:description "Links the domain to the Hyperspace in which it applies (0..*)[cite: 1482]." ;
-        sh:nodeKind sh:IRI ; # Range is space:Hyperspace
-    ] ;
-    sh:property [
-        sh:path core:managedBy ;
-        sh:name "managedBy" ;
-        sh:description "Identifies the Domain Authority for the domain, which is mandatory (1..1)[cite: 1482]." ;
-        sh:minCount 1 ;
-        sh:maxCount 1 ;
-        sh:class agt:Agent ;
-    ] ;
-    sh:property [
-        sh:path rdfh:partOf ;
-        sh:name "partOf" ;
-        sh:description "Establishes a holonic link to a parent domain (0..1)[cite: 1482]." ;
-        sh:maxCount 1 ;
-        sh:class core:Domain ;
-    ] .
+###  Class: agt:Person ###
+agt:Person rdf:type owl:Class ;
+    rdfs:subClassOf agt:Agent ;
+    rdfs:label "Person" ;
+    rdfs:comment "A human person, modeled as a special type of agt:Agent with a self-sovereign identity."@en ;
+    rdfs:isDefinedBy agt: .
+
+###  Class: hsml:Organization ###
+# Note: As per Table 98, Organization is in the 'hsml' namespace and is a subclass of 'hsml:Domain'.
+# For consistency with the Agent module, it's defined here as a subclass of agt:Agent.
+hsml:Organization rdf:type owl:Class ;
+    rdfs:subClassOf core:Domain ;
+    rdfs:label "Organization" ;
+    rdfs:comment "A collective group comprising Agents and/or Person under common governance, capable of issuing Contracts, Credentials, and norms."@en ;
+    rdfs:isDefinedBy hsml: .
+
+###  Class: agt:Goal ###
+agt:Goal rdf:type owl:Class ;
+    rdfs:subClassOf core:Entity ;
+    rdfs:label "Goal" ;
+    rdfs:comment "A state or objective that an Agent aims to achieve through the performance of Activities."@en ;
+    rdfs:isDefinedBy agt: .
+
 
 # #################################################################
-#    Shape for core:Role
+#
+#    Properties
+#
 # #################################################################
 
-core:RoleShape
-    a sh:NodeShape ;
-    sh:targetClass core:Role ;
-    sh:closed true ;
-    sh:ignoredProperties ( rdf:type ) ;
-    rdfs:label "Role Shape" ;
-    rdfs:comment "Defines constraints for a core:Role, which represents a named capacity or function." ;
+###  Property: agt:hasGoal ###
+agt:hasGoal rdf:type owl:ObjectProperty ;
+    rdfs:label "hasGoal" ;
+    rdfs:comment "Links an Agent to one or more goals that it aims to fulfill through its Activities."@en ;
+    rdfs:domain agt:Agent ;
+    rdfs:range agt:Goal ;
+    rdfs:isDefinedBy agt: .
 
-    sh:property [
-        sh:path schema:name ;
-        sh:name "name" ;
-        sh:description "A short, human-readable name for the role (0..1)[cite: 1576]." ;
-        sh:maxCount 1 ;
-        sh:datatype xsd:string ;
-    ] ;
-    sh:property [
-        sh:path schema:description ;
-        sh:name "description" ;
-        sh:description "A human-readable explanation of the role's purpose (0..1)[cite: 1576]." ;
-        sh:maxCount 1 ;
-        sh:datatype xsd:string ;
-    ] .
+###  Property: agt:canPerform ###
+agt:canPerform rdf:type owl:ObjectProperty ;
+    rdfs:label "canPerform" ;
+    rdfs:comment "Identifies the types of Activities the Agent is capable of performing."@en ;
+    rdfs:domain agt:Agent ;
+    rdfs:range act:ActivitySchema ;
+    rdfs:isDefinedBy agt: .
 
-# #################################################################
-#    Shape for core:Participation
-# #################################################################
-
-core:ParticipationShape
-    a sh:NodeShape ;
-    sh:targetClass core:Participation ;
-    sh:closed true ;
-    sh:ignoredProperties ( rdf:type ) ;
-    rdfs:label "Participation Shape" ;
-    rdfs:comment "Defines constraints for core:Participation, a reified relationship capturing an entity's involvement in a host resource." ;
-
-    sh:property [
-        sh:path core:hasParticipant ;
-        sh:name "hasParticipant" ;
-       sh:description "The entity playing the role (1..1)[cite: 1675]." ;
-        sh:minCount 1 ;
-        sh:maxCount 1 ;
-        sh:class core:Entity ; # Spec says hsml:Entity
-    ] ;
-    sh:property [
-        sh:path core:hasRole ;
-        sh:name "hasRole" ;
-       sh:description "The core:Role that describes the function of the participant (1..1)[cite: 1688]." ;
-        sh:minCount 1 ;
-        sh:maxCount 1 ;
-        sh:class core:Role ;
-    ] ;
-    sh:property [
-        sh:path schema:startTime ;
-        sh:name "startTime" ;
-       sh:description "The timestamp when the participation begins (0..1)[cite: 1688]." ;
-        sh:maxCount 1 ;
-        sh:datatype xsd:dateTime ;
-    ] ;
-    sh:property [
-        sh:path schema:endTime ;
-        sh:name "endTime" ;
-       sh:description "The timestamp when the participation ends (0..1)[cite: 1688]." ;
-        sh:maxCount 1 ;
-        sh:datatype xsd:dateTime ;
-    ] .
-
-# #################################################################
-#    Shape for core:Condition (Abstract)
-# #################################################################
-
-core:ConditionShape
-    a sh:NodeShape ;
-    sh:targetClass core:Condition ;
-    rdfs:label "Condition Shape" ;
-    rdfs:comment "A shape for the abstract core:Condition class.As it is abstract, it defines no properties itself[cite: 1760]." .
-
-# #################################################################
-#    Shape for core:SHACLCondition
-# #################################################################
-
-core:SHACLConditionShape
-    a sh:NodeShape ;
-    sh:targetClass core:SHACLCondition ;
-    sh:closed true ;
-    sh:ignoredProperties ( rdf:type ) ;
-    rdfs:label "SHACL Condition Shape" ;
-    rdfs:comment "Defines constraints for core:SHACLCondition, a concrete condition evaluated by a SHACL shape." ;
-
-    sh:property [
-        sh:path core:hasShape ;
-        sh:name "hasShape" ;
-       sh:description "Links the condition to the SHACL shape defining its logic (1..1)[cite: 1809]." ;
-        sh:minCount 1 ;
-        sh:maxCount 1 ;
-        sh:class sh:Shape ;
-    ] .
+###  Property: agt:hasSubGoal ###
+agt:hasSubGoal rdf:type owl:ObjectProperty ;
+    rdfs:label "hasSubGoal" ;
+    rdfs:comment "Links a Goal to one or more subordinate Goals that contribute to the fulfillment of the parent Goal."@en ;
+    rdfs:domain agt:Goal ;
+    rdfs:range agt:Goal ;
+    rdfs:isDefinedBy agt: .

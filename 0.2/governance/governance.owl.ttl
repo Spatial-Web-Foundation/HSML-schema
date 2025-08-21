@@ -29,31 +29,6 @@ gov: a owl:Ontology ;
 ###  Class: gov:Contract ###
 gov:Contract rdf:type owl:Class ;
     rdfs:subClassOf core:Entity ;
-    rdfs:subClassOf [
-        rdf:type owl:Restriction ;
-        owl:onProperty gov:isRequestedBy ;
-        owl:cardinality "1"^^xsd:nonNegativeInteger
-    ] ;
-    rdfs:subClassOf [
-        rdf:type owl:Restriction ;
-        owl:onProperty gov:isAcceptedBy ;
-        owl:minCardinality "1"^^xsd:nonNegativeInteger
-    ] ;
-    rdfs:subClassOf [
-        rdf:type owl:Restriction ;
-        owl:onProperty gov:isFulfilledBy ;
-        owl:minCardinality "1"^^xsd:nonNegativeInteger
-    ] ;
-    rdfs:subClassOf [
-        rdf:type owl:Restriction ;
-        owl:onProperty gov:contractFor ;
-        owl:minCardinality "1"^^xsd:nonNegativeInteger
-    ] ;
-    rdfs:subClassOf [
-        rdf:type owl:Restriction ;
-        owl:onProperty gov:contractStatus ;
-        owl:cardinality "1"^^xsd:nonNegativeInteger
-    ] ;
     rdfs:label "Contract" ;
     rdfs:comment "A binding agreement governing the execution of one or more act:Activity instances by specific agt:Agent's within a core:Domain context."@en ;
     rdfs:isDefinedBy gov: .
