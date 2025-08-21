@@ -1,0 +1,104 @@
+@prefix : <https://www.spatialwebfoundation.org/ns/hsml/core#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix geosparql: <http://www.opengis.net/ont/geosparql#> .
+
+<https://www.spatialwebfoundation.org/ns/hsml/core>
+  rdf:type owl:Ontology ;
+  owl:versionIRI <https://www.spatialwebfoundation.org/ns/hsml/0.2/core> ;
+  dct:title "HSML Core Module Ontology" ;
+  dct:description "The HSML Core Module provides the foundational concepts upon which all other HSML modules are built."@en .
+
+# #################################################################
+#    Classes
+# #################################################################
+
+# Abstract root class for all HSML entities.
+:Entity rdf:type owl:Class ;
+         rdfs:subClassOf owl:Thing ;
+         rdfs:label "Entity" ;
+         rdfs:comment "The abstract root class for all objects, agents, and concepts in the Spatial Web."@en .
+
+# A foundational entity that represents a sphere of knowledge, influence, or activity.
+:Domain rdf:type owl:Class ;
+        rdfs:subClassOf :Entity ;
+        rdfs:label "Domain" ;
+        rdfs:comment "A foundational entity that represents a sphere of knowledge, influence, or activity, forming the contextual scaffolding of the Spatial Web."@en .
+
+# A type of Domain representing a location-bound or geometry-bearing element.
+:SpatialFeature rdf:type owl:Class ;
+                rdfs:subClassOf :Domain ;
+                rdfs:label "Spatial Feature" ;
+                rdfs:comment "A type of Domain representing a location-bound or geometry-bearing element, linking semantics to geospatial structure."@en .
+
+# A type of Domain representing a bounded, passive item without agency.
+:Thing rdf:type owl:Class ;
+       rdfs:subClassOf :Domain ;
+       rdfs:label "Thing" ;
+       rdfs:comment "A type of Domain representing a bounded, passive item without agency that can be acted upon or sensed."@en .
+
+# A type of Domain representing an abstract idea or category.
+:Concept rdf:type owl:Class ;
+         rdfs:subClassOf :Domain ;
+         rdfs:label "Concept" ;
+         rdfs:comment "A type of Domain representing an abstract idea or category used for classification and knowledge organization."@en .
+
+# An abstract class representing a logical condition.
+:Condition rdf:type owl:Class ;
+           rdfs:label "Condition" ;
+           rdfs:comment "An abstract class representing a logical condition that can be evaluated to be true or false."@en .
+
+# A concrete condition that uses a SHACL shape for validation.
+:SHACLCondition rdf:type owl:Class ;
+                rdfs:subClassOf :Condition ;
+                rdfs:label "SHACL Condition" ;
+                rdfs:comment "A concrete condition that uses a SHACL shape for validation logic."@en .
+
+# A reusable entity that models the involvement of another entity in a specific role.
+:Participation rdf:type owl:Class ;
+               rdfs:label "Participation" ;
+               rdfs:comment "A reusable entity that explicitly models the involvement of another entity in a specific role within a given context."@en .
+
+# Represents the function or position of an entity within a Participation.
+:Role rdf:type owl:Class ;
+      rdfs:subClassOf skos:Concept ;
+      rdfs:label "Role" ;
+      rdfs:comment "Represents the function or position of an entity within a Participation, typically defined in a controlled vocabulary."@en .
+
+# #################################################################
+#    Properties
+# #################################################################
+
+# The Spatial Web Identifier for an Entity.
+:swid rdf:type owl:DatatypeProperty ;
+      rdfs:label "swid" ;
+      rdfs:comment "A property to hold the Spatial Web Identifier (a W3C DID conformant URI) for any core:Entity."@en ;
+      rdfs:range xsd:anyURI .
+
+# A generic property to associate a resource with a logical condition.
+:hasCondition rdf:type owl:ObjectProperty ;
+             rdfs:label "has condition" ;
+             rdfs:comment "A generic property to associate any resource with a logical condition that applies to it."@en ;
+             rdfs:range :Condition .
+
+# Links a SHACLCondition to the SHACL shape defining its logic.
+:hasShape rdf:type owl:ObjectProperty ;
+          rdfs:label "has shape" ;
+          rdfs:comment "A property that links a core:SHACLCondition to the specific SHACL shape that defines its validation logic."@en ;
+          rdfs:range <http://www.w3.org/ns/shacl#Shape> .
+
+# Links a Participation to the entity that is participating.
+:hasParticipant rdf:type owl:ObjectProperty ;
+                rdfs:label "has participant" ;
+                rdfs:comment "A generic property that links a participation context (like a core:Participation instance) to the entity that is participating."@en ;
+                rdfs:range :Entity .
+
+# Links a Participation to the role the participant plays.
+:hasRole rdf:type owl:ObjectProperty ;
+         rdfs:label "has role" ;
+         rdfs:comment "A generic property that links a participation context (like a core:Participation instance) to the role that describes the function of the participant."@en ;
+         rdfs:range :Role .
