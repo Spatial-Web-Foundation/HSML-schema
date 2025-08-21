@@ -1,0 +1,161 @@
+@prefix agt: <https://www.spatialwebfoundation.org/ns/hsml/agent#> .
+@prefix act: <https://www.spatialwebfoundation.org/ns/hsml/activity#> .
+@prefix core: <https://www.spatialwebfoundation.org/ns/hsml/core#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix schema: <http://schema.org/> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+# #################################################################
+#
+#    SHACL Shapes for HSML Agent Module
+#
+#    This file provides normative shapes for validating instances of
+#    the Agent, Person, and Goal classes as defined in the HSML
+#    Implementation Specification (P2874.X/D1, May 2024).
+#
+# #################################################################
+
+# #################################################################
+#
+#    Shape for agt:Agent
+#
+# #################################################################
+
+agt:AgentShape
+    a sh:NodeShape ;
+    sh:targetClass agt:Agent ;
+    sh:closed true ;
+    sh:ignoredProperties ( rdf:type ) ;
+    rdfs:label "Agent Shape" ;
+    rdfs:comment "Defines the constraints for an agt:Agent, including mandatory properties inherited from core:Entity and specific properties like hasGoal and canPerform." ;
+
+    # == Mandatory property from core:Entity ==
+    sh:property [
+        sh:path core:swid ;
+        sh:name "swid" ;
+        sh:description "The Spatial Web Identifier for the entity, which is mandatory (1..1) and must be an xsd:anyURI." ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:anyURI ;
+    ] ;
+
+    # == Recommended/Optional properties from core:Entity ==
+    sh:property [
+        sh:path schema:name ;
+        sh:name "name" ;
+        sh:description "A short, human-readable name for the entity (0..1)." ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:string ;
+    ] ;
+    sh:property [
+        sh:path schema:description ;
+        sh:name "description" ;
+        sh:description "A detailed explanation of the entity's purpose (0..1)." ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:string ;
+    ] ;
+
+    # == Mandatory properties for agt:Agent ==
+    sh:property [
+        sh:path agt:hasGoal ;
+        sh:name "hasGoal" ;
+        sh:description "Links the Agent to one or more objectives it seeks to achieve. Mandatory (1..*)." ;
+        sh:minCount 1 ;
+        sh:class agt:Goal ;
+    ] ;
+    sh:property [
+        sh:path agt:canPerform ;
+        sh:name "canPerform" ;
+        sh:description "Links the Agent to the schemas for Activities it can perform. Mandatory (1..*)." ;
+        sh:minCount 1 ;
+        sh:class act:ActivitySchema ;
+    ] .
+
+# #################################################################
+#
+#    Shape for agt:Person
+#
+# #################################################################
+
+agt:PersonShape
+    a sh:NodeShape ;
+    sh:targetClass agt:Person ;
+    sh:closed true ;
+    sh:ignoredProperties ( rdf:type ) ;
+    rdfs:label "Person Shape" ;
+    rdfs:comment "Defines additional constraints for an agt:Person. It implicitly inherits all constraints from agt:AgentShape because agt:Person is a subclass of agt:Agent." ;
+
+    # == Recommended/Optional properties for agt:Person ==
+    sh:property [
+        sh:path schema:givenName ;
+        sh:name "givenName" ;
+        sh:description "The given name (first name) of the person (0..1)." ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:string ;
+    ] ;
+    sh:property [
+        sh:path schema:familyName ;
+        sh:name "familyName" ;
+        sh:description "The family name (last name) of the person (0..1)." ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:string ;
+    ] ;
+    sh:property [
+        sh:path schema:email ;
+        sh:name "email" ;
+        sh:description "An email address for the person (0..*)." ;
+        sh:datatype xsd:string ;
+    ] .
+
+# #################################################################
+#
+#    Shape for agt:Goal
+#
+# #################################################################
+
+agt:GoalShape
+    a sh:NodeShape ;
+    sh:targetClass agt:Goal ;
+    sh:closed true ;
+    sh:ignoredProperties ( rdf:type ) ;
+    rdfs:label "Goal Shape" ;
+    rdfs:comment "Defines the constraints for an agt:Goal. Note the mandatory requirement for schema:description." ;
+
+    # == Mandatory property from core:Entity ==
+    sh:property [
+        sh:path core:swid ;
+        sh:name "swid" ;
+        sh:description "The Spatial Web Identifier for the Goal, which is mandatory (1..1) and must be an xsd:anyURI." ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:anyURI ;
+    ] ;
+    # == Recommended property from core:Entity ==
+    sh:property [
+        sh:path schema:name ;
+        sh:name "name" ;
+        sh:description "A short, human-readable name for the Goal (0..1)." ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:string ;
+    ] ;
+
+    # == Mandatory property for agt:Goal ==
+    sh:property [
+        sh:path schema:description ;
+        sh:name "description" ;
+        sh:description "A human-readable text description of the objective. This is mandatory (1..1) for a Goal." ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:string ;
+    ] ;
+
+    # == Optional property for agt:Goal ==
+    sh:property [
+        sh:path agt:hasSubGoal ;
+        sh:name "hasSubGoal" ;
+        sh:description "Links a Goal to one or more subordinate Goals (0..*)." ;
+        sh:class agt:Goal ;
+    ] .

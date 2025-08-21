@@ -1,0 +1,215 @@
+
+@prefix core: <https://www.spatialwebfoundation.org/ns/hsml/core#> .
+@prefix agt: <https://www.spatialwebfoundation.org/ns/hsml/agent#> .
+@prefix rdfh: <http://purl.org/rdfh/> .
+@prefix space: <https://www.spatialwebfoundation.org/ns/hsml/space#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix schema: <http://schema.org/> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+
+# #################################################################
+#
+#    SHACL Shapes for HSML Core Module
+#
+#    This file provides normative shapes for validating instances of
+#    the HSML Core Module as defined in the HSML Implementation
+#    Specification (P2874.X/D1, May 2024). It includes human-
+#    readable messages for validation failures.
+#
+# #################################################################
+
+# #################################################################
+#    Shape for core:Entity
+# #################################################################
+
+core:EntityShape
+    a sh:NodeShape ;
+    sh:targetClass core:Entity ;
+    sh:closed true ;
+    sh:ignoredProperties ( rdf:type ) ;
+    rdfs:label "Entity Shape" ;
+    rdfs:comment "Defines the base constraints for any HSML Entity. Note that core:Entity is an abstract class and should not be instantiated directly." ;
+
+    sh:property [
+        sh:path core:swid ;
+        sh:name "swid" ;
+        sh:description "The Spatial Web Identifier for the entity." ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:anyURI ;
+        sh:message "A core:Entity must have exactly one core:swid, and its value must be a valid URI (xsd:anyURI)."@en ;
+    ] ;
+    sh:property [
+        sh:path schema:name ;
+        sh:name "name" ;
+        sh:description "A short, human-readable name for the entity." ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:string ;
+        sh:message "A core:Entity can have at most one schema:name, and its value must be a string."@en ;
+    ] ;
+    sh:property [
+        sh:path schema:description ;
+        sh:name "description" ;
+        sh:description "A detailed explanation of the entity's purpose." ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:string ;
+        sh:message "A core:Entity can have at most one schema:description, and its value must be a string."@en ;
+    ] .
+
+# #################################################################
+#    Shape for core:Domain
+# #################################################################
+
+core:DomainShape
+    a sh:NodeShape ;
+    sh:targetClass core:Domain ;
+    sh:closed true ;
+    sh:ignoredProperties ( rdf:type ) ;
+    rdfs:label "Domain Shape" ;
+    rdfs:comment "Defines constraints for a core:Domain. It inherits constraints from core:EntityShape via subclassing." ;
+
+    sh:property [
+        sh:path core:domainType ;
+        sh:name "domainType" ;
+        sh:description "The classification of the Domain." ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:nodeKind sh:IRI ;
+        sh:message "A core:Domain must have exactly one core:domainType, which must be an IRI pointing to a concept."@en ;
+    ] ;
+    sh:property [
+        sh:path core:hasSpace ;
+        sh:name "hasSpace" ;
+        sh:description "Links the domain to the Hyperspace in which it applies." ;
+        sh:nodeKind sh:IRI ;
+        sh:message "Values for core:hasSpace must be IRIs referencing a space:Hyperspace."@en ;
+    ] ;
+    sh:property [
+        sh:path core:managedBy ;
+        sh:name "managedBy" ;
+        sh:description "Identifies the Domain Authority for the domain." ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:class agt:Agent ;
+        sh:message "A core:Domain must have exactly one Domain Authority (core:managedBy) which must be an instance of agt:Agent."@en ;
+    ] ;
+    sh:property [
+        sh:path rdfh:partOf ;
+        sh:name "partOf" ;
+        sh:description "Establishes a holonic link to a parent domain." ;
+        sh:maxCount 1 ;
+        sh:class core:Domain ;
+        sh:message "A core:Domain can be part of at most one parent domain, which must be an instance of core:Domain."@en ;
+    ] .
+
+# #################################################################
+#    Shape for core:Role
+# #################################################################
+
+core:RoleShape
+    a sh:NodeShape ;
+    sh:targetClass core:Role ;
+    sh:closed true ;
+    sh:ignoredProperties ( rdf:type ) ;
+    rdfs:label "Role Shape" ;
+    rdfs:comment "Defines constraints for a core:Role, which represents a named capacity or function." ;
+
+    sh:property [
+        sh:path schema:name ;
+        sh:name "name" ;
+        sh:description "A short, human-readable name for the role." ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:string ;
+        sh:message "A core:Role can have at most one schema:name, and its value must be a string."@en ;
+    ] ;
+    sh:property [
+        sh:path schema:description ;
+        sh:name "description" ;
+        sh:description "A human-readable explanation of the role's purpose." ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:string ;
+        sh:message "A core:Role can have at most one schema:description, and its value must be a string."@en ;
+    ] .
+
+# #################################################################
+#    Shape for core:Participation
+# #################################################################
+
+core:ParticipationShape
+    a sh:NodeShape ;
+    sh:targetClass core:Participation ;
+    sh:closed true ;
+    sh:ignoredProperties ( rdf:type ) ;
+    rdfs:label "Participation Shape" ;
+    rdfs:comment "Defines constraints for core:Participation, a reified relationship capturing an entity's involvement in a host resource." ;
+
+    sh:property [
+        sh:path core:hasParticipant ;
+        sh:name "hasParticipant" ;
+        sh:description "The entity playing the role." ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:class core:Entity ;
+        sh:message "A core:Participation must have exactly one participant, which must be an instance of core:Entity."@en ;
+    ] ;
+    sh:property [
+        sh:path core:hasRole ;
+        sh:name "hasRole" ;
+        sh:description "The role that describes the function of the participant." ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:class core:Role ;
+        sh:message "A core:Participation must have exactly one role, which must be an instance of core:Role."@en ;
+    ] ;
+    sh:property [
+        sh:path schema:startTime ;
+        sh:name "startTime" ;
+        sh:description "The timestamp when the participation begins." ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:dateTime ;
+        sh:message "A core:Participation can have at most one schema:startTime, which must be an xsd:dateTime."@en ;
+    ] ;
+    sh:property [
+        sh:path schema:endTime ;
+        sh:name "endTime" ;
+        sh:description "The timestamp when the participation ends." ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:dateTime ;
+        sh:message "A core:Participation can have at most one schema:endTime, which must be an xsd:dateTime."@en ;
+    ] .
+
+# #################################################################
+#    Shape for core:Condition (Abstract)
+# #################################################################
+
+core:ConditionShape
+    a sh:NodeShape ;
+    sh:targetClass core:Condition ;
+    rdfs:label "Condition Shape" ;
+    rdfs:comment "A shape for the abstract core:Condition class. As it is abstract, it defines no properties itself." .
+
+# #################################################################
+#    Shape for core:SHACLCondition
+# #################################################################
+
+core:SHACLConditionShape
+    a sh:NodeShape ;
+    sh:targetClass core:SHACLCondition ;
+    sh:closed true ;
+    sh:ignoredProperties ( rdf:type ) ;
+    rdfs:label "SHACL Condition Shape" ;
+    rdfs:comment "Defines constraints for core:SHACLCondition, a concrete condition evaluated by a SHACL shape." ;
+
+    sh:property [
+        sh:path core:hasShape ;
+        sh:name "hasShape" ;
+        sh:description "Links the condition to the SHACL shape defining its logic." ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:class sh:Shape ;
+        sh:message "A core:SHACLCondition must link to exactly one valid SHACL Shape via core:hasShape."@en ;
+    ] .
