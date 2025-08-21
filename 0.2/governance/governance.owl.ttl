@@ -1,0 +1,119 @@
+@prefix gov: <https://www.spatialwebfoundation.org/ns/hsml/governance#> .
+@prefix core: <https://www.spatialwebfoundation.org/ns/hsml/core#> .
+@prefix act: <https://www.spatialwebfoundation.org/ns/hsml/activity#> .
+@prefix agt: <https://www.spatialwebfoundation.org/ns/hsml/agent#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+# #################################################################
+#
+#    Ontology Header
+#
+# #################################################################
+
+gov: a owl:Ontology ;
+    rdfs:label "HSML Governance Module Ontology" ;
+    rdfs:comment "This ontology defines the normative classes and properties for representing contracts and governance within the Spatial Web, as specified in the HSML Implementation Specification." ;
+    owl:imports <https://www.spatialwebfoundation.org/ns/hsml/core#> ,
+                <https://www.spatialwebfoundation.org/ns/hsml/activity#> ,
+                <https://www.spatialwebfoundation.org/ns/hsml/agent#> .
+
+# #################################################################
+#
+#    Classes
+#
+# #################################################################
+
+###  Class: gov:Contract ###
+gov:Contract rdf:type owl:Class ;
+    rdfs:subClassOf core:Entity ;
+    rdfs:subClassOf [
+        rdf:type owl:Restriction ;
+        owl:onProperty gov:isRequestedBy ;
+        owl:cardinality "1"^^xsd:nonNegativeInteger
+    ] ;
+    rdfs:subClassOf [
+        rdf:type owl:Restriction ;
+        owl:onProperty gov:isAcceptedBy ;
+        owl:minCardinality "1"^^xsd:nonNegativeInteger
+    ] ;
+    rdfs:subClassOf [
+        rdf:type owl:Restriction ;
+        owl:onProperty gov:isFulfilledBy ;
+        owl:minCardinality "1"^^xsd:nonNegativeInteger
+    ] ;
+    rdfs:subClassOf [
+        rdf:type owl:Restriction ;
+        owl:onProperty gov:contractFor ;
+        owl:minCardinality "1"^^xsd:nonNegativeInteger
+    ] ;
+    rdfs:subClassOf [
+        rdf:type owl:Restriction ;
+        owl:onProperty gov:contractStatus ;
+        owl:cardinality "1"^^xsd:nonNegativeInteger
+    ] ;
+    rdfs:label "Contract" ;
+    rdfs:comment "A binding agreement governing the execution of one or more act:Activity instances by specific agt:Agent's within a core:Domain context."@en ;
+    rdfs:isDefinedBy gov: .
+
+# #################################################################
+#
+#    Object Properties
+#
+# #################################################################
+
+###  Property: gov:isRequestedBy ###
+gov:isRequestedBy rdf:type owl:ObjectProperty ;
+    rdfs:label "isRequestedBy" ;
+    rdfs:comment "Identifies the core:Domain that initiated or requested creation of the contract."@en ;
+    rdfs:domain gov:Contract ;
+    rdfs:range core:Domain ;
+    rdfs:isDefinedBy gov: .
+
+###  Property: gov:isAcceptedBy ###
+gov:isAcceptedBy rdf:type owl:ObjectProperty ;
+    rdfs:label "isAcceptedBy" ;
+    rdfs:comment "Identifies the agt:Agent(s) formally accepting the contract."@en ;
+    rdfs:domain gov:Contract ;
+    rdfs:range agt:Agent ;
+    rdfs:isDefinedBy gov: .
+
+###  Property: gov:isFulfilledBy ###
+gov:isFulfilledBy rdf:type owl:ObjectProperty ;
+    rdfs:label "isFulfilledBy" ;
+    rdfs:comment "Identifies the agt:Agent(s) tasked with fulfilling the contractual obligations."@en ;
+    rdfs:domain gov:Contract ;
+    rdfs:range agt:Agent ;
+    rdfs:isDefinedBy gov: .
+
+###  Property: gov:contractFor ###
+gov:contractFor rdf:type owl:ObjectProperty ;
+    rdfs:label "contractFor" ;
+    rdfs:comment "Identifies the act:Activity (or Activities) that this contract governs."@en ;
+    rdfs:domain gov:Contract ;
+    rdfs:range act:Activity ;
+    rdfs:isDefinedBy gov: .
+
+###  Property: gov:hasParticipation ###
+gov:hasParticipation rdf:type owl:ObjectProperty ;
+    rdfs:label "hasParticipation" ;
+    rdfs:comment "Links the contract to detailed participation records using the core:Participation class."@en ;
+    rdfs:domain gov:Contract ;
+    rdfs:range core:Participation ;
+    rdfs:isDefinedBy gov: .
+
+# #################################################################
+#
+#    Data Properties
+#
+# #################################################################
+
+###  Property: gov:contractStatus ###
+gov:contractStatus rdf:type owl:DatatypeProperty ;
+    rdfs:label "contractStatus" ;
+    rdfs:comment "The current lifecycle state of the contract. The value shall be one of 'Requested', 'Executed', 'Fulfilled', 'Rescinded', or 'Breached'."@en ;
+    rdfs:domain gov:Contract ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy gov: .
