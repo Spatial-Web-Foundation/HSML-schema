@@ -1,0 +1,137 @@
+# baseURI: https://www.spatialwebfoundation.org/ns/hsml/comm-shapes
+#
+# SHACL Shapes for the HSML Communication Module
+# ----------------------------------------------
+# This file provides the normative constraints for validating HSML Communication data.
+# Each NodeShape corresponds to a class defined in the Communication Module ontology.
+#
+# Version: 0.2
+# Date: September 1, 2025
+
+@prefix comm: <https://www.spatialwebfoundation.org/ns/hsml/comm#> .
+@prefix core: <https://www.spatialwebfoundation.org/ns/hsml/core#> .
+@prefix act: <https://www.spatialwebfoundation.org/ns/hsml/activity#> .
+@prefix agt: <https://www.spatialwebfoundation.org/ns/hsml/agent#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix core-sh: <https://www.spatialwebfoundation.org/ns/hsml/core-shapes#> .
+
+<https://www.spatialwebfoundation.org/ns/hsml/comm-shapes>
+  rdf:type owl:Ontology ;
+  owl:imports <https://www.spatialwebfoundation.org/ns/hsml/comm> ,
+              <https://www.spatialwebfoundation.org/ns/hsml/core-shapes> ;
+  rdfs:label "HSML Communication Shapes" ;
+  rdfs:comment "SHACL shapes for validating instances of the HSML Communication Module." ;
+.
+
+
+# #################################################################
+# --- Node Shapes for Communication Classes
+# #################################################################
+
+# --- Shape for comm:Channel ---
+comm:ChannelShape
+  rdf:type sh:NodeShape ;
+  sh:targetClass comm:Channel ;
+  sh:node core-sh:EntityShape ; # Channels are Entities and must have a SWID.
+  sh:property
+    [
+      sh:path core:hasParticipant ;
+      sh:name "hasParticipant" ;
+      sh:description "Identifies the entities participating in the Channel." ;
+      sh:minCount 1 ;
+      sh:class core:Entity ;
+      sh:message "A Channel must have at least one participant." ;
+    ] ,
+    [
+      sh:path comm:forActivity ;
+      sh:name "forActivity" ;
+      sh:description "Links the Channel to the Activity it supports." ;
+      sh:minCount 1 ;
+      sh:class act:Activity ;
+      sh:message "A Channel must be for at least one Activity." ;
+    ] ,
+    [
+      sh:path comm:subChannelOf ;
+      sh:name "subChannelOf" ;
+      sh:description "Links a sub-channel to its parent Channel." ;
+      sh:maxCount 1 ;
+      sh:class comm:Channel ;
+      sh:message "A Channel can be a sub-channel of at most one parent channel." ;
+    ] ,
+    [
+      sh:path comm:hasSubChannel ;
+      sh:name "hasSubChannel" ;
+      sh:description "Links a Channel to its sub-channels for hierarchical structuring." ;
+      sh:class comm:Channel ;
+      sh:message "A Channel can have multiple sub-channels." ;
+    ] ;
+.
+
+# --- Shape for comm:Message ---
+comm:MessageShape
+  rdf:type sh:NodeShape ;
+  sh:targetClass comm:Message ;
+  sh:node core-sh:EntityShape ; # Messages are Entities and must have a SWID.
+  sh:property
+    [
+      sh:path comm:inChannel ;
+      sh:name "inChannel" ;
+      sh:description "Binds a message to its carrying Channel (context)." ;
+      sh:minCount 1 ;
+      sh:maxCount 1 ;
+      sh:class comm:Channel ;
+      sh:message "A Message must belong to exactly one Channel." ;
+    ] ,
+    [
+      sh:path comm:aboutActivity ;
+      sh:name "aboutActivity" ;
+      sh:description "Identifies the Activity that a message concerns." ;
+      sh:minCount 1 ;
+      sh:class act:Activity ;
+      sh:message "A Message must be about at least one Activity." ;
+    ] ,
+    [
+      sh:path comm:sender ;
+      sh:name "sender" ;
+      sh:description "Agent that authored or emitted a message." ;
+      sh:minCount 1 ;
+      sh:class agt:Agent ;
+      sh:message "A Message must have at least one sender." ;
+    ] ,
+    [
+      sh:path prov:generatedAtTime ;
+      sh:name "generatedAtTime" ;
+      sh:description "The timestamp when the message was generated." ;
+      sh:minCount 1 ;
+      sh:maxCount 1 ;
+      sh:datatype xsd:dateTime ;
+      sh:message "A Message must have exactly one generation timestamp." ;
+    ] ,
+    [
+      sh:path prov:wasAttributedTo ;
+      sh:name "wasAttributedTo" ;
+      sh:description "The Agent(s) to whom the message is attributed." ;
+      sh:minCount 1 ;
+      sh:class agt:Agent ;
+      sh:message "A Message must be attributed to at least one Agent." ;
+    ] ,
+    [
+      sh:path comm:mediaType ;
+      sh:name "mediaType" ;
+      sh:description "IANA media type of a payload." ;
+      sh:maxCount 1 ;
+      sh:datatype xsd:anyURI ;
+    ] ,
+    [
+      sh:path comm:sequenceNumber ;
+      sh:name "sequenceNumber" ;
+      sh:description "Monotonic ordering value, typically relative to a Channel." ;
+      sh:maxCount 1 ;
+      sh:datatype xsd:integer ;
+    ] ;
+.

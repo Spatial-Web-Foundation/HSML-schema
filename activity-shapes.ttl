@@ -1,0 +1,301 @@
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix act: <https://www.spatialwebfoundation.org/ns/hsml/activity#> .
+@prefix core: <https://www.spatialwebfoundation.org/ns/hsml/core#> .
+@prefix schema: <https://schema.org/> .
+@prefix core-sh: <https://www.spatialwebfoundation.org/ns/hsml/core-shapes#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+
+#
+# === Basic Shapes for Individual Classes ===
+#
+
+act:ActivityShape
+  a sh:NodeShape ;
+  sh:targetClass act:Activity ;
+  sh:node core-sh:EntityShape ;
+  sh:property [
+    sh:path act:activitySchema ;
+    sh:name "activitySchema" ;
+    sh:description "Links the Activity instance to the ActivitySchema it implements." ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+    sh:class act:ActivitySchema ;
+    sh:message "An Activity must have exactly one act:activitySchema." ;
+  ] ;
+  sh:property [
+    sh:path act:performedBy ;
+    sh:name "performedBy" ;
+    sh:description "Identifies the Agent(s) responsible for performing the Activity." ;
+    sh:minCount 1 ;
+    sh:class core:Agent ;
+    sh:message "An Activity must have at least one act:performedBy agent." ;
+  ] ;
+  sh:property [
+    sh:path act:status ;
+    sh:name "status" ;
+    sh:description "The current lifecycle state of the Activity." ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+    sh:class skos:Concept ;
+    sh:message "An Activity must have exactly one act:status." ;
+  ] ;
+  sh:property [
+    sh:path act:hasBinding ;
+    sh:name "hasBinding" ;
+    sh:description "Associates a VariableBinding with the Activity." ;
+    sh:class act:VariableBinding ;
+    sh:message "A VariableBinding must be an instance of act:VariableBinding." ;
+  ] .
+
+act:ActivitySchemaShape
+  a sh:NodeShape ;
+  sh:targetClass act:ActivitySchema ;
+  sh:node core-sh:EntityShape ;
+  sh:property [
+    sh:path act:hasInput ;
+    sh:name "hasInput" ;
+    sh:description "Specifies an input variable for an ActivitySchema." ;
+    sh:class act:Variable ;
+    sh:message "Input variables must be instances of act:Variable." ;
+  ] ;
+  sh:property [
+    sh:path act:hasOutput ;
+    sh:name "hasOutput" ;
+    sh:description "Specifies an output variable for an ActivitySchema." ;
+    sh:class act:Variable ;
+    sh:message "Output variables must be instances of act:Variable." ;
+  ] .
+
+act:ActivityStepShape
+  a sh:NodeShape ;
+  sh:targetClass act:ActivityStep ;
+  sh:property [
+    sh:path schema:identifier ;
+    sh:name "identifier" ;
+    sh:description "A unique identifier for the ActivityStep." ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+    sh:datatype xsd:string ;
+    sh:message "An ActivityStep must have exactly one schema:identifier." ;
+  ] ;
+  sh:property [
+    sh:path act:usesSchema ;
+    sh:name "usesSchema" ;
+    sh:description "Links the step to the ActivitySchema defining its logic." ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+    sh:class act:ActivitySchema ;
+    sh:message "An ActivityStep must use exactly one act:usesSchema." ;
+  ] .
+
+act:CompositeActivitySchemaShape
+  a sh:NodeShape ;
+  sh:targetClass act:CompositeActivitySchema ;
+  sh:node act:ActivitySchemaShape ;
+  sh:property [
+    sh:path act:hasStep ;
+    sh:name "hasStep" ;
+    sh:description "Associates an ActivityStep with a CompositeActivitySchema." ;
+    sh:minCount 1 ;
+    sh:class act:ActivityStep ;
+    sh:message "Steps must be instances of act:ActivityStep." ;
+  ] ;
+  sh:property [
+    sh:path act:hasDataLink ;
+    sh:name "hasDataLink" ;
+    sh:description "Associates a DataLink with a CompositeActivitySchema." ;
+    sh:class act:DataLink ;
+    sh:message "DataLinks must be instances of act:DataLink." ;
+  ] .
+
+act:VariableShape
+  a sh:NodeShape ;
+  sh:targetClass act:Variable ;
+  sh:property [
+    sh:path schema:identifier ;
+    sh:name "identifier" ;
+    sh:description "A unique identifier for the Variable." ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+    sh:datatype xsd:string ;
+    sh:message "A Variable must have exactly one schema:identifier." ;
+  ] ;
+  sh:property [
+    sh:path schema:name ;
+    sh:name "name" ;
+    sh:description "A short, human-readable name for the Variable." ;
+    sh:maxCount 1 ;
+    sh:datatype xsd:string ;
+    sh:message "A Variable can have at most one human-readable schema:name." ;
+  ] ;
+  sh:property [
+    sh:path schema:description ;
+    sh:name "description" ;
+    sh:description "A detailed explanation of the Variable's purpose." ;
+    sh:maxCount 1 ;
+    sh:datatype xsd:string ;
+    sh:message "A Variable can have at most one schema:description." ;
+  ] ;
+  sh:property [
+    sh:path act:expects ;
+    sh:name "expects" ;
+    sh:description "A declaration of the expected data type(s) or class(es) for the variable's value." ;
+    sh:class rdfs:Class ;
+    sh:message "Expected types must be valid RDF classes." ;
+  ] .
+
+act:VariableBindingShape
+  a sh:NodeShape ;
+  sh:targetClass act:VariableBinding ;
+  sh:property [
+    sh:path act:variable ;
+    sh:name "variable" ;
+    sh:description "Connects a VariableBinding to the identifier of the Variable it parameterizes." ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+    sh:datatype xsd:string ;
+    sh:message "A VariableBinding must specify exactly one act:variable." ;
+  ] ;
+  sh:property [
+    sh:path rdf:value ;
+    sh:name "value" ;
+    sh:description "The concrete value (IRI for an entity or a Literal for data) assigned in a VariableBinding." ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+    sh:message "A VariableBinding must provide exactly one rdf:value." ;
+  ] .
+
+act:DataLinkShape
+  a sh:NodeShape ;
+  sh:targetClass act:DataLink ;
+  sh:property [
+    sh:path act:sourceStep ;
+    sh:name "sourceStep" ;
+    sh:description "The identifier of the source ActivityStep for the data link." ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+    sh:datatype xsd:string ;
+    sh:message "A DataLink must have exactly one act:sourceStep." ;
+  ] ;
+  sh:property [
+    sh:path act:sourceVariable ;
+    sh:name "sourceVariable" ;
+    sh:description "The identifier of the source Variable for the data link." ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+    sh:datatype xsd:string ;
+    sh:message "A DataLink must have exactly one act:sourceVariable." ;
+  ] ;
+  sh:property [
+    sh:path act:targetStep ;
+    sh:name "targetStep" ;
+    sh:description "The identifier of the target ActivityStep for the data link." ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+    sh:datatype xsd:string ;
+    sh:message "A DataLink must have exactly one act:targetStep." ;
+  ] ;
+  sh:property [
+    sh:path act:targetVariable ;
+    sh:name "targetVariable" ;
+    sh:description "The identifier of the target Variable for the data link." ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+    sh:datatype xsd:string ;
+    sh:message "A DataLink must have exactly one act:targetVariable." ;
+  ] .
+
+#
+# === Advanced Shapes for Validating Relationships ===
+#
+
+# Shape to validate the internal consistency of a CompositeActivitySchema
+act:CompositeActivitySchemaConsistencyShape
+  a sh:NodeShape ;
+  sh:targetClass act:CompositeActivitySchema ;
+
+  # Rule: A DataLink's sourceStep must refer to a step defined in this schema.
+  sh:sparql [
+    sh:message "DataLink sourceStep '{?sourceStepId}' does not match any ActivityStep identifier in this schema." ;
+    sh:select """
+      SELECT $this ?dataLink ?sourceStepId
+      WHERE {
+        $this act:hasDataLink ?dataLink .
+        ?dataLink act:sourceStep ?sourceStepId .
+        FILTER NOT EXISTS {
+          $this act:hasStep/schema:identifier ?sourceStepId .
+        }
+      }
+    """ ;
+  ] ;
+
+  # Rule: A DataLink's targetStep must refer to a step defined in this schema.
+  sh:sparql [
+    sh:message "DataLink targetStep '{?targetStepId}' does not match any ActivityStep identifier in this schema." ;
+    sh:select """
+      SELECT $this ?dataLink ?targetStepId
+      WHERE {
+        $this act:hasDataLink ?dataLink .
+        ?dataLink act:targetStep ?targetStepId .
+        FILTER NOT EXISTS {
+          $this act:hasStep/schema:identifier ?targetStepId .
+        }
+      }
+    """ ;
+  ] .
+
+# Shape to validate the bindings of an Activity against its schema
+act:ActivityBindingValidationShape
+  a sh:NodeShape ;
+  sh:targetClass act:Activity ;
+
+  # Rule: A VariableBinding's variable identifier must exist as an input in the activity's schema.
+  sh:sparql [
+    sh:message "VariableBinding for '{?variableId}' does not match any input Variable identifier in the ActivitySchema." ;
+    sh:select """
+      SELECT $this ?binding ?variableId
+      WHERE {
+        $this act:activitySchema ?schema .
+        $this act:hasBinding ?binding .
+        ?binding act:variable ?variableId .
+        FILTER NOT EXISTS {
+          ?schema act:hasInput/schema:identifier ?variableId .
+        }
+      }
+    """ ;
+  ] ;
+
+  # Rule: The value in a VariableBinding must be compatible with the type(s) declared by the Variable's `expects` property.
+  sh:sparql [
+    sh:message "The value provided for variable '{?variableId}' is not of the expected type." ;
+    sh:select """
+      SELECT $this ?binding ?value ?variableId
+      WHERE {
+        # Find the binding, its value, and the schema
+        $this act:activitySchema ?schema .
+        $this act:hasBinding ?binding .
+        ?binding act:variable ?variableId ;
+                 rdf:value ?value .
+
+        # Find all expected types for that variable in the schema
+        ?schema act:hasInput ?variableDef .
+        ?variableDef schema:identifier ?variableId .
+        ?variableDef act:expects ?expectedType .
+
+        # Filter to find bindings where the value is NOT compatible with ANY expected type
+        FILTER NOT EXISTS {
+          # Re-select the expected types for this specific variable
+          ?variableDef act:expects ?checkType .
+          
+          # Check for compatibility
+          # Case 1: Value is a literal and its datatype matches
+          (isLiteral(?value) && (datatype(?value) = ?checkType)) ||
+          # Case 2: Value is a resource and its rdf:type matches
+          (isIRI(?value) && EXISTS { ?value rdf:type ?checkType })
+        }
+      }
+    """ ;
+  ] .

@@ -1,0 +1,98 @@
+@prefix agt: <https://www.spatialwebfoundation.org/ns/hsml/agent#> .
+@prefix act: <https://www.spatialwebfoundation.org/ns/hsml/activity#> .
+@prefix core: <https://www.spatialwebfoundation.org/ns/hsml/core#> .
+@prefix hsml: <https://purl.org/hsml/core#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix schema: <http://schema.org/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+
+# #################################################################
+#
+#    Ontology Header
+#
+# #################################################################
+
+agt: a owl:Ontology ;
+    rdfs:label "HSML Agent Module Ontology" ;
+    rdfs:comment "This ontology defines the normative classes and properties for representing agents, persons, organizations, and their goals within the Spatial Web, as specified in the HSML Implementation Specification." ;
+    dct:created "2025-09-01"^^xsd:date ;
+    dc:creator "Stephane Fellah" ;
+    dct:publisher <https://www.spatialwebfoundation.org/> ;
+    owl:versionIRI <https://www.spatialwebfoundation.org/ns/hsml/0.2/agent> ;
+    owl:versionInfo "0.2" ;
+    owl:imports <https://www.spatialwebfoundation.org/ns/hsml/core#> ,
+                <https://www.spatialwebfoundation.org/ns/hsml/activity#> ,
+                <http://schema.org/> ;
+    sh:shapeGraph <https://www.spatialwebfoundation.org/ns/hsml/agent-shapes> .
+
+# #################################################################
+#
+#    Classes
+#
+# #################################################################
+
+###  Class: agt:Agent ###
+agt:Agent rdf:type owl:Class ;
+    rdfs:subClassOf core:Domain ;
+    rdfs:label "Agent" ;
+    rdfs:comment "An autonomous entity capable of perceiving, deciding, and performing Activities to achieve its goals."@en ;
+    rdfs:isDefinedBy agt: .
+
+###  Class: agt:Person ###
+agt:Person rdf:type owl:Class ;
+    rdfs:subClassOf agt:Agent ;
+    rdfs:label "Person" ;
+    rdfs:comment "A human person, modeled as a special type of agt:Agent with a self-sovereign identity."@en ;
+    rdfs:isDefinedBy agt: .
+
+###  Class: hsml:Organization ###
+# Note: As per Table 98, Organization is in the 'hsml' namespace and is a subclass of 'hsml:Domain'.
+# For consistency with the Agent module, it's defined here as a subclass of agt:Agent.
+hsml:Organization rdf:type owl:Class ;
+    rdfs:subClassOf core:Domain ;
+    rdfs:label "Organization" ;
+    rdfs:comment "A collective group comprising Agents and/or Person under common governance, capable of issuing Contracts, Credentials, and norms."@en ;
+    rdfs:isDefinedBy hsml: .
+
+###  Class: agt:Goal ###
+agt:Goal rdf:type owl:Class ;
+    rdfs:subClassOf core:Entity ;
+    rdfs:label "Goal" ;
+    rdfs:comment "A state or objective that an Agent aims to achieve through the performance of Activities."@en ;
+    rdfs:isDefinedBy agt: .
+
+
+# #################################################################
+#
+#    Properties
+#
+# #################################################################
+
+###  Property: agt:hasGoal ###
+agt:hasGoal rdf:type owl:ObjectProperty ;
+    rdfs:label "hasGoal" ;
+    rdfs:comment "Links an Agent to one or more goals that it aims to fulfill through its Activities."@en ;
+    rdfs:domain agt:Agent ;
+    rdfs:range agt:Goal ;
+    rdfs:isDefinedBy agt: .
+
+###  Property: agt:canPerform ###
+agt:canPerform rdf:type owl:ObjectProperty ;
+    rdfs:label "canPerform" ;
+    rdfs:comment "Identifies the types of Activities the Agent is capable of performing."@en ;
+    rdfs:domain agt:Agent ;
+    rdfs:range act:ActivitySchema ;
+    rdfs:isDefinedBy agt: .
+
+###  Property: agt:hasSubGoal ###
+agt:hasSubGoal rdf:type owl:ObjectProperty ;
+    rdfs:label "hasSubGoal" ;
+    rdfs:comment "Links a Goal to one or more subordinate Goals that contribute to the fulfillment of the parent Goal."@en ;
+    rdfs:domain agt:Goal ;
+    rdfs:range agt:Goal ;
+    rdfs:isDefinedBy agt: .

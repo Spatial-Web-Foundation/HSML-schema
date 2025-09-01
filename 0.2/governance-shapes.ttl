@@ -1,0 +1,376 @@
+# baseURI: https://www.spatialwebfoundation.org/ns/hsml/governance-shapes
+#
+# SHACL Shapes for the HSML Governance Module
+# -------------------------------------------
+# This file provides the normative constraints for validating HSML Governance data.
+# Each NodeShape corresponds to a class defined in the Governance Module ontology.
+#
+# Version: 1.0
+# Date: September 1, 2025
+
+@prefix gov: <https://www.spatialwebfoundation.org/ns/hsml/governance#> .
+@prefix core: <https://www.spatialwebfoundation.org/ns/hsml/core#> .
+@prefix act: <https://www.spatialwebfoundation.org/ns/hsml/activity#> .
+@prefix agt: <https://www.spatialwebfoundation.org/ns/hsml/agent#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix schema: <http://schema.org/> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix core-sh: <https://www.spatialwebfoundation.org/ns/hsml/core-shapes#> .
+@prefix vc: <https://www.w3.org/2018/credentials#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+
+<https://www.spatialwebfoundation.org/ns/hsml/governance-shapes>
+  rdf:type owl:Ontology ;
+  owl:imports <https://www.spatialwebfoundation.org/ns/hsml/governance> ;
+  rdfs:label "HSML Governance Shapes" ;
+  rdfs:comment "SHACL shapes for validating instances of the HSML Governance Module." ;
+.
+
+
+# #################################################################
+# --- Node Shapes for Governance Classes
+# #################################################################
+
+# --- Shape for gov:Contract ---
+gov:ContractShape
+  rdf:type sh:NodeShape ;
+  sh:targetClass gov:Contract ;
+  sh:node core-sh:EntityShape ;
+  sh:property
+    [
+      sh:path gov:isRequestedBy ;
+      sh:name "isRequestedBy" ;
+      sh:description "The Domain that requested the contract." ;
+      sh:minCount 1 ;
+      sh:maxCount 1 ;
+      sh:class core:Domain ;
+      sh:message "A Contract must be requested by exactly one Domain." ;
+    ] ,
+    [
+      sh:path gov:isAcceptedBy ;
+      sh:name "isAcceptedBy" ;
+      sh:description "The Agent(s) that accepted the contract." ;
+      sh:minCount 1 ;
+      sh:class agt:Agent ;
+      sh:message "A Contract must be accepted by at least one Agent." ;
+    ] ,
+    [
+      sh:path gov:isFulfilledBy ;
+      sh:name "isFulfilledBy" ;
+      sh:description "The Agent(s) that fulfilled the contract." ;
+      sh:minCount 1 ;
+      sh:class agt:Agent ;
+      sh:message "A Contract must be fulfilled by at least one Agent." ;
+    ] ,
+    [
+      sh:path gov:contractFor ;
+      sh:name "contractFor" ;
+      sh:description "The Activity for which the contract was created." ;
+      sh:minCount 1 ;
+      sh:class act:Activity ;
+      sh:message "A Contract must be for at least one Activity." ;
+    ] ,
+    [
+      sh:path gov:contractStatus ;
+      sh:name "contractStatus" ;
+      sh:description "The current lifecycle state of the contract." ;
+      sh:minCount 1 ;
+      sh:maxCount 1 ;
+      sh:datatype xsd:string ;
+      sh:in ( "Requested" "Executed" "Fulfilled" "Rescinded" "Breached" ) ;
+      sh:message "Contract status must be exactly one of the allowed values." ;
+    ] ,
+    [
+      sh:path gov:hasParticipation ;
+      sh:name "hasParticipation" ;
+      sh:description "The participation context for the contract." ;
+      sh:class core:Participation ;
+      sh:message "If present, hasParticipation must link to a core:Participation instance." ;
+    ] ;
+.
+
+# --- Shape for gov:Credential ---
+gov:CredentialShape
+  rdf:type sh:NodeShape ;
+  sh:targetClass gov:Credential ;
+  sh:node core-sh:EntityShape ;
+  sh:property
+    [
+      sh:path gov:conformsToProfile ;
+      sh:name "conformsToProfile" ;
+      sh:description "Declares an intended CredentialProfile this credential claims to satisfy." ;
+      sh:class gov:CredentialProfile ;
+      sh:message "If present, conformsToProfile must reference a valid CredentialProfile." ;
+    ] ,
+    # === Verifiable Credentials (VC) Standard Properties ===
+    [
+      sh:path vc:issuer ;
+      sh:name "issuer" ;
+      sh:description "The issuer of the Verifiable Credential (VC)." ;
+      sh:minCount 1 ;
+      sh:maxCount 1 ;
+      sh:nodeKind sh:IRI ;
+      sh:message "A VC must have exactly one issuer." ;
+    ] ,
+    [
+      sh:path vc:issuanceDate ;
+      sh:name "issuanceDate" ;
+      sh:description "The date and time when the credential was issued." ;
+      sh:minCount 1 ;
+      sh:maxCount 1 ;
+      sh:datatype xsd:dateTime ;
+      sh:message "A VC must have exactly one issuance date." ;
+    ] ,
+    [
+      sh:path vc:expirationDate ;
+      sh:name "expirationDate" ;
+      sh:description "The date and time when the credential expires." ;
+      sh:maxCount 1 ;
+      sh:datatype xsd:dateTime ;
+      sh:message "A VC can have at most one expiration date." ;
+    ] ,
+    [
+      sh:path vc:credentialSubject ;
+      sh:name "credentialSubject" ;
+      sh:description "The subject of the Verifiable Credential." ;
+      sh:minCount 1 ;
+      sh:message "A VC must have at least one credential subject." ;
+    ] ,
+    [
+      sh:path vc:credentialStatus ;
+      sh:name "credentialStatus" ;
+      sh:description "The status of the Verifiable Credential (e.g., revocation status)." ;
+      sh:maxCount 1 ;
+      sh:message "A VC can have at most one credential status." ;
+    ] ,
+    [
+      sh:path vc:evidence ;
+      sh:name "evidence" ;
+      sh:description "Evidence used to issue the Verifiable Credential." ;
+      sh:message "Evidence must be valid VC evidence." ;
+    ] ,
+    [
+      sh:path vc:termsOfUse ;
+      sh:name "termsOfUse" ;
+      sh:description "Terms of use for the Verifiable Credential." ;
+      sh:message "Terms of use must be valid VC terms of use." ;
+    ] ,
+    [
+      sh:path vc:refreshService ;
+      sh:name "refreshService" ;
+      sh:description "Service used to refresh the Verifiable Credential." ;
+      sh:message "Refresh service must be valid VC refresh service." ;
+    ] ,
+    [
+      sh:path vc:proof ;
+      sh:name "proof" ;
+      sh:description "Cryptographic proof of the Verifiable Credential." ;
+      sh:minCount 1 ;
+      sh:message "A VC must have at least one cryptographic proof." ;
+    ] ;
+.
+
+# --- Shape for gov:CredentialProfile ---
+gov:CredentialProfileShape
+  rdf:type sh:NodeShape ;
+  sh:targetClass gov:CredentialProfile ;
+  sh:property
+    [
+      sh:path gov:profileOfCredentialType ;
+      sh:name "profileOfCredentialType" ;
+      sh:description "The type of credential this profile applies to." ;
+      sh:minCount 1 ;
+      sh:maxCount 1 ;
+      sh:message "A CredentialProfile must specify exactly one credential type." ;
+    ] ,
+    [
+      sh:path gov:statusPolicy ;
+      sh:name "statusPolicy" ;
+      sh:description "Required VC status condition (e.g., 'notRevoked', 'StatusList2021:valid')." ;
+      sh:maxCount 1 ;
+      sh:datatype xsd:string ;
+      sh:message "Status policy must be a valid string." ;
+    ] ,
+    [
+      sh:path gov:issuedWithin ;
+      sh:name "issuedWithin" ;
+      sh:description "Maximum credential age at validation time." ;
+      sh:maxCount 1 ;
+      sh:datatype xsd:duration ;
+      sh:message "Issued within must be a valid duration." ;
+    ] ,
+    [
+      sh:path gov:requiresSubjectBinding ;
+      sh:name "requiresSubjectBinding" ;
+      sh:description "If true, the VC subject MUST be bound to the performing Agent's identifier at contract time." ;
+      sh:maxCount 1 ;
+      sh:datatype xsd:boolean ;
+      sh:message "Requires subject binding must be a boolean value." ;
+    ] ,
+    [
+      sh:path gov:profileVersion ;
+      sh:name "profileVersion" ;
+      sh:description "Version identifier of the profile for audit/change control." ;
+      sh:maxCount 1 ;
+      sh:datatype xsd:string ;
+      sh:message "Profile version must be a valid string." ;
+    ] ,
+    [
+      sh:path gov:credentialShape ;
+      sh:name "credentialShape" ;
+      sh:description "SHACL NodeShape(s) that MUST validate true for a presented VC instance." ;
+      sh:class sh:NodeShape ;
+      sh:message "Credential shapes must be valid SHACL NodeShapes." ;
+    ] ,
+    [
+      sh:path gov:acceptableIssuer ;
+      sh:name "acceptableIssuer" ;
+      sh:description "Whitelist of issuers permitted for credentials conforming to this profile." ;
+      sh:or ( [ sh:class agt:Agent ] [ sh:class core:Domain ] ) ;
+      sh:message "Acceptable issuers must be either Agents or Domains." ;
+    ] ,
+    [
+      sh:path gov:trustFramework ;
+      sh:name "trustFramework" ;
+      sh:description "Named trust framework policy guiding verification and status handling." ;
+      sh:class skos:Concept ;
+      sh:message "Trust framework must be a valid SKOS concept." ;
+    ] ,
+    [
+      sh:path gov:proofSuite ;
+      sh:name "proofSuite" ;
+      sh:description "Acceptable proof suites for presented VCs (e.g., Ed25519Signature2020)." ;
+      sh:class skos:Concept ;
+      sh:message "Proof suite must be a valid SKOS concept." ;
+    ] ;
+.
+
+# --- Shape for gov:Norm ---
+gov:NormShape
+  rdf:type sh:NodeShape ;
+  sh:targetClass gov:Norm ;
+  sh:node core-sh:EntityShape ;
+  sh:property
+    [
+      sh:path gov:modality ;
+      sh:name "modality" ;
+      sh:description "The deontic modality of the norm (Obligation, Prohibition, Permission)." ;
+      sh:minCount 1 ;
+      sh:maxCount 1 ;
+      sh:in ( gov:Obligation gov:Prohibition gov:Permission ) ;
+      sh:message "A Norm must have exactly one modality from the controlled vocabulary." ;
+    ] ,
+    [
+      sh:path core:hasCondition ;
+      sh:name "hasCondition" ;
+      sh:description "The executable condition that defines when the norm applies." ;
+      sh:minCount 1 ;
+      sh:class core:Condition ;
+      sh:message "A Norm must have at least one executable Condition." ;
+    ] ,
+    [
+      sh:path gov:precedence ;
+      sh:name "precedence" ;
+      sh:description "Numeric priority used in conflict resolution across applicable policies." ;
+      sh:maxCount 1 ;
+      sh:datatype xsd:integer ;
+      sh:message "Precedence must be a valid integer." ;
+    ] ;
+.
+
+# --- Shape for gov:Policy ---
+gov:PolicyShape
+  rdf:type sh:NodeShape ;
+  sh:targetClass gov:Policy ;
+  sh:node core-sh:EntityShape ;
+  sh:property
+    [
+      sh:path schema:creator ;
+      sh:name "creator" ;
+      sh:description "The Domain or Agent that issued the policy." ;
+      sh:minCount 1 ;
+      sh:maxCount 1 ;
+      sh:or ( [ sh:class core:Domain ] [ sh:class agt:Agent ] ) ;
+      sh:message "A Policy must be issued by exactly one Domain or Agent." ;
+    ] ,
+    [
+      sh:path schema:validFrom ;
+      sh:name "validFrom" ;
+      sh:description "The timestamp when the policy becomes effective." ;
+      sh:minCount 1 ;
+      sh:maxCount 1 ;
+      sh:datatype xsd:dateTime ;
+      sh:message "A Policy must have a validFrom timestamp." ;
+    ] ,
+    [
+      sh:path schema:validThrough ;
+      sh:name "validThrough" ;
+      sh:description "The timestamp when the policy expires." ;
+      sh:maxCount 1 ;
+      sh:datatype xsd:dateTime ;
+      sh:message "Valid through must be a valid dateTime." ;
+    ] ,
+    [
+      sh:path gov:appliesToActivitySchema ;
+      sh:name "appliesToActivitySchema" ;
+      sh:description "The ActivitySchema(s) to which this policy applies." ;
+      sh:minCount 1 ;
+      sh:class act:ActivitySchema ;
+      sh:message "A Policy must apply to at least one ActivitySchema." ;
+    ] ,
+    [
+      sh:path gov:appliesToDomain ;
+      sh:name "appliesToDomain" ;
+      sh:description "Limits applicability to one or more Domains (e.g., sites, org units)." ;
+      sh:class core:Domain ;
+      sh:message "Applied domains must be instances of core:Domain." ;
+    ] ,
+    [
+      sh:path gov:appliesToActorClass ;
+      sh:name "appliesToActorClass" ;
+      sh:description "Targets classes/roles of actors (e.g., agt:Pilot)." ;
+      sh:class rdfs:Class ;
+      sh:message "Actor classes must be valid RDF classes." ;
+    ] ,
+    [
+      sh:path gov:hasNorm ;
+      sh:name "hasNorm" ;
+      sh:description "Includes the atomic deontic rules governed by the policy." ;
+      sh:minCount 1 ;
+      sh:class gov:Norm ;
+      sh:message "A Policy must bundle at least one Norm." ;
+    ] ,
+    [
+      sh:path gov:hasCredentialRequirement ;
+      sh:name "hasCredentialRequirement" ;
+      sh:description "References reusable credential profiles that define acceptable credential classes and constraints." ;
+      sh:class gov:CredentialProfile ;
+      sh:message "Credential requirements must be instances of gov:CredentialProfile." ;
+    ] ,
+    [
+      sh:path gov:relatedPolicy ;
+      sh:name "relatedPolicy" ;
+      sh:description "Links to superseding, superseded, parent, or child policies." ;
+      sh:class gov:Policy ;
+      sh:message "Related policies must be instances of gov:Policy." ;
+    ] ,
+    [
+      sh:path gov:precedence ;
+      sh:name "precedence" ;
+      sh:description "Numeric priority used in conflict resolution across applicable policies. Higher values override lower." ;
+      sh:maxCount 1 ;
+      sh:datatype xsd:integer ;
+      sh:message "Precedence must be a valid integer." ;
+    ] ,
+    [
+      sh:path gov:policyStatus ;
+      sh:name "policyStatus" ;
+      sh:description "Current lifecycle state (e.g., Draft, Active, Suspended, Retired)." ;
+      sh:maxCount 1 ;
+      sh:datatype xsd:string ;
+      sh:message "Policy status must be a valid string." ;
+    ] ;
+.

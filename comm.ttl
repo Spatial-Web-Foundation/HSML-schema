@@ -1,0 +1,152 @@
+# baseURI: https://www.spatialwebfoundation.org/ns/hsml/comm
+#
+# HSML Communication Module Ontology
+# ------------------------------------
+# This ontology provides a semantic framework for modeling communication contexts (Channels)
+# and message exchanges (Messages) within the Spatial Web. Properties are defined
+# without domains to promote reuse across modules.
+#
+# Version: 0.2
+# Date: September 1, 2025
+
+@prefix comm: <https://www.spatialwebfoundation.org/ns/hsml/comm#> .
+@prefix core: <https://www.spatialwebfoundation.org/ns/hsml/core#> .
+@prefix act: <https://www.spatialwebfoundation.org/ns/hsml/activity#> .
+@prefix agt: <https://www.spatialwebfoundation.org/ns/hsml/agent#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+
+<https://www.spatialwebfoundation.org/ns/hsml/comm>
+  rdf:type owl:Ontology ;
+  owl:versionIRI <https://www.spatialwebfoundation.org/ns/hsml/0.2/comm> ;
+  owl:versionInfo "0.2" ;
+  owl:imports <https://www.spatialwebfoundation.org/ns/hsml/core> ,
+              <https://www.spatialwebfoundation.org/ns/hsml/activity> ;
+  rdfs:comment "The HSML Communication Module provides a semantic framework for modeling communication contexts and message exchange in the Spatial Web." ;
+  rdfs:label "HSML Communication Module" ;
+  sh:shapeGraph <https://www.spatialwebfoundation.org/ns/hsml/comm-shapes> .
+
+# #################################################################
+# --- Classes
+# #################################################################
+
+comm:Channel
+  rdf:type owl:Class ;
+  rdfs:subClassOf core:Entity ;
+  owl:disjointWith core:Domain ;
+  rdfs:label "Channel" ;
+  rdfs:comment "A contextual, non-hierarchical grouping of entities associated with a specific Activity or purpose, for coordinating transient communications. Channels are for transient, ad-hoc collaboration; they do not define domain boundaries or permanent hierarchies." ;
+.
+
+comm:Message
+  rdf:type owl:Class ;
+  rdfs:subClassOf core:Concept ;
+  rdfs:label "Message" ;
+  rdfs:comment "Semantic record of a communicative artifact exchanged within a Channel and about an Activity; an optional overlay on HSTP transport. Use to capture provenance (who/when), integrity (hash/sequence), typing (media/profile), and correlation (threads, request/response)." ;
+.
+
+# #################################################################
+# --- Object Properties
+# #################################################################
+
+comm:forActivity
+  rdf:type owl:ObjectProperty ;
+  rdfs:label "forActivity" ;
+  rdfs:range act:Activity ;
+  rdfs:comment "Associates a resource with one or more Activities it supports or relates to. Intended domain: comm:Channel. Cardinality: 1..n (Mandatory)" ;
+.
+
+comm:hasSubChannel
+  rdf:type owl:ObjectProperty ;
+  rdfs:label "hasSubChannel" ;
+  rdfs:range comm:Channel ;
+  owl:inverseOf comm:subChannelOf ;
+  rdfs:comment "Links a Channel to its sub-channels for hierarchical structuring. Intended domain: comm:Channel. Cardinality: 0..n (Optional)" ;
+.
+
+comm:subChannelOf
+  rdf:type owl:ObjectProperty ;
+  rdfs:label "subChannelOf" ;
+  rdfs:range comm:Channel ;
+  rdfs:comment "Links a sub-channel to its parent Channel. Intended domain: comm:Channel. Cardinality: 0..1 (Optional)" ;
+.
+
+comm:inChannel
+  rdf:type owl:ObjectProperty ;
+  rdfs:label "inChannel" ;
+  rdfs:range comm:Channel ;
+  rdfs:comment "Binds a message to its carrying Channel (context). Intended domain: comm:Message. Cardinality: 1..1 (Mandatory)" ;
+.
+
+comm:aboutActivity
+  rdf:type owl:ObjectProperty ;
+  rdfs:label "aboutActivity" ;
+  rdfs:range act:Activity ;
+  rdfs:comment "Identifies the Activity that a message concerns. Intended domain: comm:Message. Cardinality: 1..* (Mandatory)" ;
+.
+
+comm:sender
+  rdf:type owl:ObjectProperty ;
+  rdfs:label "sender" ;
+  rdfs:range agt:Agent ;
+  rdfs:comment "Agent that authored or emitted a message. Intended domain: comm:Message. Cardinality: 1..* (Mandatory)" ;
+.
+
+comm:recipient
+  rdf:type owl:ObjectProperty ;
+  rdfs:label "recipient" ;
+  rdfs:range [
+      rdf:type owl:Class ;
+      owl:unionOf ( agt:Agent comm:Channel )
+    ] ;
+  rdfs:comment "Intended audience of a message. Intended domain: comm:Message. Cardinality: 0..* (Optional)" ;
+.
+
+comm:correlatesWith
+  rdf:type owl:ObjectProperty ;
+  rdfs:label "correlatesWith" ;
+  rdfs:range comm:Message ;
+  rdfs:comment "Links to a related message (e.g., in a thread or request/response pair). Intended domain: comm:Message. Cardinality: 0..* (Optional)" ;
+.
+
+# #################################################################
+# --- Datatype Properties
+# #################################################################
+
+comm:mediaType
+  rdf:type owl:DatatypeProperty ;
+  rdfs:label "mediaType" ;
+  rdfs:range xsd:anyURI ;
+  rdfs:comment "IANA media type of a payload. Intended domain: comm:Message. Cardinality: 0..1 (Recommended)" ;
+.
+
+comm:contentSchema
+  rdf:type owl:DatatypeProperty ;
+  rdfs:label "contentSchema" ;
+  rdfs:range xsd:anyURI ;
+  rdfs:comment "Schema or profile describing a payload (e.g., a SHACL shape IRI). Intended domain: comm:Message. Cardinality: 0..* (Recommended)" ;
+.
+
+comm:content
+  rdf:type owl:DatatypeProperty ;
+  rdfs:label "content" ;
+  rdfs:comment "The payload itself (inline text/binary) or a canonical, immutable link to it. Intended domain: comm:Message. Cardinality: 0..1 (Optional)" ;
+.
+
+comm:contentHash
+  rdf:type owl:DatatypeProperty ;
+  rdfs:label "contentHash" ;
+  rdfs:range xsd:string ;
+  rdfs:comment "Integrity hash (e.g., multihash) of a payload. Intended domain: comm:Message. Cardinality: 0..1 (Optional)" ;
+.
+
+comm:sequenceNumber
+  rdf:type owl:DatatypeProperty ;
+  rdfs:label "sequenceNumber" ;
+  rdfs:range xsd:integer ;
+  rdfs:comment "Monotonic ordering value, typically relative to a Channel. Intended domain: comm:Message. Cardinality: 0..1 (Optional)" ;
+.

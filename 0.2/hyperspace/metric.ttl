@@ -1,0 +1,233 @@
+# baseURI: https://www.spatialwebfoundation.org/ns/hsml/hyperspace/metric
+#
+# HSML Metric Space Submodule Ontology
+# --------------------------------------
+# This ontology defines the classes and properties for representing metric spaces,
+# which add quantitative distance or similarity semantics to a Hyperspace.
+#
+# Version: 0.2
+# Date: September 1, 2025
+
+@prefix metric: <https://www.spatialwebfoundation.org/ns/hsml/hyperspace/metric#> .
+@prefix hspace: <https://www.spatialwebfoundation.org/ns/hsml/hyperspace#> .
+@prefix core: <https://www.spatialwebfoundation.org/ns/hsml/core#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+
+<https://www.spatialwebfoundation.org/ns/hsml/hyperspace/metric>
+  rdf:type owl:Ontology ;
+  owl:versionIRI <https://www.spatialwebfoundation.org/ns/hsml/0.2/hyperspace/metric> ;
+  owl:versionInfo "0.2" ;
+  dct:created "2025-09-01"^^xsd:date ;
+  dc:creator "Stephane Fellah" ;
+  dct:publisher <https://www.spatialwebfoundation.org/> ;
+  owl:imports <https://www.spatialwebfoundation.org/ns/hsml/hyperspace> ;
+  rdfs:label "HSML Metric Space Submodule" ;
+  rdfs:comment "Defines concepts for metric-aware Hyperspaces, including Metrics, Measures, and Aggregators." ;
+  sh:shapeGraph <https://www.spatialwebfoundation.org/ns/hsml/hyperspace/metric-shapes> .
+
+# #################################################################
+# --- Classes
+# #################################################################
+
+metric:MetricSpace
+  rdf:type owl:Class ;
+  rdfs:subClassOf hspace:Hyperspace ;
+  rdfs:label "Metric Space" ;
+  rdfs:comment "A specialization of hspace:Hyperspace that declares one or more metrics (distance or similarity) applicable to its elements, enabling quantitative reasoning." ;
+.
+
+metric:Metric
+  rdf:type owl:Class ;
+  rdfs:subClassOf owl:Thing ;
+  rdfs:label "Metric" ;
+  rdfs:comment "A reusable, declarative definition of a distance or similarity function over the elements of a Hyperspace. It separates the semantics of measurement from the implementation." ;
+.
+
+metric:Measure
+  rdf:type owl:Class ;
+  rdfs:subClassOf core:Entity ;
+  rdfs:label "Measure" ;
+  rdfs:comment "A first-class resource representing a single computed pairwise measurement (distance or similarity). Useful for caching, provenance, and exchange of results." ;
+.
+
+metric:Aggregator
+  rdf:type owl:Class ;
+  rdfs:subClassOf core:Entity ;
+  rdfs:label "Aggregator" ;
+  rdfs:comment "A declarative monoid for composing step-level measures into a path-level measure, defining an associative operation and an identity element." ;
+.
+
+metric:Polarity
+  rdf:type owl:Class ;
+  rdfs:subClassOf owl:Thing ;
+  rdfs:label "Polarity" ;
+  rdfs:comment "A vocabulary class whose instances tag whether a measure behaves as a distance (lower values are better) or a similarity (higher values are better)." ;
+.
+
+# #################################################################
+# --- Individuals (Enumeration Members)
+# #################################################################
+
+metric:Distance
+  rdf:type owl:NamedIndividual ,
+           metric:Polarity ;
+  rdfs:label "Distance" ;
+  rdfs:comment "A polarity tag indicating that lower measurement values represent greater closeness." ;
+.
+
+metric:Similarity
+  rdf:type owl:NamedIndividual ,
+           metric:Polarity ;
+  rdfs:label "Similarity" ;
+  rdfs:comment "A polarity tag indicating that higher measurement values represent greater likeness." ;
+.
+
+# #################################################################
+# --- Object Properties
+# #################################################################
+
+metric:hasMetric
+  rdf:type owl:ObjectProperty ;
+  rdfs:label "hasMetric" ;
+  rdfs:range metric:Metric ;
+  rdfs:comment "Declares a metric that is available for use within a Hyperspace. Intended domain: metric:MetricSpace." ;
+.
+
+metric:defaultMetric
+  rdf:type owl:ObjectProperty ;
+  rdfs:label "defaultMetric" ;
+  rdfs:range metric:Metric ;
+  rdfs:comment "Identifies the default metric to use when an operation does not specify one. Intended domain: metric:MetricSpace." ;
+.
+
+metric:weightProperty
+  rdf:type owl:ObjectProperty ;
+  rdfs:label "weightProperty" ;
+  rdfs:range rdf:Property ;
+  rdfs:comment "Names a property on edges/steps that holds precomputed weights. Intended domain: metric:MetricSpace." ;
+.
+
+metric:kind
+  rdf:type owl:ObjectProperty ;
+  rdfs:label "kind" ;
+  rdfs:comment "Specifies the axiom flavor of the measure (e.g., Metric, Pseudometric, Quasimetric). Intended domain: metric:Metric." ;
+.
+
+metric:polarity
+  rdf:type owl:ObjectProperty ;
+  rdfs:label "polarity" ;
+  rdfs:range metric:Polarity ;
+  rdfs:comment "Declares whether the metric values represent distance or similarity. Intended domain: metric:Metric." ;
+.
+
+metric:onType
+  rdf:type owl:ObjectProperty ;
+  rdfs:label "onType" ;
+  rdfs:range rdfs:Class ;
+  rdfs:comment "Declares the expected element class or literal datatype the metric operates on. Intended domain: metric:Metric." ;
+.
+
+metric:operandProperty
+  rdf:type owl:ObjectProperty ;
+  rdfs:label "operandProperty" ;
+  rdfs:range rdf:Property ;
+  rdfs:comment "If elements are resources, this property points to the literal value used by the metric (e.g., an embedding vector). Intended domain: metric:Metric." ;
+.
+
+metric:valueType
+  rdf:type owl:ObjectProperty ;
+  rdfs:label "valueType" ;
+  rdfs:range rdfs:Datatype ;
+  rdfs:comment "The datatype of the operand and/or the final measure value (e.g., xsd:double). Intended domain: metric:Metric." ;
+.
+
+metric:aggregator
+  rdf:type owl:ObjectProperty ;
+  rdfs:label "aggregator" ;
+  rdfs:range metric:Aggregator ;
+  rdfs:comment "The default path aggregation method for composing step costs. Intended domain: metric:Metric." ;
+.
+
+metric:usingMetric
+  rdf:type owl:ObjectProperty ;
+  rdfs:label "usingMetric" ;
+  rdfs:range metric:Metric ;
+  rdfs:comment "Associates a measurement with the specific metric definition that was used to compute it. Intended domain: metric:Measure." ;
+.
+
+metric:from
+  rdf:type owl:ObjectProperty ;
+  rdfs:label "from" ;
+  rdfs:comment "The first element (resource or literal) in the ordered pair of a measurement. Intended domain: metric:Measure." ;
+.
+
+metric:to
+  rdf:type owl:ObjectProperty ;
+  rdfs:label "to" ;
+  rdfs:comment "The second element (resource or literal) in the ordered pair of a measurement. Intended domain: metric:Measure." ;
+.
+
+# #################################################################
+# --- Datatype Properties
+# #################################################################
+
+metric:rangeMin
+  rdf:type owl:DatatypeProperty ;
+  rdfs:label "rangeMin" ;
+  rdfs:range xsd:decimal ;
+  rdfs:comment "The theoretical or enforced minimum value of the measure. Intended domain: metric:Metric." ;
+.
+
+metric:rangeMax
+  rdf:type owl:DatatypeProperty ;
+  rdfs:label "rangeMax" ;
+  rdfs:range xsd:decimal ;
+  rdfs:comment "The theoretical or enforced maximum value of the measure. Intended domain: metric:Metric." ;
+.
+
+metric:symmetric
+  rdf:type owl:DatatypeProperty ;
+  rdfs:label "symmetric" ;
+  rdfs:range xsd:boolean ;
+  rdfs:comment "A boolean indicating whether the measure is symmetric (i.e., d(x,y) = d(y,x)). Intended domain: metric:Metric." ;
+.
+
+metric:identityOfIndiscernibles
+  rdf:type owl:DatatypeProperty ;
+  rdfs:label "identityOfIndiscernibles" ;
+  rdfs:range xsd:boolean ;
+  rdfs:comment "A boolean indicating whether d(x,y)=0 implies x=y. Intended domain: metric:Metric." ;
+.
+
+metric:triangleInequality
+  rdf:type owl:DatatypeProperty ;
+  rdfs:label "triangleInequality" ;
+  rdfs:range xsd:boolean ;
+  rdfs:comment "A boolean indicating whether the triangle inequality axiom holds. Intended domain: metric:Metric." ;
+.
+
+metric:nonNegative
+  rdf:type owl:DatatypeProperty ;
+  rdfs:label "nonNegative" ;
+  rdfs:range xsd:boolean ;
+  rdfs:comment "A boolean indicating whether values are guaranteed to be non-negative. Intended domain: metric:Metric." ;
+.
+
+metric:value
+  rdf:type owl:DatatypeProperty ;
+  rdfs:label "value" ;
+  rdfs:comment "The literal numeric value of a measurement. Intended domain: metric:Measure." ;
+.
+
+metric:confidence
+  rdf:type owl:DatatypeProperty ;
+  rdfs:label "confidence" ;
+  rdfs:range xsd:decimal ;
+  rdfs:comment "The confidence in a computed value, expressed as a decimal between 0 and 1. Intended domain: metric:Measure." ;
+.

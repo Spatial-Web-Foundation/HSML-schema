@@ -1,0 +1,120 @@
+@prefix agt: <https://www.spatialwebfoundation.org/ns/hsml/agent#> .
+@prefix act: <https://www.spatialwebfoundation.org/ns/hsml/activity#> .
+@prefix core: <https://www.spatialwebfoundation.org/ns/hsml/core#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix schema: <http://schema.org/> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix core-sh: <https://www.spatialwebfoundation.org/ns/hsml/core-shapes#> .
+
+# #################################################################
+#
+#    SHACL Shapes for HSML Agent Module
+#
+#    This file provides normative shapes for validating instances of
+#    the Agent, Person, and Goal classes as defined in the HSML
+#    Implementation Specification (P2874.X/D1, May 2024).
+#
+# #################################################################
+
+# #################################################################
+#
+#    Shape for agt:Agent
+#
+# #################################################################
+
+agt:AgentShape
+    a sh:NodeShape ;
+    sh:targetClass agt:Agent ;
+    sh:node core-sh:DomainShape ;
+    rdfs:label "Agent Shape" ;
+    rdfs:comment "Defines the constraints for an agt:Agent, including mandatory properties inherited from core:Domain and specific properties like hasGoal and canPerform." ;
+
+    # == Mandatory properties for agt:Agent ==
+    sh:property [
+        sh:path agt:hasGoal ;
+        sh:name "hasGoal" ;
+        sh:description "Links the Agent to one or more objectives it seeks to achieve." ;
+        sh:minCount 1 ;
+        sh:class agt:Goal ;
+        sh:message "An Agent must have at least one goal." ;
+    ] ;
+    sh:property [
+        sh:path agt:canPerform ;
+        sh:name "canPerform" ;
+        sh:description "Identifies the types of Activities the Agent is capable of performing." ;
+        sh:minCount 1 ;
+        sh:class act:ActivitySchema ;
+        sh:message "An Agent must be capable of performing at least one type of Activity." ;
+    ] .
+
+# #################################################################
+#
+#    Shape for agt:Person
+#
+# #################################################################
+
+agt:PersonShape
+    a sh:NodeShape ;
+    sh:targetClass agt:Person ;
+    sh:node agt:AgentShape ;
+    rdfs:label "Person Shape" ;
+    rdfs:comment "Defines additional constraints for an agt:Person. It inherits all constraints from agt:AgentShape because agt:Person is a subclass of agt:Agent." ;
+
+    # == Recommended/Optional properties for agt:Person ==
+    sh:property [
+        sh:path schema:givenName ;
+        sh:name "givenName" ;
+        sh:description "The given name (first name) of the person." ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:string ;
+        sh:message "A Person can have at most one given name." ;
+    ] ;
+    sh:property [
+        sh:path schema:familyName ;
+        sh:name "familyName" ;
+        sh:description "The family name (last name) of the person." ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:string ;
+        sh:message "A Person can have at most one family name." ;
+    ] ;
+    sh:property [
+        sh:path schema:email ;
+        sh:name "email" ;
+        sh:description "An email address for the person." ;
+        sh:datatype xsd:string ;
+        sh:message "Email addresses must be valid strings." ;
+    ] .
+
+# #################################################################
+#
+#    Shape for agt:Goal
+#
+# #################################################################
+
+agt:GoalShape
+    a sh:NodeShape ;
+    sh:targetClass agt:Goal ;
+    sh:node core-sh:EntityShape ;
+    rdfs:label "Goal Shape" ;
+    rdfs:comment "Defines the constraints for an agt:Goal. Note the mandatory requirement for schema:description." ;
+
+    # == Mandatory property for agt:Goal ==
+    sh:property [
+        sh:path schema:description ;
+        sh:name "description" ;
+        sh:description "A human-readable text description of the objective." ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:string ;
+        sh:message "A Goal must have exactly one description." ;
+    ] ;
+
+    # == Optional property for agt:Goal ==
+    sh:property [
+        sh:path agt:hasSubGoal ;
+        sh:name "hasSubGoal" ;
+        sh:description "Links a Goal to one or more subordinate Goals that contribute to the fulfillment of the parent Goal." ;
+        sh:class agt:Goal ;
+        sh:message "Sub-goals must be instances of agt:Goal." ;
+    ] .

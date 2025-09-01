@@ -1,0 +1,204 @@
+@prefix hspace: <https://www.spatialwebfoundation.org/ns/hsml/hyperspace#> .
+@prefix owl:    <http://www.w3.org/2002/07/owl#> .
+@prefix rdf:    <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:   <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:    <http://www.w3.org/2001/XMLSchema#> .
+@prefix sh:     <http://www.w3.org/ns/shacl#> .
+@prefix dct:    <http://purl.org/dc/terms/> .
+@prefix dc:     <http://purl.org/dc/elements/1.1/> .
+
+#################################################################
+# Ontology header
+#################################################################
+
+<https://www.spatialwebfoundation.org/ns/hsml/hyperspace>
+  a owl:Ontology ;
+  rdfs:label "HSML Hyperspace Core"@en ;
+  rdfs:comment "Core ontology for hyperspaces: element/arrow/path mappings, explicit paths, and operations. Designed to be modular and format-agnostic (e.g., works with GeoSPARQL, custom graphs, cellular grids)."@en ;
+  dct:created "2025-09-01"^^xsd:date ;
+  dc:creator "Stephane Fellah" ;
+  dct:publisher <https://www.spatialwebfoundation.org/> ;
+  owl:versionIRI <https://www.spatialwebfoundation.org/ns/hsml/0.2/hyperspace> ;
+  owl:versionInfo "0.2" ;
+  rdfs:isDefinedBy <https://www.spatialwebfoundation.org/ns/hsml/hyperspace> ;
+  sh:shapeGraph <https://www.spatialwebfoundation.org/ns/hsml/hyperspace-shapes> .
+
+#################################################################
+# Core classes
+#################################################################
+
+hspace:Entity a owl:Class ;
+  rdfs:label "Entity"@en ;
+  rdfs:comment "Generic HSML entity. Superclass for Hyperspace, Path, Operation."@en .
+
+hspace:Hyperspace a owl:Class ;
+  rdfs:subClassOf hspace:Entity ;
+  rdfs:label "Hyperspace"@en ;
+  rdfs:comment "Domain-attached spatial structure declaring element, arrow, and optional path types, enabling navigation and reasoning."@en .
+
+hspace:HyperspaceOfHyperspace a owl:Class ;
+  rdfs:subClassOf hspace:Hyperspace ;
+  rdfs:label "Hyperspace of Hyperspaces"@en ;
+  rdfs:comment "Higher-order hyperspace whose elements are themselves hyperspaces. (Profiles SHALL set hspace:hasElementType to hspace:Hyperspace.)"@en .
+
+hspace:Path a owl:Class ;
+  rdfs:subClassOf hspace:Entity ;
+  rdfs:label "Path"@en ;
+  rdfs:comment "First-class composed path: a finite composition of arrows. Supports endpoints, ordered steps, and optional serialized realization."@en .
+
+hspace:Operation a owl:Class ;
+  rdfs:subClassOf hspace:Entity ;
+  rdfs:label "Operation"@en ;
+  rdfs:comment "Declarative, reusable operation over a Hyperspace (e.g., reachability, shortest path, subspace formation). Binds to arrow/element/path mappings."@en .
+
+#################################################################
+# Hyperspace-level mapping & governance properties
+# (Annotation properties allow pointing to classes, datatypes, or properties)
+#################################################################
+
+
+hspace:hasElementType a owl:AnnotationProperty ;
+  rdfs:domain hspace:Hyperspace ;
+  rdfs:range  rdfs:Resource ;
+  rdfs:label "hasElementType"@en ;
+  rdfs:comment "Names the element type for this Hyperspace (a class IRI or a datatype IRI)."@en .
+
+hspace:hasArrowType a owl:AnnotationProperty ;
+  rdfs:domain hspace:Hyperspace ;
+  rdfs:range  rdfs:Resource ;
+  rdfs:label "hasArrowType"@en ;
+  rdfs:comment "Names the atomic one-step relation (either an object property IRI or a reified edge class IRI)."@en .
+
+hspace:hasPathType a owl:AnnotationProperty ;
+  rdfs:domain hspace:Hyperspace ;
+  rdfs:range  rdfs:Resource ;
+  rdfs:label "hasPathType"@en ;
+  rdfs:comment "Names accepted composed path type(s): a path class (e.g., hspace:Path) or a serialization datatype (e.g., WKT LineString)."@en .
+
+hspace:arrowProperty a owl:AnnotationProperty ;
+  rdfs:domain hspace:Hyperspace ;
+  rdfs:range  rdf:Property ;
+  rdfs:label "arrowProperty"@en ;
+  rdfs:comment "When using direct RDF edges: the predicate IRI that encodes atomic steps."@en .
+
+hspace:hasOperation a owl:ObjectProperty ;
+  rdfs:domain hspace:Hyperspace ;
+  rdfs:range  hspace:Operation ;
+  rdfs:label "hasOperation"@en ;
+  rdfs:comment "Declares operations supported by this Hyperspace."@en .
+
+#################################################################
+# Path-class properties (usable on instances of classes named in hasPathType)
+#################################################################
+
+hspace:startsAt a owl:ObjectProperty ;
+  rdfs:domain hspace:Path ;
+  rdfs:range  owl:Thing ;
+  rdfs:label "startsAt"@en ;
+  rdfs:comment "Start element node (when elements are resources)."@en .
+
+hspace:endsAt a owl:ObjectProperty ;
+  rdfs:domain hspace:Path ;
+  rdfs:range  owl:Thing ;
+  rdfs:label "endsAt"@en ;
+  rdfs:comment "End element node (when elements are resources)."@en .
+
+hspace:pathStep a owl:ObjectProperty ;
+  rdfs:domain hspace:Path ;
+  rdfs:range  owl:Thing ;
+  rdfs:label "pathStep"@en ;
+  rdfs:comment "Ordered steps of a path. Steps MAY be element nodes, edges, or step nodes per profile."@en .
+
+hspace:onPath a owl:ObjectProperty ;
+  rdfs:domain hspace:Path ;
+  rdfs:range  owl:Thing ;
+  rdfs:label "onPath"@en ;
+  rdfs:comment "Indicates that an element node lies on this explicit path."@en .
+
+hspace:startsAtValue a owl:DatatypeProperty ;
+  rdfs:domain hspace:Path ;
+  rdfs:range  rdfs:Literal ;
+  rdfs:label "startsAtValue"@en ;
+  rdfs:comment "Start literal (when elements are literals)."@en .
+
+hspace:endsAtValue a owl:DatatypeProperty ;
+  rdfs:domain hspace:Path ;
+  rdfs:range  rdfs:Literal ;
+  rdfs:label "endsAtValue"@en ;
+  rdfs:comment "End literal (when elements are literals)."@en .
+
+hspace:stepList a owl:ObjectProperty ;
+  rdfs:domain hspace:Path ;
+  rdfs:range  rdf:List ;
+  rdfs:label "stepList"@en ;
+  rdfs:comment "RDF Collection whose items are the ordered literal elements that constitute the path (literal-element profiles)."@en .
+
+hspace:pathValue a owl:DatatypeProperty ;
+  rdfs:domain hspace:Path ;
+  rdfs:range  rdfs:Literal ;
+  rdfs:label "pathValue"@en ;
+  rdfs:comment "Serialized realization of the path (e.g., WKT/GeoJSON LineString, JSON polyline). Semantics remain arrow-driven."@en .
+
+#################################################################
+# Optional element-class helper (value-node pattern)
+#################################################################
+
+hspace:elementValue a owl:DatatypeProperty ;
+  rdfs:domain owl:Thing ;
+  rdfs:range  rdfs:Literal ;
+  rdfs:label "elementValue"@en ;
+  rdfs:comment "Stores a literal value on an element node, enabling arrows between resources while retaining the raw value (profile-specific typing)."@en .
+
+#################################################################
+# Operation binding properties
+#################################################################
+
+hspace:usesArrowProperty a owl:AnnotationProperty ;
+  rdfs:domain hspace:Operation ;
+  rdfs:range  rdf:Property ;
+  rdfs:label "usesArrowProperty"@en ;
+  rdfs:comment "Binds the operation to the arrow predicate it traverses (direct-edge model)."@en .
+
+hspace:usesArrowClass a owl:AnnotationProperty ;
+  rdfs:domain hspace:Operation ;
+  rdfs:range  rdfs:Class ;
+  rdfs:label "usesArrowClass"@en ;
+  rdfs:comment "Binds the operation to a reified edge class it traverses (reified-edge model)."@en .
+
+hspace:usesAnnotationProperty a owl:AnnotationProperty ;
+  rdfs:domain hspace:Operation ;
+  rdfs:range  rdf:Property ;
+  rdfs:label "usesAnnotationProperty"@en ;
+  rdfs:comment "Declares edge annotation properties (e.g., weight, cost) the operation consumes."@en .
+
+hspace:returnsPathClass a owl:AnnotationProperty ;
+  rdfs:domain hspace:Operation ;
+  rdfs:range  rdfs:Class ;
+  rdfs:label "returnsPathClass"@en ;
+  rdfs:comment "Declares the path class produced by the operation (if it returns explicit paths)."@en .
+
+hspace:returnsValueType a owl:AnnotationProperty ;
+  rdfs:domain hspace:Operation ;
+  rdfs:range  rdfs:Resource ;
+  rdfs:label "returnsValueType"@en ;
+  rdfs:comment "Declares the non-path result type(s) (class or datatype), e.g., xsd:boolean or xsd:decimal."@en .
+
+hspace:parameterShape a owl:AnnotationProperty ;
+  rdfs:domain hspace:Operation ;
+  rdfs:range  sh:NodeShape ;
+  rdfs:label "parameterShape"@en ;
+  rdfs:comment "SHACL NodeShape describing required/optional parameters for invoking the operation."@en .
+
+hspace:implementation a owl:AnnotationProperty ;
+  rdfs:domain hspace:Operation ;
+  rdfs:range  rdfs:Resource ;
+  rdfs:label "implementation"@en ;
+  rdfs:comment "IRI of an algorithm, function, plan, or service that realizes the operation."@en .
+
+#################################################################
+# Notes:
+# - hasElementType / hasArrowType / hasPathType are AnnotationProperties
+#   to allow pointing to classes, datatypes, or properties across modules.
+# - Structural constraints (e.g., element/path class compatibility) are
+#   enforced by profiles/SHACL, keeping the core ontology minimal.
+#################################################################

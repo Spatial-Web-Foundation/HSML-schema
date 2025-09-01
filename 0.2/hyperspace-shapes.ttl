@@ -1,0 +1,245 @@
+@prefix hspace: <https://www.spatialwebfoundation.org/ns/hsml/hyperspace#> .
+@prefix sh:     <http://www.w3.org/ns/shacl#> .
+@prefix rdf:    <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:   <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:    <http://www.w3.org/2001/XMLSchema#> .
+@prefix core-sh: <https://www.spatialwebfoundation.org/ns/hsml/core-shapes#> .
+
+#################################################################
+# SHACL for HSML Hyperspace Core
+# Validates minimal mapping and structure for Hyperspace, Path,
+# and Operation, without assuming any external submodules.
+#################################################################
+
+############################
+# Hyperspace
+############################
+
+hspace:HyperspaceShape
+  a sh:NodeShape ;
+  sh:targetClass hspace:Hyperspace ;
+  sh:node core-sh:EntityShape ;
+
+  # hasElementType (exactly one; IRI or datatype IRI)
+  sh:property [
+    sh:path      hspace:hasElementType ;
+    sh:name      "hasElementType" ;
+    sh:description "Element type (class IRI or datatype IRI)." ;
+    sh:nodeKind  sh:IRI ;
+    sh:minCount  1 ;
+    sh:maxCount  1
+  ] ;
+
+  # hasArrowType (exactly one; IRI to a predicate or a reified edge class)
+  sh:property [
+    sh:path      hspace:hasArrowType ;
+    sh:name      "hasArrowType" ;
+    sh:description "Atomic one-step relation (object property IRI or reified edge class IRI)." ;
+    sh:nodeKind  sh:IRI ;
+    sh:minCount  1 ;
+    sh:maxCount  1
+  ] ;
+
+  # hasPathType (0..*; IRI to a class or a datatype IRI for serialized paths)
+  sh:property [
+    sh:path      hspace:hasPathType ;
+    sh:name      "hasPathType" ;
+    sh:description "Recognized composed path type(s): class IRI or datatype IRI." ;
+    sh:nodeKind  sh:IRI ;
+    sh:minCount  0
+  ] ;
+
+  # arrowProperty (0..1; IRI, used when arrows are direct RDF edges)
+  sh:property [
+    sh:path      hspace:arrowProperty ;
+    sh:name      "arrowProperty" ;
+    sh:description "Predicate used to encode atomic steps as direct RDF edges." ;
+    sh:nodeKind  sh:IRI ;
+    sh:maxCount  1
+  ] ;
+
+  # hasOperation (0..*; points to Operation resources)
+  sh:property [
+    sh:path      hspace:hasOperation ;
+    sh:name      "hasOperation" ;
+    sh:description "Operations supported by this Hyperspace." ;
+    sh:class     hspace:Operation ;
+    sh:minCount  0
+  ] .
+
+############################
+# HyperspaceOfHyperspace specialization
+############################
+
+hspace:HyperspaceOfHyperspaceShape
+  a sh:NodeShape ;
+  sh:targetClass hspace:HyperspaceOfHyperspace ;
+
+  # MUST declare its element type as hspace:Hyperspace exactly once
+  sh:property [
+    sh:path      hspace:hasElementType ;
+    sh:name      "hasElementType (must be hspace:Hyperspace)" ;
+    sh:hasValue  hspace:Hyperspace ;
+    sh:minCount  1 ;
+    sh:maxCount  1
+  ] .
+
+############################
+# Path
+############################
+
+hspace:PathShape
+  a sh:NodeShape ;
+  sh:targetClass hspace:Path ;
+
+  # Path realization payload (optional)
+  sh:property [
+    sh:path      hspace:pathValue ;
+    sh:name      "pathValue" ;
+    sh:description "Serialized path realization (e.g., WKT/GeoJSON/JSON polyline)." ;
+    sh:nodeKind  sh:Literal ;
+    sh:minCount  0
+  ] ;
+
+  # Endpoints (resource-based)
+  sh:property [
+    sh:path      hspace:startsAt ;
+    sh:name      "startsAt" ;
+    sh:description "Start element node (resource-based elements)." ;
+    sh:nodeKind  sh:BlankNodeOrIRI ;
+    sh:maxCount  1
+  ] ;
+  sh:property [
+    sh:path      hspace:endsAt ;
+    sh:name      "endsAt" ;
+    sh:description "End element node (resource-based elements)." ;
+    sh:nodeKind  sh:BlankNodeOrIRI ;
+    sh:maxCount  1
+  ] ;
+
+  # Endpoints (literal-based)
+  sh:property [
+    sh:path      hspace:startsAtValue ;
+    sh:name      "startsAtValue" ;
+    sh:description "Start literal (literal-based elements)." ;
+    sh:nodeKind  sh:Literal ;
+    sh:maxCount  1
+  ] ;
+  sh:property [
+    sh:path      hspace:endsAtValue ;
+    sh:name      "endsAtValue" ;
+    sh:description "End literal (literal-based elements)." ;
+    sh:nodeKind  sh:Literal ;
+    sh:maxCount  1
+  ] ;
+
+  # Ordered steps (resource-based); profile may further constrain to elements/edges
+  sh:property [
+    sh:path      hspace:pathStep ;
+    sh:name      "pathStep" ;
+    sh:description "Ordered steps of the path (elements/edges/step-nodes per profile)." ;
+    sh:nodeKind  sh:BlankNodeOrIRI ;
+    sh:minCount  0
+  ] ;
+
+  # Literal step list (RDF Collection)
+  sh:property [
+    sh:path      hspace:stepList ;
+    sh:name      "stepList" ;
+    sh:description "RDF list of ordered literal elements for the path (literal-element profiles)." ;
+    sh:class     rdf:List ;
+    sh:minCount  0 ;
+    sh:maxCount  1
+  ] ;
+
+  # Minimal completeness: at least one of {(startsAt & endsAt), (startsAtValue & endsAtValue), (pathValue)}
+  sh:or (
+    [ sh:property [ sh:path hspace:startsAt     ; sh:minCount 1 ] ;
+      sh:property [ sh:path hspace:endsAt       ; sh:minCount 1 ] ]
+    [ sh:property [ sh:path hspace:startsAtValue; sh:minCount 1 ] ;
+      sh:property [ sh:path hspace:endsAtValue  ; sh:minCount 1 ] ]
+    [ sh:property [ sh:path hspace:pathValue    ; sh:minCount 1 ] ]
+  ) .
+
+############################
+# Operation
+############################
+
+hspace:OperationShape
+  a sh:NodeShape ;
+  sh:targetClass hspace:Operation ;
+
+  # Exactly one of usesArrowProperty or usesArrowClass (when declared)
+  sh:xone (
+    [ sh:property [
+        sh:path     hspace:usesArrowProperty ;
+        sh:name     "usesArrowProperty" ;
+        sh:description "Arrow predicate to traverse (direct-edge model)." ;
+        sh:nodeKind sh:IRI ;
+        sh:minCount 1 ; sh:maxCount 1
+      ] ]
+    [ sh:property [
+        sh:path     hspace:usesArrowClass ;
+        sh:name     "usesArrowClass" ;
+        sh:description "Reified edge class to traverse (reified-edge model)." ;
+        sh:nodeKind sh:IRI ;
+        sh:minCount 1 ; sh:maxCount 1
+      ] ]
+  ) ;
+
+  # Optional edge annotation properties (weights, labels, etc.)
+  sh:property [
+    sh:path      hspace:usesAnnotationProperty ;
+    sh:name      "usesAnnotationProperty" ;
+    sh:description "Edge annotation properties the operation consumes (e.g., weight)." ;
+    sh:nodeKind  sh:IRI ;
+    sh:minCount  0
+  ] ;
+
+  # Declared outputs (optional)
+  sh:property [
+    sh:path      hspace:returnsPathClass ;
+    sh:name      "returnsPathClass" ;
+    sh:description "Path class produced by this operation (if any)." ;
+    sh:nodeKind  sh:IRI ;
+    sh:maxCount  1
+  ] ;
+  sh:property [
+    sh:path      hspace:returnsValueType ;
+    sh:name      "returnsValueType" ;
+    sh:description "Non-path result type(s): class or datatype IRI." ;
+    sh:nodeKind  sh:IRI ;
+    sh:minCount  0
+  ] ;
+
+  # Parameter shape (SHACL NodeShape) and implementation IRI(s)
+  sh:property [
+    sh:path      hspace:parameterShape ;
+    sh:name      "parameterShape" ;
+    sh:description "SHACL NodeShape describing parameters for invocation." ;
+    sh:class     sh:NodeShape ;
+    sh:maxCount  1
+  ] ;
+  sh:property [
+    sh:path      hspace:implementation ;
+    sh:name      "implementation" ;
+    sh:description "IRI of an algorithm/plan/service that realizes the operation." ;
+    sh:nodeKind  sh:IRI ;
+    sh:minCount  0
+  ] .
+
+############################
+# Optional helper: elementValue on element nodes (if used)
+############################
+
+hspace:ElementValueUsageShape
+  a sh:NodeShape ;
+  sh:targetSubjectsOf hspace:elementValue ;
+  sh:property [
+    sh:path      hspace:elementValue ;
+    sh:name      "elementValue" ;
+    sh:description "Literal payload carried by an element node (profile-typed)." ;
+    sh:nodeKind  sh:Literal ;
+    sh:minCount  1 ;
+    sh:maxCount  1
+  ] .

@@ -1,0 +1,321 @@
+# baseURI: https://www.spatialwebfoundation.org/ns/hsml/governance
+#
+# HSML Governance Module Ontology
+# ---------------------------------
+# This ontology defines the classes and properties for modeling governance constructs
+# such as contracts, credentials, policies, and norms within the Spatial Web.
+#
+# Version: 0.2
+# Date: September 1, 2025
+
+@prefix gov: <https://www.spatialwebfoundation.org/ns/hsml/governance#> .
+@prefix core: <https://www.spatialwebfoundation.org/ns/hsml/core#> .
+@prefix act: <https://www.spatialwebfoundation.org/ns/hsml/activity#> .
+@prefix agt: <https://www.spatialwebfoundation.org/ns/hsml/agent#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix schema: <http://schema.org/> .
+@prefix vc: <https://www.w3.org/2018/credentials#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+
+
+<https://www.spatialwebfoundation.org/ns/hsml/governance>
+  rdf:type owl:Ontology ;
+  owl:versionIRI <https://www.spatialwebfoundation.org/ns/hsml/0.2/governance> ;
+  owl:versionInfo "0.2" ;
+  dct:created "2025-09-01"^^xsd:date ;
+  dc:creator "Stephane Fellah" ;
+  dct:publisher <https://www.spatialwebfoundation.org/> ;
+  owl:imports <https://www.spatialwebfoundation.org/ns/hsml/core> ,
+              <https://www.spatialwebfoundation.org/ns/hsml/activity> ,
+              <https://www.spatialwebfoundation.org/ns/hsml/agent> ;
+  rdfs:comment "The HSML Governance Module defines credentials, contracts, norms, and policies that domains declare and enforce." ;
+  rdfs:label "HSML Governance Module" ;
+  sh:shapeGraph <https://www.spatialwebfoundation.org/ns/hsml/governance-shapes> .
+
+# #################################################################
+# --- Classes
+# #################################################################
+
+gov:Contract
+  rdf:type owl:Class ;
+  rdfs:subClassOf core:Entity ;
+  rdfs:label "Contract" ;
+  rdfs:comment "The binding agreement that initiates and governs the execution of one or more act:Activity instances." ;
+.
+
+gov:Credential
+  rdf:type owl:Class ;
+  rdfs:subClassOf core:Entity ,
+                  vc:VerifiableCredential ;
+  rdfs:label "Credential" ;
+  rdfs:comment "A tamper-evident, cryptographically verifiable set of claims, as defined by the W3C VC standard, used for authentication and authorization." ;
+.
+
+gov:CredentialProfile
+  rdf:type owl:Class ;
+  rdfs:label "Credential Profile" ;
+  rdfs:comment "A reusable bundle of constraints describing what a Verifiable Credential instance MUST satisfy (type, issuer/trust, subject binding, attribute constraints, proof, freshness)." ;
+.
+
+gov:Norm
+  rdf:type owl:Class ;
+  rdfs:subClassOf core:Entity ;
+  rdfs:label "Norm" ;
+  rdfs:comment "An atomic deontic rule (Obligation, Prohibition, Permission) governing behavior in a Domain, expressed as one or more executable Conditions." ;
+.
+
+gov:Policy
+  rdf:type owl:Class ;
+  rdfs:subClassOf core:Entity ;
+  rdfs:label "Policy" ;
+  rdfs:comment "A governance artifact issued by an authority, bundling one or more Norms, and declaring their scope, applicability, and lifecycle." ;
+.
+
+gov:DeonticModality
+  rdf:type owl:Class ;
+  rdfs:label "Deontic Modality" ;
+  rdfs:comment "An enumeration class that defines the set of allowable deontic modalities for Norms (Obligation, Prohibition, Permission)." ;
+.
+
+# #################################################################
+# --- Individuals (Enumeration Members)
+# #################################################################
+
+gov:Obligation
+  rdf:type owl:NamedIndividual ,
+           gov:DeonticModality ;
+  rdfs:label "Obligation" ;
+  rdfs:comment "A Norm requiring that an action must be performed or a condition must hold." ;
+.
+
+gov:Prohibition
+  rdf:type owl:NamedIndividual ,
+           gov:DeonticModality ;
+  rdfs:label "Prohibition" ;
+  rdfs:comment "A Norm requiring that an action must not be performed or a condition must not hold." ;
+.
+
+gov:Permission
+  rdf:type owl:NamedIndividual ,
+           gov:DeonticModality ;
+  rdfs:label "Permission" ;
+  rdfs:comment "A Norm indicating that an action may be performed or a condition may hold (neither required nor forbidden)." ;
+.
+
+# #################################################################
+# --- Object Properties
+# #################################################################
+
+gov:isRequestedBy
+  rdf:type owl:ObjectProperty ;
+  rdfs:label "isRequestedBy" ;
+  rdfs:domain gov:Contract ;
+  rdfs:range core:Domain ;
+  rdfs:comment "Identifies the core:Domain that initiated or requested creation of the contract." ;
+.
+
+gov:isAcceptedBy
+  rdf:type owl:ObjectProperty ;
+  rdfs:label "isAcceptedBy" ;
+  rdfs:domain gov:Contract ;
+  rdfs:range agt:Agent ;
+  rdfs:comment "Identifies the agt:Agent(s) formally accepting the contract." ;
+.
+
+gov:isFulfilledBy
+  rdf:type owl:ObjectProperty ;
+  rdfs:label "isFulfilledBy" ;
+  rdfs:domain gov:Contract ;
+  rdfs:range agt:Agent ;
+  rdfs:comment "Identifies the agt:Agent(s) tasked with fulfilling the contractual obligations." ;
+.
+
+gov:contractFor
+  rdf:type owl:ObjectProperty ;
+  rdfs:label "contractFor" ;
+  rdfs:domain gov:Contract ;
+  rdfs:range act:Activity ;
+  rdfs:comment "Identifies the act:Activity (or Activities) that this contract governs." ;
+.
+
+gov:hasParticipation
+  rdf:type owl:ObjectProperty ;
+  rdfs:label "hasParticipation" ;
+  rdfs:domain gov:Contract ;
+  rdfs:range core:Participation ;
+  rdfs:comment "Links the contract to detailed participation records." ;
+.
+
+gov:profileOfCredentialType
+  rdf:type owl:ObjectProperty ;
+  rdfs:label "profileOfCredentialType" ;
+  rdfs:domain gov:CredentialProfile ;
+  rdfs:range vc:Credential ;
+  rdfs:comment "Points to the base credential class that instances MUST instantiate to be eligible under this profile." ;
+.
+
+gov:credentialShape
+  rdf:type owl:ObjectProperty ;
+  rdfs:label "credentialShape" ;
+  rdfs:domain gov:CredentialProfile ;
+  rdfs:range sh:NodeShape ;
+  rdfs:comment "SHACL NodeShape(s) that MUST validate true for a presented VC instance." ;
+.
+
+gov:acceptableIssuer
+  rdf:type owl:ObjectProperty ;
+  rdfs:label "acceptableIssuer" ;
+  rdfs:domain gov:CredentialProfile ;
+  rdfs:range [
+      rdf:type owl:Class ;
+      owl:unionOf ( agt:Agent core:Domain )
+    ] ;
+  rdfs:comment "Whitelist of issuers permitted for credentials conforming to this profile." ;
+.
+
+gov:trustFramework
+  rdf:type owl:ObjectProperty ;
+  rdfs:label "trustFramework" ;
+  rdfs:domain gov:CredentialProfile ;
+  rdfs:range skos:Concept ;
+  rdfs:comment "Named trust framework policy guiding verification and status handling." ;
+.
+
+gov:proofSuite
+  rdf:type owl:ObjectProperty ;
+  rdfs:label "proofSuite" ;
+  rdfs:domain gov:CredentialProfile ;
+  rdfs:range skos:Concept ;
+  rdfs:comment "Acceptable proof suites for presented VCs (e.g., Ed25519Signature2020)." ;
+.
+
+gov:modality
+  rdf:type owl:ObjectProperty ;
+  rdfs:label "modality" ;
+  rdfs:domain gov:Norm ;
+  rdfs:range gov:DeonticModality ;
+  rdfs:comment "Declares the deontic force of the norm." ;
+.
+
+gov:appliesToActivitySchema
+  rdf:type owl:ObjectProperty ;
+  rdfs:label "appliesToActivitySchema" ;
+  rdfs:domain gov:Policy ;
+  rdfs:range act:ActivitySchema ;
+  rdfs:comment "Declares the Activity schema(s) governed by the policy." ;
+.
+
+gov:appliesToDomain
+  rdf:type owl:ObjectProperty ;
+  rdfs:label "appliesToDomain" ;
+  rdfs:domain gov:Policy ;
+  rdfs:range core:Domain ;
+  rdfs:comment "Limits applicability to one or more Domains (e.g., sites, org units)." ;
+.
+
+gov:appliesToActorClass
+  rdf:type owl:ObjectProperty ;
+  rdfs:label "appliesToActorClass" ;
+  rdfs:domain gov:Policy ;
+  rdfs:range rdfs:Class ;
+  rdfs:comment "Targets classes/roles of actors (e.g., agt:Pilot)." ;
+.
+
+gov:hasNorm
+  rdf:type owl:ObjectProperty ;
+  rdfs:label "hasNorm" ;
+  rdfs:domain gov:Policy ;
+  rdfs:range gov:Norm ;
+  rdfs:comment "Includes the atomic deontic rules governed by the policy." ;
+.
+
+gov:hasCredentialRequirement
+  rdf:type owl:ObjectProperty ;
+  rdfs:label "hasCredentialRequirement" ;
+  rdfs:domain gov:Policy ;
+  rdfs:range gov:CredentialProfile ;
+  rdfs:comment "References reusable credential profiles that define acceptable credential classes and constraints." ;
+.
+
+gov:conformsToProfile
+  rdf:type owl:ObjectProperty ;
+  rdfs:label "conformsToProfile" ;
+  rdfs:domain gov:Credential ;
+  rdfs:range gov:CredentialProfile ;
+  rdfs:comment "Declares an intended CredentialProfile this credential claims to satisfy (hint for evaluators; policy is authoritative)." ;
+.
+
+gov:relatedPolicy
+  rdf:type owl:ObjectProperty ;
+  rdfs:label "relatedPolicy" ;
+  rdfs:domain gov:Policy ;
+  rdfs:range gov:Policy ;
+  rdfs:comment "Links to superseding, superseded, parent, or child policies." ;
+.
+
+
+# #################################################################
+# --- Datatype Properties
+# #################################################################
+
+gov:contractStatus
+  rdf:type owl:DatatypeProperty ;
+  rdfs:label "contractStatus" ;
+  rdfs:domain gov:Contract ;
+  rdfs:range xsd:string ;
+  rdfs:comment "The current lifecycle state of the contract. The value shall be one of: 'Requested', 'Executed', 'Fulfilled', 'Rescinded', or 'Breached'." ;
+.
+
+gov:statusPolicy
+  rdf:type owl:DatatypeProperty ;
+  rdfs:label "statusPolicy" ;
+  rdfs:domain gov:CredentialProfile ;
+  rdfs:range xsd:string ;
+  rdfs:comment "Required VC status condition (e.g., 'notRevoked', 'StatusList2021:valid')." ;
+.
+
+gov:issuedWithin
+  rdf:type owl:DatatypeProperty ;
+  rdfs:label "issuedWithin" ;
+  rdfs:domain gov:CredentialProfile ;
+  rdfs:range xsd:duration ;
+  rdfs:comment "Maximum credential age at validation time." ;
+.
+
+gov:requiresSubjectBinding
+  rdf:type owl:DatatypeProperty ;
+  rdfs:label "requiresSubjectBinding" ;
+  rdfs:domain gov:CredentialProfile ;
+  rdfs:range xsd:boolean ;
+  rdfs:comment "If true, the VC subject MUST be bound to the performing Agent's identifier at contract time." ;
+.
+
+gov:profileVersion
+  rdf:type owl:DatatypeProperty ;
+  rdfs:label "profileVersion" ;
+  rdfs:domain gov:CredentialProfile ;
+  rdfs:range xsd:string ;
+  rdfs:comment "Version identifier of the profile for audit/change control." ;
+.
+
+gov:precedence
+  rdf:type owl:DatatypeProperty ;
+  rdfs:label "precedence" ;
+  rdfs:domain gov:Policy ;
+  rdfs:range xsd:integer ;
+  rdfs:comment "Numeric priority used in conflict resolution across applicable policies. Higher values override lower." ;
+.
+
+gov:policyStatus
+  rdf:type owl:DatatypeProperty ;
+  rdfs:label "policyStatus" ;
+  rdfs:domain gov:Policy ;
+  rdfs:range xsd:string ;
+  rdfs:comment "Current lifecycle state (e.g., Draft, Active, Suspended, Retired)." ;
+.

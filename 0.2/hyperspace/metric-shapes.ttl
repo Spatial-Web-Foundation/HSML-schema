@@ -1,0 +1,205 @@
+# baseURI: https://www.spatialwebfoundation.org/ns/hsml/hyperspace/metric-shapes
+#
+# SHACL Shapes for the HSML Metric Space Submodule
+# ------------------------------------------------
+# This file provides the normative constraints for validating HSML Metric Space data.
+# Each NodeShape corresponds to a class defined in the Metric Space Submodule ontology.
+#
+# Version: 0.2
+# Date: September 1, 2025
+
+@prefix metric: <https://www.spatialwebfoundation.org/ns/hsml/hyperspace/metric#> .
+@prefix hspace: <https://www.spatialwebfoundation.org/ns/hsml/hyperspace#> .
+@prefix core: <https://www.spatialwebfoundation.org/ns/hsml/core#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix core-sh: <https://www.spatialwebfoundation.org/ns/hsml/core-shapes#> .
+
+<https://www.spatialwebfoundation.org/ns/hsml/hyperspace/metric-shapes>
+  rdf:type owl:Ontology ;
+  owl:imports <https://www.spatialwebfoundation.org/ns/hsml/hyperspace/metric> ;
+  rdfs:label "HSML Metric Space Shapes" ;
+  rdfs:comment "SHACL shapes for validating instances of the HSML Metric Space Submodule." ;
+.
+
+
+# #################################################################
+# --- Node Shapes for Metric Space Classes
+# #################################################################
+
+# --- Shape for metric:MetricSpace ---
+metric:MetricSpaceShape
+  rdf:type sh:NodeShape ;
+  sh:targetClass metric:MetricSpace ;
+  sh:node hspace:HyperspaceShape ;
+  sh:property
+    [
+      sh:path metric:hasMetric ;
+      sh:name "hasMetric" ;
+      sh:description "Declares a metric that is available for use within a Hyperspace." ;
+      sh:class metric:Metric ;
+      sh:message "Values for hasMetric must be of type metric:Metric." ;
+    ] ,
+    [
+      sh:path metric:defaultMetric ;
+      sh:name "defaultMetric" ;
+      sh:description "Identifies the default metric to use when an operation does not specify one." ;
+      sh:maxCount 1 ;
+      sh:class metric:Metric ;
+      sh:message "A MetricSpace can have at most one default metric." ;
+    ] ;
+.
+
+# --- Shape for metric:Metric ---
+metric:MetricShape
+  rdf:type sh:NodeShape ;
+  sh:targetClass metric:Metric ;
+  sh:property
+    [
+      sh:path metric:kind ;
+      sh:name "kind" ;
+      sh:description "A human-readable identifier for the metric (e.g., 'euclidean', 'manhattan')." ;
+      sh:minCount 1 ;
+      sh:maxCount 1 ;
+      sh:datatype xsd:string ;
+      sh:message "A Metric must have exactly one 'kind' specified." ;
+    ] ,
+    [
+      sh:path metric:polarity ;
+      sh:name "polarity" ;
+      sh:description "Whether the metric behaves as a distance (lower values are better) or similarity (higher values are better)." ;
+      sh:minCount 1 ;
+      sh:maxCount 1 ;
+      sh:in ( metric:Distance metric:Similarity ) ;
+      sh:message "A Metric must have exactly one polarity: metric:Distance or metric:Similarity." ;
+    ] ,
+    [
+      sh:path metric:onType ;
+      sh:name "onType" ;
+      sh:description "The element type or datatype that this metric operates on." ;
+      sh:minCount 1 ;
+      sh:maxCount 1 ;
+      sh:nodeKind sh:IRI ;
+      sh:message "A Metric must specify exactly one element type or datatype it operates on." ;
+    ] ,
+    [
+      sh:path metric:rangeMin ;
+      sh:name "rangeMin" ;
+      sh:description "The minimum value in the metric's range." ;
+      sh:maxCount 1 ;
+      sh:datatype xsd:decimal ;
+      sh:message "Range minimum must be a valid decimal." ;
+    ] ,
+    [
+      sh:path metric:rangeMax ;
+      sh:name "rangeMax" ;
+      sh:description "The maximum value in the metric's range." ;
+      sh:maxCount 1 ;
+      sh:datatype xsd:decimal ;
+      sh:message "Range maximum must be a valid decimal." ;
+    ] ,
+    [
+      sh:path metric:symmetric ;
+      sh:name "symmetric" ;
+      sh:description "Whether the metric is symmetric (d(a,b) = d(b,a))." ;
+      sh:maxCount 1 ;
+      sh:datatype xsd:boolean ;
+      sh:message "Symmetric must be a valid boolean." ;
+    ] ,
+    [
+      sh:path metric:identityOfIndiscernibles ;
+      sh:name "identityOfIndiscernibles" ;
+      sh:description "Whether the metric satisfies the identity of indiscernibles (d(a,b) = 0 iff a = b)." ;
+      sh:maxCount 1 ;
+      sh:datatype xsd:boolean ;
+      sh:message "Identity of indiscernibles must be a valid boolean." ;
+    ] ,
+    [
+      sh:path metric:triangleInequality ;
+      sh:name "triangleInequality" ;
+      sh:description "Whether the metric satisfies the triangle inequality (d(a,c) ≤ d(a,b) + d(b,c))." ;
+      sh:maxCount 1 ;
+      sh:datatype xsd:boolean ;
+      sh:message "Triangle inequality must be a valid boolean." ;
+    ] ,
+    [
+      sh:path metric:nonNegative ;
+      sh:name "nonNegative" ;
+      sh:description "Whether the metric is non-negative (d(a,b) ≥ 0)." ;
+      sh:maxCount 1 ;
+      sh:datatype xsd:boolean ;
+      sh:message "Non-negative must be a valid boolean." ;
+    ] ;
+.
+
+# --- Shape for metric:Measure ---
+metric:MeasureShape
+  rdf:type sh:NodeShape ;
+  sh:targetClass metric:Measure ;
+  sh:node core-sh:EntityShape ;
+  sh:property
+    [
+      sh:path metric:usingMetric ;
+      sh:name "usingMetric" ;
+      sh:description "The Metric used to compute this measure." ;
+      sh:minCount 1 ;
+      sh:maxCount 1 ;
+      sh:class metric:Metric ;
+      sh:message "A Measure must reference exactly one Metric." ;
+    ] ,
+    [
+      sh:path metric:from ;
+      sh:name "from" ;
+      sh:description "The source element for the measurement." ;
+      sh:minCount 1 ;
+      sh:maxCount 1 ;
+      sh:message "A Measure must specify exactly one 'from' element." ;
+    ] ,
+    [
+      sh:path metric:to ;
+      sh:name "to" ;
+      sh:description "The target element for the measurement." ;
+      sh:minCount 1 ;
+      sh:maxCount 1 ;
+      sh:message "A Measure must specify exactly one 'to' element." ;
+    ] ,
+    [
+      sh:path metric:value ;
+      sh:name "value" ;
+      sh:description "The computed measurement value." ;
+      sh:minCount 1 ;
+      sh:maxCount 1 ;
+      sh:nodeKind sh:Literal ;
+      sh:message "A Measure must have exactly one literal value." ;
+    ] ,
+    [
+      sh:path metric:confidence ;
+      sh:name "confidence" ;
+      sh:description "The confidence in a computed value, expressed as a decimal between 0 and 1." ;
+      sh:maxCount 1 ;
+      sh:datatype xsd:decimal ;
+      sh:minInclusive 0 ;
+      sh:maxInclusive 1 ;
+      sh:message "Confidence must be a decimal between 0 and 1." ;
+    ] ;
+.
+
+# --- Shape for metric:Aggregator ---
+metric:AggregatorShape
+  rdf:type sh:NodeShape ;
+  sh:targetClass metric:Aggregator ;
+  sh:node core-sh:EntityShape ;
+  sh:property
+    [
+      sh:path metric:op ;
+      sh:name "op" ;
+      sh:description "The operation IRI that defines the aggregation function." ;
+      sh:minCount 1 ;
+      sh:maxCount 1 ;
+      sh:nodeKind sh:IRI ;
+      sh:message "An Aggregator must specify exactly one operation IRI." ;
+    ] ;
+.
