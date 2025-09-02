@@ -15,10 +15,11 @@
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix schema: <http://schema.org/> .
+@prefix schema: <https://schema.org/> .
 @prefix sh: <http://www.w3.org/ns/shacl#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix core-sh: <https://www.spatialwebfoundation.org/ns/hsml/core-shapes#> .
+@prefix gov-sh: <https://www.spatialwebfoundation.org/ns/hsml/governance-shapes#> .
 @prefix vc: <https://www.w3.org/2018/credentials#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 
@@ -35,7 +36,7 @@
 # #################################################################
 
 # --- Shape for gov:Contract ---
-gov:ContractShape
+gov-sh:ContractShape
   rdf:type sh:NodeShape ;
   sh:targetClass gov:Contract ;
   sh:node core-sh:EntityShape ;
@@ -93,7 +94,7 @@ gov:ContractShape
 .
 
 # --- Shape for gov:Credential ---
-gov:CredentialShape
+gov-sh:CredentialShape
   rdf:type sh:NodeShape ;
   sh:targetClass gov:Credential ;
   sh:node core-sh:EntityShape ;
@@ -174,7 +175,7 @@ gov:CredentialShape
 .
 
 # --- Shape for gov:CredentialProfile ---
-gov:CredentialProfileShape
+gov-sh:CredentialProfileShape
   rdf:type sh:NodeShape ;
   sh:targetClass gov:CredentialProfile ;
   sh:property
@@ -249,7 +250,7 @@ gov:CredentialProfileShape
 .
 
 # --- Shape for gov:Norm ---
-gov:NormShape
+gov-sh:NormShape
   rdf:type sh:NodeShape ;
   sh:targetClass gov:Norm ;
   sh:node core-sh:EntityShape ;
@@ -282,7 +283,7 @@ gov:NormShape
 .
 
 # --- Shape for gov:Policy ---
-gov:PolicyShape
+gov-sh:PolicyShape
   rdf:type sh:NodeShape ;
   sh:targetClass gov:Policy ;
   sh:node core-sh:EntityShape ;

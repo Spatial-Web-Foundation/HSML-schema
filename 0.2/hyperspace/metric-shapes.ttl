@@ -9,14 +9,16 @@
 # Date: September 1, 2025
 
 @prefix metric: <https://www.spatialwebfoundation.org/ns/hsml/hyperspace/metric#> .
+@prefix metric-sh: <https://www.spatialwebfoundation.org/ns/hsml/hyperspace/metric-shapes#> .
 @prefix hspace: <https://www.spatialwebfoundation.org/ns/hsml/hyperspace#> .
+@prefix hspace-sh: <https://www.spatialwebfoundation.org/ns/hsml/hyperspace-shapes#> .
 @prefix core: <https://www.spatialwebfoundation.org/ns/hsml/core#> .
+@prefix core-sh: <https://www.spatialwebfoundation.org/ns/hsml/core-shapes#> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix sh: <http://www.w3.org/ns/shacl#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
-@prefix core-sh: <https://www.spatialwebfoundation.org/ns/hsml/core-shapes#> .
 
 <https://www.spatialwebfoundation.org/ns/hsml/hyperspace/metric-shapes>
   rdf:type owl:Ontology ;
@@ -31,10 +33,10 @@
 # #################################################################
 
 # --- Shape for metric:MetricSpace ---
-metric:MetricSpaceShape
+metric-sh:MetricSpaceShape
   rdf:type sh:NodeShape ;
   sh:targetClass metric:MetricSpace ;
-  sh:node hspace:HyperspaceShape ;
+  sh:node hspace-sh:HyperspaceShape ;
   sh:property
     [
       sh:path metric:hasMetric ;
@@ -54,7 +56,7 @@ metric:MetricSpaceShape
 .
 
 # --- Shape for metric:Metric ---
-metric:MetricShape
+metric-sh:MetricShape
   rdf:type sh:NodeShape ;
   sh:targetClass metric:Metric ;
   sh:property
@@ -136,10 +138,9 @@ metric:MetricShape
 .
 
 # --- Shape for metric:Measure ---
-metric:MeasureShape
+metric-sh:MeasureShape
   rdf:type sh:NodeShape ;
   sh:targetClass metric:Measure ;
-  sh:node core-sh:EntityShape ;
   sh:property
     [
       sh:path metric:usingMetric ;
@@ -153,53 +154,54 @@ metric:MeasureShape
     [
       sh:path metric:from ;
       sh:name "from" ;
-      sh:description "The source element for the measurement." ;
+      sh:description "The source element for the measure." ;
       sh:minCount 1 ;
       sh:maxCount 1 ;
-      sh:message "A Measure must specify exactly one 'from' element." ;
+      sh:nodeKind sh:IRI ;
+      sh:message "A Measure must specify exactly one source element." ;
     ] ,
     [
       sh:path metric:to ;
       sh:name "to" ;
-      sh:description "The target element for the measurement." ;
+      sh:description "The target element for the measure." ;
       sh:minCount 1 ;
       sh:maxCount 1 ;
-      sh:message "A Measure must specify exactly one 'to' element." ;
+      sh:nodeKind sh:IRI ;
+      sh:message "A Measure must specify exactly one target element." ;
     ] ,
     [
       sh:path metric:value ;
       sh:name "value" ;
-      sh:description "The computed measurement value." ;
+      sh:description "The computed metric value." ;
       sh:minCount 1 ;
       sh:maxCount 1 ;
-      sh:nodeKind sh:Literal ;
-      sh:message "A Measure must have exactly one literal value." ;
+      sh:datatype xsd:decimal ;
+      sh:message "A Measure must have exactly one decimal value." ;
     ] ,
     [
       sh:path metric:confidence ;
       sh:name "confidence" ;
-      sh:description "The confidence in a computed value, expressed as a decimal between 0 and 1." ;
+      sh:description "Confidence level in the computed measure (0.0 to 1.0)." ;
       sh:maxCount 1 ;
       sh:datatype xsd:decimal ;
-      sh:minInclusive 0 ;
-      sh:maxInclusive 1 ;
-      sh:message "Confidence must be a decimal between 0 and 1." ;
+      sh:minInclusive 0.0 ;
+      sh:maxInclusive 1.0 ;
+      sh:message "Confidence must be a decimal between 0.0 and 1.0." ;
     ] ;
 .
 
 # --- Shape for metric:Aggregator ---
-metric:AggregatorShape
+metric-sh:AggregatorShape
   rdf:type sh:NodeShape ;
   sh:targetClass metric:Aggregator ;
-  sh:node core-sh:EntityShape ;
   sh:property
     [
       sh:path metric:op ;
       sh:name "op" ;
-      sh:description "The operation IRI that defines the aggregation function." ;
+      sh:description "The aggregation operation to perform." ;
       sh:minCount 1 ;
       sh:maxCount 1 ;
-      sh:nodeKind sh:IRI ;
-      sh:message "An Aggregator must specify exactly one operation IRI." ;
+      sh:in ( metric:Min metric:Max metric:Mean metric:Median metric:Sum metric:Count ) ;
+      sh:message "An Aggregator must specify exactly one operation from the allowed enumeration." ;
     ] ;
 .

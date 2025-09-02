@@ -1,8 +1,11 @@
 @prefix agt: <https://www.spatialwebfoundation.org/ns/hsml/agent#> .
 @prefix act: <https://www.spatialwebfoundation.org/ns/hsml/activity#> .
 @prefix core: <https://www.spatialwebfoundation.org/ns/hsml/core#> .
+@prefix agt-sh: <https://www.spatialwebfoundation.org/ns/hsml/agent-shapes#> .
+@prefix act-sh: <https://www.spatialwebfoundation.org/ns/hsml/activity-shapes#> .
+@prefix core-sh: <https://www.spatialwebfoundation.org/ns/hsml/core-shapes#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix schema: <http://schema.org/> .
+@prefix schema: <https://schema.org/> .
 @prefix sh: <http://www.w3.org/ns/shacl#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix core-sh: <https://www.spatialwebfoundation.org/ns/hsml/core-shapes#> .
@@ -23,7 +26,7 @@
 #
 # #################################################################
 
-agt:AgentShape
+agt-sh:AgentShape
     a sh:NodeShape ;
     sh:targetClass agt:Agent ;
     sh:node core-sh:DomainShape ;
@@ -44,7 +47,10 @@ agt:AgentShape
         sh:name "canPerform" ;
         sh:description "Identifies the types of Activities the Agent is capable of performing." ;
         sh:minCount 1 ;
-        sh:class act:ActivitySchema ;
+        sh:or (
+            [ sh:class act:ActivitySchema ]
+            [ sh:class act:CompositeActivitySchema ]
+        ) ;
         sh:message "An Agent must be capable of performing at least one type of Activity." ;
     ] .
 
@@ -54,10 +60,10 @@ agt:AgentShape
 #
 # #################################################################
 
-agt:PersonShape
+agt-sh:PersonShape
     a sh:NodeShape ;
     sh:targetClass agt:Person ;
-    sh:node agt:AgentShape ;
+    sh:node agt-sh:AgentShape ;
     rdfs:label "Person Shape" ;
     rdfs:comment "Defines additional constraints for an agt:Person. It inherits all constraints from agt:AgentShape because agt:Person is a subclass of agt:Agent." ;
 
@@ -92,7 +98,7 @@ agt:PersonShape
 #
 # #################################################################
 
-agt:GoalShape
+agt-sh:GoalShape
     a sh:NodeShape ;
     sh:targetClass agt:Goal ;
     sh:node core-sh:EntityShape ;

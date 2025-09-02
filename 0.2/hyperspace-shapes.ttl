@@ -4,6 +4,7 @@
 @prefix rdfs:   <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd:    <http://www.w3.org/2001/XMLSchema#> .
 @prefix core-sh: <https://www.spatialwebfoundation.org/ns/hsml/core-shapes#> .
+@prefix hspace-sh: <https://www.spatialwebfoundation.org/ns/hsml/hyperspace-shapes#> .
 
 #################################################################
 # SHACL for HSML Hyperspace Core
@@ -15,7 +16,7 @@
 # Hyperspace
 ############################
 
-hspace:HyperspaceShape
+hspace-sh:HyperspaceShape
   a sh:NodeShape ;
   sh:targetClass hspace:Hyperspace ;
   sh:node core-sh:EntityShape ;
@@ -71,7 +72,7 @@ hspace:HyperspaceShape
 # HyperspaceOfHyperspace specialization
 ############################
 
-hspace:HyperspaceOfHyperspaceShape
+hspace-sh:HyperspaceOfHyperspaceShape
   a sh:NodeShape ;
   sh:targetClass hspace:HyperspaceOfHyperspace ;
 
@@ -88,7 +89,7 @@ hspace:HyperspaceOfHyperspaceShape
 # Path
 ############################
 
-hspace:PathShape
+hspace-sh:PathShape
   a sh:NodeShape ;
   sh:targetClass hspace:Path ;
 
@@ -165,7 +166,7 @@ hspace:PathShape
 # Operation
 ############################
 
-hspace:OperationShape
+hspace-sh:OperationShape
   a sh:NodeShape ;
   sh:targetClass hspace:Operation ;
 
@@ -232,7 +233,7 @@ hspace:OperationShape
 # Optional helper: elementValue on element nodes (if used)
 ############################
 
-hspace:ElementValueUsageShape
+hspace-sh:ElementValueUsageShape
   a sh:NodeShape ;
   sh:targetSubjectsOf hspace:elementValue ;
   sh:property [

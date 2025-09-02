@@ -5,7 +5,7 @@
 @prefix hspace: <https://www.spatialwebfoundation.org/ns/hsml/hyperspace#> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix schema: <http://schema.org/> .
+@prefix schema: <https://schema.org/> .
 @prefix sh: <http://www.w3.org/ns/shacl#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix core-sh: <https://www.spatialwebfoundation.org/ns/hsml/core-shapes#> .
@@ -28,8 +28,6 @@
 core-sh:EntityShape
     a sh:NodeShape ;
     sh:targetClass core:Entity ;
-    sh:closed true ;
-    sh:ignoredProperties ( rdf:type ) ;
     rdfs:label "Entity Shape" ;
     rdfs:comment "Defines the base constraints for any HSML Entity. Note that core:Entity is an abstract class and should not be instantiated directly." ;
 
@@ -66,8 +64,7 @@ core-sh:EntityShape
 core-sh:DomainShape
     a sh:NodeShape ;
     sh:targetClass core:Domain ;
-    sh:closed true ;
-    sh:ignoredProperties ( rdf:type ) ;
+    sh:node core-sh:EntityShape ;
     rdfs:label "Domain Shape" ;
     rdfs:comment "Defines constraints for a core:Domain. It inherits constraints from core:EntityShape via subclassing." ;
 
@@ -112,8 +109,6 @@ core-sh:DomainShape
 core-sh:RoleShape
     a sh:NodeShape ;
     sh:targetClass core:Role ;
-    sh:closed true ;
-    sh:ignoredProperties ( rdf:type ) ;
     rdfs:label "Role Shape" ;
     rdfs:comment "Defines constraints for a core:Role, which represents a named capacity or function." ;
 
@@ -141,8 +136,6 @@ core-sh:RoleShape
 core-sh:ParticipationShape
     a sh:NodeShape ;
     sh:targetClass core:Participation ;
-    sh:closed true ;
-    sh:ignoredProperties ( rdf:type ) ;
     rdfs:label "Participation Shape" ;
     rdfs:comment "Defines constraints for core:Participation, a reified relationship capturing an entity's involvement in a host resource." ;
 
@@ -198,8 +191,6 @@ core-sh:ConditionShape
 core-sh:SHACLConditionShape
     a sh:NodeShape ;
     sh:targetClass core:SHACLCondition ;
-    sh:closed true ;
-    sh:ignoredProperties ( rdf:type ) ;
     rdfs:label "SHACL Condition Shape" ;
     rdfs:comment "Defines constraints for core:SHACLCondition, a concrete condition evaluated by a SHACL shape." ;
 
